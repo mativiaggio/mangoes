@@ -5,7 +5,7 @@ export default function PageWrapper({
 }>) {
   return (
     <div className="page-wrapper flex justify-center">
-      <div className="w-full max-w-[63.5rem]">{children}</div>
+      <div className="w-full flex justify-between">{children}</div>
     </div>
   );
 }
