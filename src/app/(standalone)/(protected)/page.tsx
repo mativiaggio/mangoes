@@ -12,8 +12,8 @@ export default async function Home() {
   return (
     <>
       <PageWrapper>
-        <div className="hidden xl:block w-1/6 border-r"></div>
-        <div className="w-full xl:w-3/6 pt-6">
+        <div className="hidden xl:block w-1/6 border-r">Sidebar</div>
+        <div className="w-full xl:w-3/6 pt-6 h-fit pb-0 xl:h-[calc(100vh-66px)] overflow-auto xl:pb-[100px]">
           <div className="border w-full min-h-[100px] h-fit rounded-xl bg-main-orange flex flex-col xl:flex-row justify-between items-center xl:items-start p-10">
             <span className="flex flex-col gap-2 text-primary-foreground">
               <h1 className="text-4xl font-bold text-center xl:text-left">

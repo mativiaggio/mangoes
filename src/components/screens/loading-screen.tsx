@@ -52,7 +52,7 @@ export default function LoadingScreen() {
                 fill="#366918"></path>
             </svg>
           </span>
-          <span className="flex flex-col gap-2 text-main-blue dark:text-foreground">
+          <span className="flex flex-col gap-2 text-main-orange dark:text-foreground">
             <h1 className="text-5xl font-bold">Mangoes</h1>
           </span>
         </span>

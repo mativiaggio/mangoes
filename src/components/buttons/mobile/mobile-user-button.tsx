@@ -64,7 +64,7 @@ export default function MobileUserButton({
       <div className={"prose select-none"}>
         <h1
           className={
-            "text-2xl xl:text-3xl font-semibold flex gap-2 items-center text-main-blue dark:text-primary"
+            "text-2xl xl:text-3xl font-semibold flex gap-2 items-center text-main-orange dark:text-primary"
           }>
           <Image
             src="/static/svg/mango-logo.svg"

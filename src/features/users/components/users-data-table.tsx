@@ -135,7 +135,7 @@ export const columns: ColumnDef<Users>[] = [
     cell: ({ row }) => {
       const labels = row.getValue("labels") as string[] | undefined;
       return (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-2">
           {labels && labels.length > 0 ? (
             labels.map((label, index) => {
               let badgeClass = "";
@@ -253,7 +253,7 @@ export function UsersDataTable({ usersData }: UsersDataTableProps) {
       </div>
       <div className="rounded-md border overflow-hidden">
         <Table>
-          <TableHeader className="bg-main-blue dark:bg-transparent text-foreground">
+          <TableHeader className="bg-main-orange dark:bg-transparent text-foreground">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
