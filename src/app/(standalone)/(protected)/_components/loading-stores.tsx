@@ -19,11 +19,6 @@ export default function LoadingStores() {
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-3 w-1/2" />
       </span>
-      <span className="flex flex-col gap-1">
-        <Skeleton className="h-auto w-full aspect-square" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-3 w-1/2" />
-      </span>
     </div>
   );
 }
