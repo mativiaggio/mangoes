@@ -23,7 +23,7 @@ import { userSchema } from "@/features/users/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ProfileSettingsSkeleton from "../../seguridad/_components/profile-password-skeleton";
@@ -50,7 +50,7 @@ export default function ProfileSettingsForm({ data, sheet = false }: Props) {
   const { mutate: mutateEmail } = useUpdateProfileEmail();
   const { mutate: mutateDocument } = useUpdateProfileDocument();
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  // const inputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
@@ -69,12 +69,12 @@ export default function ProfileSettingsForm({ data, sheet = false }: Props) {
     form.setValue("email", data?.email || "");
   }, [userDocument, isLoadingDocument, form, data?.name, data?.email]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      form.setValue("image", file);
-    }
-  };
+  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     form.setValue("image", file);
+  //   }
+  // };
 
   const onSubmit = async (values: z.infer<typeof userSchema>) => {
     try {
@@ -193,7 +193,7 @@ export default function ProfileSettingsForm({ data, sheet = false }: Props) {
                         <AvatarFallback>{data?.name}</AvatarFallback>
                       </Avatar>
                     )}
-                    <div className="flex flex-col">
+                    {/* <div className="flex flex-col">
                       <Label htmlFor="name">Foto de Perfil</Label>
                       <p className="text-sm trext-hover">
                         JPG, PNG, SVG, JPEG o WEBP, max 15MB
@@ -212,7 +212,7 @@ export default function ProfileSettingsForm({ data, sheet = false }: Props) {
                         onClick={() => inputRef.current?.click()}>
                         Subir Imagen
                       </Button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               )}

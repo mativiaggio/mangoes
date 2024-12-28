@@ -86,7 +86,7 @@ const app = new Hono()
             user_id: session.userId,
             name: name,
             email: email,
-            imageId: "67704a4b000712ca10db",
+            imageId: "677064b3002498a4549a",
           }
         );
         return c.json({ success: true });
