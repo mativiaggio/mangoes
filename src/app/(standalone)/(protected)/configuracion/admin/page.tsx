@@ -8,6 +8,7 @@ import { useCurrent } from "@/features/auth/api/use-current";
 import GenerateRegisterLink from "@/features/auth/components/generate-sign-up";
 import UsersDataContainer from "@/features/users/components/users-data-container";
 import { useWindowSize } from "@/hooks/use-window-size";
+import { cn } from "@/lib/utils";
 import { AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -47,7 +48,7 @@ export default function ProfileSettings() {
   }
 
   return (
-    <>
+    <div className="flex flex-col">
       {isClient && isDesktop && (
         <div className="space-y-6">
           <PageTitle
@@ -56,12 +57,12 @@ export default function ProfileSettings() {
           />
         </div>
       )}
-      <div className={(isClient && !isDesktop && "pt-6") || ""}>
+      <div className={cn("", (isClient && !isDesktop && "pt-6") || "")}>
         <GenerateRegisterLink />
         <Separator />
         <PageTitle title="Usuarios" subtitle="Lista de usuarios del sistema" />
         <UsersDataContainer />
       </div>
-    </>
+    </div>
   );
 }

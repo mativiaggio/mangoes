@@ -84,7 +84,7 @@ export default function GenerateRegisterLink() {
           onClick={generateLink}
           className="w-full"
           disabled={isSubmitting}>
-          Generar Enlace de Inicio de Sesión
+          Generar Enlace de alta Tienda
         </Button>
         <div className="space-y-2">
           <div className="flex relative">
@@ -133,8 +133,8 @@ export default function GenerateRegisterLink() {
                     {data?.secrets.documents.map((secret) => (
                       <li
                         key={secret.$id}
-                        className="flex items-center justify-between">
-                        <span className="text-sm truncate mr-2">
+                        className="flex items-center justify-between max-w-full">
+                        <span className="text-sm truncate mr-2 w-[250px] overflow-hidden text-ellipsis">
                           {`${env.HOSTNAME}/create-store-account?secret=${secret.secret}`}
                         </span>
                         <Button

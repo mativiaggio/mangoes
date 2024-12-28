@@ -13,7 +13,7 @@ type DesktopNavbarProps = {
 export const DesktopNavbar = ({ user }: DesktopNavbarProps) => {
   return (
     <div className="flex w-full items-center justify-between px-10 py-2">
-      <div className="flex w-1/6 text-main-blue dark:text-foreground">
+      <div className="flex w-1/6 text-main-orange dark:text-foreground">
         <Link className="flex items-center justify-center" href="/">
           <Image
             src="/static/svg/mango-logo.svg"
