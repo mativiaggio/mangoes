@@ -1,0 +1,15 @@
+.navItem {
+  position: relative;
+  z-index: 1;
+}
+
+.activeBackground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 20%; /* Asumiendo 5 elementos de navegación */
+  height: 100%;
+  background-color: hsl(var(--muted));
+  transition: transform 0.3s ease-in-out;
+  z-index: 0;
+}

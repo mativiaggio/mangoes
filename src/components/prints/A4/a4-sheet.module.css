@@ -1,0 +1,45 @@
+.container {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 20px;
+  padding-bottom: 0px;
+  background-color: #e0e0e0;
+}
+
+.a4Sheet {
+  width: 210mm; /* Ancho de una hoja A4 */
+  height: 297mm; /* Alto de una hoja A4 */
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  padding: 48px;
+  box-sizing: border-box;
+  overflow: hidden;
+  color: black !important;
+}
+
+.h1 {
+  font-size: 18px !important;
+}
+
+.p {
+  font-size: 12px !important;
+}
+
+@media print {
+  .navbar-container {
+    display: none !important;
+  }
+
+  .container {
+    padding: 0;
+    height: auto;
+    overflow: visible;
+  }
+
+  .a4Sheet {
+    box-shadow: none;
+    margin: 0;
+  }
+}
