@@ -11,8 +11,10 @@ export const env = {
   // IDs de la base de datos
   DATABASE_ID: process.env.NEXT_PUBLIC_DATABASE_ID || "",
   USERS_ID: process.env.NEXT_PUBLIC_USERS_ID || "",
+  STORES_ID: process.env.NEXT_PUBLIC_STORES_ID || "",
   TICKETS_ID: process.env.NEXT_PUBLIC_TICKETS_ID || "",
   SECRETS_ID: process.env.NEXT_PUBLIC_SECRETS_ID || "",
+  CATEGORIES_ID: process.env.NEXT_PUBLIC_CATEGORIES_ID || "",
 
   // Configuración del almacenamiento (buckets)
   IMAGES_BUCKET_ID: process.env.NEXT_PUBLIC_IMAGES_BUCKET_ID || "",

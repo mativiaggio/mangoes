@@ -9,9 +9,9 @@ export default function SettingsLayout({
 }>) {
   return (
     <PageWrapper>
-      <div className="hidden xl:block w-1/6 border-r"></div>
+      <div className="hidden xl:block w-1/6"></div>
       {children}
-      <div className="hidden xl:block w-1/6 border-l"></div>
+      <div className="hidden xl:block w-1/6"></div>
     </PageWrapper>
   );
 }
