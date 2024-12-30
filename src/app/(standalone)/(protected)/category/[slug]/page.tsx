@@ -10,7 +10,11 @@ function CategoryPage() {
   const { data, isLoading } = useFindCategoryBySlug(params.slug);
 
   if (isLoading) {
-    return <Loader2 className="text-main-orange" />;
+    return (
+      <div className="w-full flex justify-center items-center h-full">
+        <Loader2 className="text-main-orange animate-spin" size={42} />
+      </div>
+    );
   } else {
     return (
       <>

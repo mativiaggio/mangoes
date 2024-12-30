@@ -6,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { useCurrent } from "@/features/auth/api/use-current";
 import GenerateRegisterLink from "@/features/auth/components/generate-sign-up";
+import CategoriesDataContainer from "@/features/categories/components/categories-data-container";
 import UsersDataContainer from "@/features/users/components/users-data-container";
 import { useWindowSize } from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
@@ -29,7 +30,7 @@ export default function ProfileSettings() {
     return <LoadingScreen />;
   }
 
-  if (!data?.labels.includes("admin")) {
+  if (!data?.labels.includes("owner")) {
     router.push("/no-autorizado");
     return null;
   }
@@ -60,6 +61,11 @@ export default function ProfileSettings() {
       <div className={cn("", (isClient && !isDesktop && "pt-6") || "")}>
         <GenerateRegisterLink />
         <Separator />
+        <PageTitle
+          title="Categorías"
+          subtitle="Lista de categorías del sistema"
+        />
+        <CategoriesDataContainer />
         <PageTitle title="Usuarios" subtitle="Lista de usuarios del sistema" />
         <UsersDataContainer />
       </div>

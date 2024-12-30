@@ -7,11 +7,5 @@ export default function SettingsLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <PageWrapper>
-      <div className="hidden xl:block w-1/6"></div>
-      {children}
-      <div className="hidden xl:block w-1/6"></div>
-    </PageWrapper>
-  );
+  return <PageWrapper level2={true}>{children}</PageWrapper>;
 }

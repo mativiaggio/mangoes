@@ -278,7 +278,7 @@ export default function ProfileSettingsForm({ data, sheet = false }: Props) {
           <div className="space-y-2">
             {!sheet ? (
               <Link
-                href={"/configuracion/seguridad"}
+                href={"/settings/seguridad"}
                 className="text-sm hover:underline font-semibold mt-2">
                 ¿Desea cambiar la contraseña? Click aquí
               </Link>

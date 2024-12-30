@@ -32,7 +32,7 @@ function HomeSideBar() {
   );
 
   const filteredCategories = parentCategories.filter((category) =>
-    category.labels.some((label) =>
+    category.labels?.some((label) =>
       label.toLowerCase().includes(search.toLowerCase())
     )
   );
