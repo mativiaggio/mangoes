@@ -2,7 +2,7 @@
 import { redirect } from "next/navigation";
 
 const SettingsPage = () => {
-  redirect("/configuracion/datos-personales");
+  redirect("/settings/datos-personales");
 };
 
 export default SettingsPage;

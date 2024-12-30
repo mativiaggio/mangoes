@@ -95,7 +95,7 @@ export function UserDropdown() {
                 <span className="w-full flex">
                   <Link
                     className="!w-full text-xl xl:text-sm"
-                    href={"/configuracion/admin"}
+                    href={"/settings/admin"}
                     onClick={handleLinkClick}>
                     Admin
                   </Link>
@@ -108,7 +108,7 @@ export function UserDropdown() {
             <span className="w-full flex">
               <Link
                 className="!w-full text-xl xl:text-sm"
-                href={"/configuracion/datos-personales"}
+                href={"/settings/datos-personales"}
                 onClick={handleLinkClick}>
                 Datos personales
               </Link>
@@ -119,7 +119,7 @@ export function UserDropdown() {
             <span className="w-full flex">
               <Link
                 className="!w-full text-xl xl:text-sm"
-                href={"/configuracion/seguridad"}
+                href={"/settings/seguridad"}
                 onClick={handleLinkClick}>
                 Seguridad
               </Link>

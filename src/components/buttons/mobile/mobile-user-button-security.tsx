@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "../../ui/button";
 import { PageTitle } from "../../page-title";
-import ProfilePasswordForm from "@/app/(standalone)/(protected)/configuracion/seguridad/_components/profile-password-form";
+import ProfilePasswordForm from "@/app/(standalone)/(protected)/settings/seguridad/_components/profile-password-form";
 
 interface Props {
   textButton?: boolean;
