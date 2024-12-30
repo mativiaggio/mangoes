@@ -26,6 +26,7 @@ import { SliderInput } from "./slider-input";
 import { Eye, EyeClosed } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import TagInput from "./tag-input";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -40,6 +41,7 @@ export enum FormFieldType {
   SELECT = "select",
   SKELETON = "skeleton",
   SLIDER = "slider",
+  TAGS = "tags",
 }
 
 interface CustomProps {
@@ -335,6 +337,18 @@ const RenderField = ({
             <FormDescription>{props.description}</FormDescription>
           )}
         </FormItem>
+      );
+
+    case FormFieldType.TAGS:
+      return (
+        <div className={`flex flex-col ${fieldCustomClasses}`}>
+          <FormControl>
+            <TagInput
+              value={field.value || ""}
+              onChange={(val) => field.onChange(val)}
+            />
+          </FormControl>
+        </div>
       );
 
     default:

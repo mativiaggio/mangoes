@@ -1,6 +1,6 @@
 "use client";
 
-import { CaretSortIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -17,21 +17,6 @@ import * as React from "react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -43,22 +28,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  SocialSecurity,
-  SocialSecurityApiResponse,
-} from "@/lib/appwrite-types";
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import {
-  CheckCircleIcon,
-  Copy,
-  FileX2,
-  Filter,
-  Plus,
-  XCircleIcon,
-} from "lucide-react";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Categories, CategoriesApiResponse } from "@/lib/appwrite-types";
+import { Copy, FileX2, Filter } from "lucide-react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { useWindowSize } from "@/hooks/use-window-size";
 
-export const columns: ColumnDef<SocialSecurity>[] = [
+export const columns: ColumnDef<Categories>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -98,81 +85,13 @@ export const columns: ColumnDef<SocialSecurity>[] = [
       <div className="whitespace-nowrap">{row.getValue("name")}</div>
     ),
   },
-  {
-    accessorKey: "private",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="pl-0 hover:bg-transparent"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Privada
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const isPrivate = row.getValue("private");
-      return (
-        <div className="whitespace-nowrap flex items-center">
-          {isPrivate ? (
-            <Badge className="rounded-full aspect-square flex items-center justify-center bg-active border-active dark:bg-active-dark dark:border-active-dark text-active-text-light dark:text-active-text-dark">
-              <CheckCircleIcon className="h-4 w-4" />
-            </Badge>
-          ) : (
-            <Badge className="rounded-full aspect-square flex items-center justify-center bg-inactive border-inactive dark:bg-inactive-dark dark:border-inactive-dark text-inactive-text-light dark:text-inactive-text-dark">
-              <XCircleIcon className="h-4 w-4" />
-            </Badge>
-          )}
-        </div>
-      );
-    },
-  },
-
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const social_security = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            <DropdownMenuItem>Pasar a inactivo</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(social_security.$id)
-              }>
-              <span className="flex items-center gap-1">
-                ID
-                <Copy size={12} />
-              </span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Ver más</DropdownMenuItem>
-            {/* Agrega más acciones según sea necesario */}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
 ];
 
-interface SocialSecurityDataTableProps {
-  socialSecurityData?: SocialSecurityApiResponse;
+interface UsersDataTableProps {
+  categoriesData?: CategoriesApiResponse;
 }
 
-export function SocialSecurityDataTable({
-  socialSecurityData,
-}: SocialSecurityDataTableProps) {
+export function CategoriesDataTable({ categoriesData }: UsersDataTableProps) {
   // Declaraciones de estado
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -182,19 +101,16 @@ export function SocialSecurityDataTable({
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const { width } = useWindowSize();
-  const isDesktop = width !== undefined && width >= 1280;
-
-  const social_security = socialSecurityData;
+  const categories = categoriesData;
 
   // Uso de useMemo para memoizar los datos
   const data = React.useMemo(
-    () => social_security?.social_security.documents ?? [],
-    [social_security]
+    () => categories?.categories.documents ?? [],
+    [categories]
   );
 
   // Inicializar la tabla
-  const table = useReactTable<SocialSecurity>({
+  const table = useReactTable<Categories>({
     data,
     columns,
     onSortingChange: setSorting,
@@ -253,12 +169,9 @@ export function SocialSecurityDataTable({
             className="max-w-sm"
           />
         </div>
-        <div className="flex items-center gap-2">
-          <Link href={"/"}>
-            <Button>
-              <Plus className={isDesktop ? "mr-2 h-4 w-4" : "h-4 w-4"} />
-              {isDesktop && "Agregar Obra Social"}
-            </Button>
+        <div className="w-1/2 gap-2 hidden lg:flex items-center justify-end">
+          <Link href={"/category/new"}>
+            <Button>Agregar categoría</Button>
           </Link>
         </div>
       </div>
@@ -282,7 +195,7 @@ export function SocialSecurityDataTable({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="select-none">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -290,27 +203,53 @@ export function SocialSecurityDataTable({
                   data-state={row.getIsSelected() ? "selected" : undefined}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="p-0">
-                      {cell.column.id === "age" ? (
-                        <div className="flex gap-1">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}{" "}
-                          años
-                        </div>
-                      ) : (
-                        <div className="py-4 px-2">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
+                      <ContextMenu modal={false}>
+                        <ContextMenuTrigger>
+                          {cell.column.id === "age" ? (
+                            <div className="flex gap-1">
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}{" "}
+                              años
+                            </div>
+                          ) : (
+                            <div className="py-4 px-2">
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </div>
                           )}
-                        </div>
-                      )}
+                        </ContextMenuTrigger>
+                        <ContextMenuContent>
+                          <ContextMenuItem
+                            onClick={() =>
+                              navigator.clipboard.writeText(row.original.$id)
+                            }>
+                            <span className="flex items-center gap-1">
+                              ID
+                              <Copy size={12} />
+                            </span>
+                          </ContextMenuItem>
+                          <ContextMenuSeparator />
+                          <ContextMenuItem>
+                            {row.original.labels?.includes("admin")
+                              ? "Quitar rol admin"
+                              : "Dar rol admin"}
+                          </ContextMenuItem>
+                          <ContextMenuItem>
+                            {row.original.labels?.includes("admin")
+                              ? "Quitar rol developer"
+                              : "Dar rol developer"}
+                          </ContextMenuItem>
+                        </ContextMenuContent>
+                      </ContextMenu>
                     </TableCell>
                   ))}
                 </TableRow>
               ))
-            ) : social_security && social_security.social_security ? (
+            ) : categories && categories.categories ? (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}

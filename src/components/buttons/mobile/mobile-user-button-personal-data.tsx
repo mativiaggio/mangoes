@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "../../ui/button";
 import { PageTitle } from "../../page-title";
-import ProfileSettingsForm from "@/app/(standalone)/(protected)/configuracion/datos-personales/_components/profile-settings-form";
+import ProfileSettingsForm from "@/app/(standalone)/(protected)/settings/datos-personales/_components/profile-settings-form";
 
 interface Props {
   data: { $id: string; name: string; email: string };
