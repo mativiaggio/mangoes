@@ -59,7 +59,7 @@ function HomeSideBar() {
                     <Link
                       href={`/category/${child.slug}`}
                       key={child.$id}
-                      className="text-xs text-gray-700 hover:text-main-orange cursor-pointer">
+                      className="text-xs text-muted-foreground hover:text-main-orange cursor-pointer">
                       {child.name}
                     </Link>
                   ))}

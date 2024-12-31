@@ -53,13 +53,10 @@ export default function LoadingScreen() {
             </svg>
           </span>
           <span className="flex flex-col gap-2 text-main-orange dark:text-foreground">
-            <h1 className="text-5xl font-bold">Mangoes</h1>
+            <h1 className="text-5xl font-bold text-main-oranger">Mangoes</h1>
           </span>
         </span>
-        <Loader2
-          size={38}
-          className="animate-spin text-main-orange dark:text-main-oranger"
-        />
+        <Loader2 size={38} className="animate-spin text-main-oranger" />
       </div>
     </div>
   );

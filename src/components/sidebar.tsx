@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
 import React, { ReactNode, useState } from "react";
-import { UserDropdown } from './dropdowns/user-dropdown';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -67,9 +66,6 @@ export default function SidebarComponent({
                 ))}
               </div>
             )}
-          </div>
-          <div>
-            <UserDropdown/>
           </div>
         </SidebarBody>
       </Sidebar>

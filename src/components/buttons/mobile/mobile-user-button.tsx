@@ -1,7 +1,6 @@
 "use client";
-import { useCurrent } from "@/features/auth/api/use-current";
 import React, { useState } from "react";
-import { ChevronLeft, ChevronRight, Github, LogIn, User } from "lucide-react";
+import { ChevronLeft, ChevronRight, Github, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import Link from "next/link";
 import {
@@ -21,31 +20,23 @@ import MobileUserButtonSecurity from "./mobile-user-button-security";
 import MobileUserButtonAdminPanel from "./mobile-user-button-admin-panel";
 import MobileUserButtonTickets from "./mobile-user-button-tickets";
 import { env } from "@/env.config";
-import { useGetUserDocument } from "@/features/users/api/use-find-user-document";
-import { useGetFilePreviewById } from "@/features/files/api/use-get-preview";
-import LoadingScreen from "@/components/screens/loading-screen";
 import { Models } from "node-appwrite";
 import Image from "next/image";
 
 interface MobileUserButtonProps {
   user: Models.User<Models.Preferences> | null;
+  fileUrl: string | undefined;
   title?: string;
   subtitle?: string;
 }
 
 export default function MobileUserButton({
   user,
+  fileUrl,
   title,
   subtitle,
 }: MobileUserButtonProps) {
-  const { data, isLoading } = useCurrent();
-  const { data: userDocument, isLoading: isLoadingDocument } =
-    useGetUserDocument(data?.$id || null);
-
   const [isOpen, setIsOpen] = useState(false);
-  const { data: fileUrl, isLoading: isLoadingFileUrl } = useGetFilePreviewById(
-    userDocument?.document?.imageId || ""
-  );
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
@@ -54,10 +45,6 @@ export default function MobileUserButton({
   const handleLinkClick = () => {
     setIsOpen(false);
   };
-
-  if (isLoading || isLoadingDocument || isLoadingFileUrl) {
-    return <LoadingScreen />;
-  }
 
   return (
     <>
@@ -82,18 +69,18 @@ export default function MobileUserButton({
             <div className="flex gap-2 items-center border rounded-full p-2 hover:bg-muted">
               <Avatar className="select-none cursor-pointer rounded-full h-8 w-8">
                 <AvatarImage
-                  src={
-                    fileUrl ||
-                    `https://api.dicebear.com/6.x/initials/svg?seed=${data?.name}}`
-                  }
+                  src={fileUrl || `/static/images/happy-mango.jpg`}
                   className="object-cover"
                 />
                 <AvatarFallback>
-                  <User />
+                  <AvatarImage
+                    src={`/static/images/happy-mango.jpg`}
+                    className="object-cover"
+                  />
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col text-sm">
-                <div>{data?.name}</div>
+                <div>{user?.name}</div>
               </div>
             </div>
           </SheetTrigger>
@@ -127,7 +114,7 @@ export default function MobileUserButton({
                       className="object-cover"
                       src={
                         fileUrl ||
-                        `https://api.dicebear.com/6.x/initials/svg?seed=${data?.name}}`
+                        `https://api.dicebear.com/6.x/initials/svg?seed=${user?.name}}`
                       }
                     />
                     <AvatarFallback>
@@ -135,9 +122,9 @@ export default function MobileUserButton({
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <div className="text-xl text-left">{data?.name}</div>
+                    <div className="text-xl text-left">{user?.name}</div>
                     <div className="text-base text-gray-600 dark:text-gray-400">
-                      {data?.email}
+                      {user?.email}
                     </div>
                   </div>
                 </div>
@@ -145,12 +132,12 @@ export default function MobileUserButton({
             </SheetHeader>
             <div className="flex-1 overflow-y-auto no-scrollbar">
               <div className="grid gap-4 py-4">
-                {data?.labels.includes("owner") && (
+                {user?.labels.includes("owner") && (
                   <>
                     <h2>Avanzado</h2>
                     <div className="bg-main-card border-main-card rounded-xl">
                       <div className="flex flex-col gap-4 p-8">
-                        <MobileUserButtonAdminPanel data={data!} />
+                        <MobileUserButtonAdminPanel data={user!} />
                       </div>
                     </div>
                   </>
@@ -158,7 +145,7 @@ export default function MobileUserButton({
                 <h2>Mi cuenta</h2>
                 <div className="bg-main-card border-main-card rounded-xl">
                   <div className="flex flex-col gap-4 p-8">
-                    <MobileUserButtonPersonalData data={data!} />
+                    <MobileUserButtonPersonalData data={user!} />
                     <MobileUserButtonSecurity />
                     <MobileUserButtonPersonalization />
                   </div>
@@ -205,11 +192,18 @@ export default function MobileUserButton({
           </SheetContent>
         </Sheet>
       ) : (
-        <Link
-          className="text-base flex gap-2 items-center justify-center hover:text-main-oranger dark:hover:text-main-orange"
-          href={"/login"}>
-          Iniciar sesión <LogIn size={18} />
-        </Link>
+        <div className="flex gap-4">
+          <Link
+            className="flex gap-2 items-center justify-center hover:text-main-oranger dark:hover:text-main-orange"
+            href={"/create-account"}>
+            Crear cuenta
+          </Link>
+          <Link
+            className="flex gap-2 items-center justify-center hover:text-main-oranger dark:hover:text-main-orange"
+            href={"/login"}>
+            Iniciar sesión
+          </Link>
+        </div>
       )}
     </>
   );
