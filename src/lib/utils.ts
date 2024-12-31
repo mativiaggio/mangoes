@@ -116,3 +116,10 @@ export const calcularDiasEntreFechas = (
     return 0; // Si alguna de las fechas es inválida, retorna 0
   }
 };
+
+export const formatPriceToARS = (price: number): string => {
+  return new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+  }).format(price);
+};

@@ -1,13 +1,13 @@
 import { env } from "@/env.config";
 import { Categories } from "@/lib/appwrite-types";
-import { sessionMiddleware } from "@/lib/middlwares";
+import { guestMiddleware, sessionMiddleware } from "@/lib/middlwares";
 import { Hono } from "hono";
 import { ID, Query } from "node-appwrite";
 import { categorySchema } from "../schemas";
 import { zValidator } from "@hono/zod-validator";
 
 const app = new Hono()
-  .get("/", sessionMiddleware, async (c) => {
+  .get("/", guestMiddleware, async (c) => {
     const databases = c.get("databases");
 
     const categories = await databases.listDocuments(
@@ -17,7 +17,7 @@ const app = new Hono()
 
     return c.json({ categories: categories });
   })
-  .get("/parents", sessionMiddleware, async (c) => {
+  .get("/parents", guestMiddleware, async (c) => {
     const databases = c.get("databases");
 
     const categories = await databases.listDocuments(
@@ -28,7 +28,7 @@ const app = new Hono()
 
     return c.json({ categories: categories });
   })
-  .get("/find-by-slug/:slug", sessionMiddleware, async (c) => {
+  .get("/find-by-slug/:slug", guestMiddleware, async (c) => {
     const database = c.get("databases");
     const slug = c.req.param("slug");
     const categories = await database.listDocuments(

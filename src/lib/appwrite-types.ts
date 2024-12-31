@@ -103,3 +103,24 @@ export interface CategoriesApiResponse {
     documents: Categories[];
   };
 }
+
+export interface Plans {
+  $id: string;
+  $collectionId: string;
+  $databaseId: string;
+  $createdAt: string;
+  $updatedAt: string;
+  $permissions: string[];
+  name?: string;
+  description?: string;
+  price?: number;
+  features?: string[];
+}
+
+export interface PlansApiResponse {
+  plans: {
+    total: number;
+    documents: Plans[];
+  };
+}
+
