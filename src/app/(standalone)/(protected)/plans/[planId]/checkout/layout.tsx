@@ -20,7 +20,6 @@ export default async function CheckoutLayout({
     redirect("/login");
   }
 
-  // Función de suscripción
   const { url, suscription } = await api.user.suscribe(
     plan?.name as string,
     userFromServer?.email as string,
