@@ -4,6 +4,7 @@ import tickets from "@/features/ticketing-system/server/route";
 import files from "@/features/files/server/route";
 import categories from "@/features/categories/server/route";
 import plans from "@/features/plans/server/route";
+import mercadopago from "@/features/mercadopago/server/route";
 
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
@@ -16,7 +17,8 @@ const routes = app
   .route("/tickets", tickets)
   .route("/files", files)
   .route("/categories", categories)
-  .route("/plans", plans);
+  .route("/plans", plans)
+  .route("/mercadopago", mercadopago);
 
 export const GET = handle(app);
 export const POST = handle(app);

@@ -24,4 +24,7 @@ export const env = {
   APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION || "",
   HOSTNAME: process.env.NEXT_PUBLIC_HOSTNAME || "",
   APP_TITLE: process.env.NEXT_PUBLIC_APP_TITLE || "Mangoes",
+
+  // Mercado Pago
+  MP_ACCESS_TOKEN: process.env.NEXT_MP_ACCESS_TOKEN || "",
 };
