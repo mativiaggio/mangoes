@@ -1,70 +1,145 @@
 "use client";
-import { Separator } from "@/components/ui/separator";
-import { useWindowSize } from "@/hooks/use-window-size";
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
-  const { width } = useWindowSize();
-  const isDesktop = width !== undefined && width >= 1280;
-
   return (
     <>
-      {isDesktop && (
-        <footer className="py-[100px] px-4 sm:px-6 md:px-8 lg:px-10 text-white dark:text-primary print:hidden bg-main-orange dark:bg-main flex justify-center border-t">
-          <div className="w-full max-w-[63.5rem]">
-            <div className="flex gap-2 text-lg font-semibold w-full justify-center items-center pb-4 sm:pb-6 md:pb-8 lg:pb-10">
-              <Link className="flex items-center justify-center" href="/">
-                <span className="flex items-center justify-between gap-2 w-full">
-                  <span className="flex items-center gap-2">
-                    <Image
-                      src={"/static/svg/mango-logo.svg"}
-                      height={40}
-                      width={40}
-                      alt="Logo"
-                      className="h-[40px] max-h-[40px] w-[40px] max-w-[40px]"
-                    />
-                  </span>
-                </span>
-                <span className="flex flex-col ml-2 font-bold">
-                  <h1 className="text-xl">Mangoes</h1>
-                </span>
-              </Link>
-            </div>
-            <Separator className="my-8 bg-primary-foreground/20" />
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <p className="text-sm text-center md:text-left">
-                © {currentYear} Mangoes. Todos los derechos reservados.
+      <footer className="bg-[#fff8f0] dark:bg-main border-t border-[#f48d06]/20 dark:border-[#f48d06]/10">
+        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+          <div className="xl:grid xl:grid-cols-3 xl:gap-8">
+            <div className="space-y-8 xl:col-span-1">
+              <span className="flex items-center gap-2">
+                <Image
+                  src="/static/svg/mango-logo.svg"
+                  alt="Mangoes logo"
+                  height={40}
+                  width={40}
+                />
+                <h1 className="text-2xl font-bold text-main-oranger">
+                  Mangoes
+                </h1>
+              </span>
+              <p className="text-muted-foreground text-base">
+                Empoderando a pymes y emprendedores con soluciones de e-commerce
+                fáciles de usar.
               </p>
-              <div className="flex space-x-4 mt-4 md:mt-0">
+              <div className="flex space-x-6">
                 <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Facebook">
-                  <Facebook className="h-5 w-5" />
+                  href="#"
+                  className="text-muted-foreground hover:text-[#e75b04]">
+                  <span className="sr-only">Facebook</span>
+                  <Facebook className="h-6 w-6" />
                 </a>
                 <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Twitter">
-                  <Twitter className="h-5 w-5" />
+                  href="#"
+                  className="text-muted-foreground hover:text-[#e75b04]">
+                  <span className="sr-only">Instagram</span>
+                  <Instagram className="h-6 w-6" />
                 </a>
                 <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram">
-                  <Instagram className="h-5 w-5" />
+                  href="#"
+                  className="text-muted-foreground hover:text-[#e75b04]">
+                  <span className="sr-only">Twitter</span>
+                  <Twitter className="h-6 w-6" />
+                </a>
+                <a
+                  href="#"
+                  className="text-muted-foreground hover:text-[#e75b04]">
+                  <span className="sr-only">LinkedIn</span>
+                  <Linkedin className="h-6 w-6" />
                 </a>
               </div>
             </div>
+            <div className="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
+              <div className="md:grid md:grid-cols-2 md:gap-8">
+                <div>
+                  <h3 className="text-sm font-semibold text-[#e75b04] tracking-wider uppercase">
+                    Soluciones
+                  </h3>
+                  <ul className="mt-4 space-y-4">
+                    {[
+                      "Tienda Online",
+                      "Marketing",
+                      "Analíticas",
+                      "Integraciones",
+                    ].map((item) => (
+                      <li key={item}>
+                        <Link
+                          href="#"
+                          className="text-base text-muted-foreground hover:text-[#f48d06]">
+                          {item}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="mt-12 md:mt-0">
+                  <h3 className="text-sm font-semibold text-[#e75b04] tracking-wider uppercase">
+                    Soporte
+                  </h3>
+                  <ul className="mt-4 space-y-4">
+                    {["Precios", "Documentación", "Guías", "API Status"].map(
+                      (item) => (
+                        <li key={item}>
+                          <Link
+                            href="#"
+                            className="text-base text-muted-foreground hover:text-[#f48d06]">
+                            {item}
+                          </Link>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              </div>
+              <div className="md:grid md:grid-cols-2 md:gap-8">
+                <div>
+                  <h3 className="text-sm font-semibold text-[#e75b04] tracking-wider uppercase">
+                    Compañía
+                  </h3>
+                  <ul className="mt-4 space-y-4">
+                    {["Sobre Nosotros", "Blog", "Trabajos", "Prensa"].map(
+                      (item) => (
+                        <li key={item}>
+                          <Link
+                            href="#"
+                            className="text-base text-muted-foreground hover:text-[#f48d06]">
+                            {item}
+                          </Link>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+                <div className="mt-12 md:mt-0">
+                  <h3 className="text-sm font-semibold text-[#e75b04] tracking-wider uppercase">
+                    Legal
+                  </h3>
+                  <ul className="mt-4 space-y-4">
+                    {["Privacidad", "Términos", "Cookies"].map((item) => (
+                      <li key={item}>
+                        <Link
+                          href="#"
+                          className="text-base text-muted-foreground hover:text-[#f48d06]">
+                          {item}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
-        </footer>
-      )}
+          <div className="mt-12 border-t border-[#f48d06]/20 pt-8">
+            <p className="text-base text-muted-foreground xl:text-center">
+              &copy; {new Date().getFullYear()} Mangoes, Inc. Todos los derechos
+              reservados.
+            </p>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }

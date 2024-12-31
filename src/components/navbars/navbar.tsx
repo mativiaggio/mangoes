@@ -3,15 +3,16 @@
 import React, { useEffect, useState } from "react";
 import { MobileTopNavbar } from "./mobile-top-navbar";
 import { DesktopNavbar } from "./desktop-navbar";
-import { MobileBottomNavbar } from "./mobile-bottom-navbar";
+// import { MobileBottomNavbar } from "./mobile-bottom-navbar";
 import { useWindowSize } from "../../hooks/use-window-size";
 import { Models } from "node-appwrite";
 
 type NavbarProps = {
   user: Models.User<Models.Preferences> | null;
+  fileUrl: string | undefined;
 };
 
-const Navbar = ({ user }: NavbarProps) => {
+const Navbar = ({ user, fileUrl }: NavbarProps) => {
   const [isClient, setIsClient] = useState(false);
   const { width } = useWindowSize();
 
@@ -25,12 +26,12 @@ const Navbar = ({ user }: NavbarProps) => {
     <>
       <header className="fixed w-full top-0 z-10 bg-main print:hidden h-fit border-b">
         {isClient && isDesktop ? (
-          <DesktopNavbar user={user} />
+          <DesktopNavbar user={user} fileUrl={fileUrl} />
         ) : (
-          <MobileTopNavbar user={user} width={width} />
+          <MobileTopNavbar user={user} fileUrl={fileUrl} width={width} />
         )}
       </header>
-      {isClient && !isDesktop && <MobileBottomNavbar width={width} />}
+      {/* {isClient && !isDesktop && <MobileBottomNavbar width={width} />} */}
     </>
   );
 };
