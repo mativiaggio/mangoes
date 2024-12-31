@@ -1,8 +1,8 @@
 // import { redirect } from "next/navigation";
 import PageWrapper from "@/components/page-wrapper";
-import Stores from "./_components/stores";
-import HomeSideBar from "./_components/home-sidebar";
-import Banner from "./_components/banner";
+import Stores from "../_components/stores";
+import HomeSideBar from "../_components/home-sidebar";
+import Banner from "../_components/banner";
 
 export default async function Home() {
   return (
