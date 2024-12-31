@@ -10,10 +10,10 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { SelectItem } from "@/components/ui/select";
 import { categorySchema } from "../schemas";
-import { useNewCategory } from "../api/use-new-category";
-import { useGetParentCategories } from "../api/use-get-parents";
 import { CategoriesApiResponse } from "@/lib/appwrite-types";
 import { Loader2 } from "lucide-react";
+import { useNewCategory } from "@/features/categories/api/use-new-category";
+import { useGetParentCategories } from "@/features/categories/api/use-get-parents";
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
 
