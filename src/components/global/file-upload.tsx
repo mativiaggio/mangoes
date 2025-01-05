@@ -50,6 +50,15 @@ const FileUpload = ({ onChange, value }: Props) => {
     <div className="w-full bg-muted/30">
       <UploadDropzone
         endpoint={`imageUploader`}
+        appearance={{
+          button: {
+            background: "hsl(34, 95%, 49%)",
+            color: "#FFF",
+          },
+          label: {
+            color: "#FFF",
+          },
+        }}
         onClientUploadComplete={(res) => {
           onChange(res?.[0].url);
         }}

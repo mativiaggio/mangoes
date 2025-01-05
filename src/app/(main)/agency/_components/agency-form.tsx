@@ -27,7 +27,7 @@ import {
 import FileUpload from "@/components/global/file-upload";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader } from "lucide-react";
+import { Loader, Stars } from "lucide-react";
 
 interface Props {
   data: Partial<Agency>;
@@ -201,7 +201,9 @@ const AgencyForm = ({ data }: Props) => {
                 {isLoading ? (
                   <Loader className="animate-spin" />
                 ) : (
-                  "Crear marca ✨"
+                  <span className="flex gap-2 text-white">
+                    Crear marca <Stars />
+                  </span>
                 )}
               </Button>
             </form>

@@ -14,13 +14,15 @@ const navItems = [
   { name: "Inicio", href: "#home" },
   { name: "Servicios", href: "#features" },
   { name: "Precios", href: "#pricing" },
-  { name: "Registrarse", href: "/sign-up" },
-  { name: "Ingresar", href: "/sign-in" },
 ];
 
-export function Navbar() {
-  const [isOpen, setIsOpen] = React.useState(false);
+interface NavbarProps {
+  id: string | null;
+}
 
+export function Navbar({ id }: NavbarProps): React.JSX.Element {
+  const [isOpen, setIsOpen] = React.useState(false);
+  console.log("id", id);
   return (
     <nav className="bg-background sticky top-0 z-40 w-full border-b">
       <div className="flex h-16 items-center justify-between px-4 sm:px-8">
@@ -46,7 +48,21 @@ export function Navbar() {
               {item.name}
             </Link>
           ))}
-          <UserButton />
+          {!id && (
+            <>
+              <Link
+                href={"/sign-up"}
+                className="text-foreground/60 transition-colors hover:text-foreground">
+                Crear cuenta
+              </Link>
+              <Link
+                href={"/sign-in"}
+                className="text-foreground/60 transition-colors hover:text-foreground">
+                Iniciar sesión
+              </Link>
+            </>
+          )}
+          {id && <UserButton />}
           <ModeToggle />
         </div>
 
