@@ -101,6 +101,7 @@ model Agency {
   Notification     Notification[]
   Subscription     Subscription?
   AddOns           AddOns[]
+  Products         Product[]             // Relación con productos
 }
 
 model SubAccount {
@@ -282,6 +283,7 @@ model Media {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   Subaccount   SubAccount @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
+  Products     Product[]             // Relación con productos
 
   @@index([subAccountId])
 }
@@ -430,4 +432,23 @@ model AddOns {
   Agency    Agency?  @relation(fields: [agencyId], references: [id])
 
   @@index([agencyId])
+}
+
+model Product {
+  id           String     @id @default(uuid())
+  name         String
+  description  String      @db.Text
+  price        Decimal     @default(0.0)
+  category     String
+  stock        Int         @default(0)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  agencyId     String
+  Agency       Agency      @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  isActive     Boolean     @default(true) // Para marcar productos activos/inactivos
+  Media        Media[]     // Para asociar imágenes o archivos al producto
+
+  @@index([agencyId])
+  @@index([name])
+  @@index([category])
 }

@@ -9,7 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Check } from "lucide-react";
+import {
+  Armchair,
+  Check,
+  ChevronRight,
+  Drill,
+  ShoppingBag,
+} from "lucide-react";
 import { formatPriceToARS } from "@/lib/utils";
 
 export default function Home() {
@@ -78,8 +84,9 @@ export default function Home() {
             <Link href={"/agency"}>
               <Button
                 variant={"ghost"}
-                className="!border-[#f48d06] hover:!border-[#e75b04] text-primary text-lg py-6 px-8 rounded-full transition-colors duration-300">
+                className="!border-[#f48d06] hover:!border-[#e75b04] text-primary text-lg py-6 px-8 rounded-full transition-colors duration-300 flex justify-center items-center gap-2">
                 Dashboard
+                <ChevronRight />
               </Button>
             </Link>
           </div>
@@ -92,6 +99,28 @@ export default function Home() {
             height={1366}
             className="rounded-lg mx-auto"
           />
+        </div>
+      </section>
+
+      {/* Tusted  */}
+      <section className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+        <div className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto bg-[#fff8f0] dark:bg-card rounded-lg w-full flex flex-col gap-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-oranger">
+            Algunas empresas que están usando Mangoes
+          </h2>
+          <div className="flex justify-between items-center font-extrabold text-3xl w-full text-muted-foreground">
+            <p className="flex gap-2 items-center">
+              <Drill size={32} /> Herramientas OTOL
+            </p>
+            <p className="flex gap-2 items-center">
+              <ShoppingBag size={32} />
+              Buy Everywhere
+            </p>
+            <p className="flex gap-2 items-center">
+              <Armchair size={32} />
+              Deacon Diseñadora
+            </p>
+          </div>
         </div>
       </section>
 
@@ -249,22 +278,6 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-[#e75b04] mb-6">
-          ¿Todavía estas dudando?
-        </h2>
-        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Explora las tiendas de los emprendedores que ya están creciendo con
-          Mangoes
-        </p>
-        <Link href={"/stores"}>
-          <Button className="bg-[#f48d06] hover:bg-[#e75b04] text-white text-lg py-6 px-8 rounded-full">
-            Ver tiendas
-          </Button>
-        </Link>
       </section>
     </>
   );
