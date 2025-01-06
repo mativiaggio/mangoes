@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { NumberInput } from "@tremor/react";
 import * as z from "zod";
 import {
   AlertDialog,
@@ -52,6 +53,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  deleteAgency,
+  initUser,
+  saveActivityLogsNotification,
+  updateAgencyDetails,
+  upsertAgency,
+} from "@/lib/queries";
+import { v4 } from "uuid";
 
 interface Props {
   data: Partial<Agency>;
@@ -61,13 +70,13 @@ const FormSchema = z.object({
   name: z.string().min(2, { message: "Agency name must be atleast 2 chars." }),
   companyEmail: z.string().min(1),
   companyPhone: z.string().min(1),
-  // whiteLabel: z.boolean(),
+  whiteLabel: z.boolean().default(false),
   address: z.string().min(1),
   city: z.string().min(1),
   zipCode: z.string().min(1),
   state: z.string().min(1),
   country: z.string().min(1),
-  agencyLogo: z.string().min(1),
+  agencyLogo: z.string().optional(),
 });
 
 const AgencyForm = ({ data }: Props) => {
@@ -86,7 +95,7 @@ const AgencyForm = ({ data }: Props) => {
       name: data?.name || "",
       companyEmail: data?.companyEmail || "",
       companyPhone: data?.companyPhone || "",
-      // whiteLabel: data?.whiteLabel || false,
+      whiteLabel: false,
       address: data?.address || "",
       city: data?.city || "",
       zipCode: data?.zipCode || "",
@@ -118,8 +127,88 @@ const AgencyForm = ({ data }: Props) => {
       .then((data) => setMunicipios(data));
   };
 
-  const handleSubmit = async () => {
-    console.log(form);
+  const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
+    // console.log("Entramos al submit");
+    try {
+      if (!data?.id) {
+        const bodyData = {
+          email: values.companyEmail,
+          name: values.name,
+          shipping: {
+            address: {
+              city: values.city,
+              country: values.country,
+              line1: values.address,
+              postal_code: values.zipCode,
+              state: values.zipCode,
+            },
+            name: values.name,
+          },
+          address: {
+            city: values.city,
+            country: values.country,
+            line1: values.address,
+            postal_code: values.zipCode,
+            state: values.zipCode,
+          },
+        };
+      }
+
+      await initUser({ role: "AGENCY_OWNER" });
+      if (!data?.id) {
+        const response = await upsertAgency({
+          id: data?.id ? data.id : v4(),
+          address: values.address,
+          agencyLogo: values.agencyLogo || "",
+          city: values.city,
+          companyPhone: values.companyPhone,
+          country: values.country,
+          name: values.name,
+          state: values.state,
+          whiteLabel: false,
+          zipCode: values.zipCode,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          companyEmail: values.companyEmail,
+          connectAccountId: "",
+          goal: 5,
+        });
+        toast({
+          title: "Created Agency",
+        });
+        if (data?.id) return router.refresh();
+        if (response) {
+          return router.refresh();
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Oops!",
+        description: "Ocurrió un error y no pudimos crear tu marca.",
+      });
+    }
+  };
+
+  const handleDeleteAgency = async () => {
+    if (!data?.id) return;
+    SetDeletingAgency(true);
+    try {
+      await deleteAgency(data?.id);
+      toast({
+        title: "Marca eliminada",
+        description: "Se eliminó la marca y toda su información con éxito.",
+      });
+      router.refresh();
+    } catch (error) {
+      toast({
+        title: "Oops!",
+        description: "Ocurrió un error al eliminar la marca.",
+        variant: "destructive",
+      });
+    }
+    SetDeletingAgency(false);
   };
 
   return (
@@ -134,18 +223,21 @@ const AgencyForm = ({ data }: Props) => {
         <CardContent>
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(handleSubmit)}
+              onSubmit={form.handleSubmit(handleSubmit, (errors) => {
+                console.error("Validation errors:", errors);
+              })}
               className="space-y-4">
               <FormField
                 control={form.control}
                 name="agencyLogo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Foto de la marca</FormLabel>
+                    <FormLabel>Logo de la marca</FormLabel>
                     <FormControl>
                       <FileUpload
-                        onChange={field.onChange} // Aquí conectamos el onChange del FileUpload
-                        value={field.value} // Pasamos el valor del formulario al FileUpload
+                        apiEndpoint="agencyLogo"
+                        onChange={field.onChange}
+                        value={field.value}
                       />
                     </FormControl>
                     <FormMessage />
@@ -218,13 +310,14 @@ const AgencyForm = ({ data }: Props) => {
                 name="country"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel className="flex gap-1 items-center">
-                      País{" "}
+                    <FormLabel>
                       <span className="text-xs">
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <CircleHelp size={12} />
+                              <div className="flex gap-1 items-center w-fit">
+                                País <CircleHelp size={12} />
+                              </div>
                             </TooltipTrigger>
                             <TooltipContent>
                               <p>
@@ -270,7 +363,9 @@ const AgencyForm = ({ data }: Props) => {
                           {provinces?.provincias?.length > 0 ? (
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             provinces.provincias.map((province: any) => (
-                              <SelectItem key={province.id} value={province.id}>
+                              <SelectItem
+                                key={province.id}
+                                value={province.nombre}>
                                 <div className="flex cursor-pointer items-center gap-2">
                                   <p>{province.nombre}</p>
                                 </div>
@@ -303,7 +398,7 @@ const AgencyForm = ({ data }: Props) => {
                             municipios.municipios.map((municipio: any) => (
                               <SelectItem
                                 key={municipio.id}
-                                value={municipio.id}>
+                                value={municipio.nombre}>
                                 <div className="flex cursor-pointer items-center gap-2">
                                   <p>{municipio.nombre}</p>
                                 </div>
@@ -334,27 +429,48 @@ const AgencyForm = ({ data }: Props) => {
               </div>
               {data?.id && (
                 <div className="flex flex-col gap-2">
-                  <FormLabel>Create A Goal</FormLabel>
-                  <FormDescription>
-                    ✨ Create a goal for your agency. As your business grows
-                    your goals grow too so dont forget to set the bar higher!
+                  <FormLabel className="flex gap-1 items-center">
+                    <span className="text-xs">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex gap-1 items-center w-fit">
+                              Objetivo de productos/servicios{" "}
+                              <CircleHelp size={12} />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>
+                              Establece un objetivo de productos/servicios.{" "}
+                              <br />
+                              Recuerda que esto puede ser modificado en
+                              cualquier momento!
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </span>
+                  </FormLabel>
+                  <FormDescription className="sr-only">
+                    ✨ Establece un objetivo de productos/servicios. Recuerda
+                    que esto puede ser modificado en cualquier momento!
                   </FormDescription>
-                  {/* <NumberInput
+                  <NumberInput
                     defaultValue={data?.goal}
                     onValueChange={async (val) => {
                       if (!data?.id) return;
                       await updateAgencyDetails(data.id, { goal: val });
                       await saveActivityLogsNotification({
                         agencyId: data.id,
-                        description: `Updated the agency goal to | ${val} Sub Account`,
-                        subaccountId: undefined,
+                        description: `Se actualizó el objetivo de la marca a | ${val} productos vendidos`,
+                        subAccountId: undefined,
                       });
                       router.refresh();
                     }}
                     min={1}
-                    className="bg-background !border !border-input"
-                    placeholder="Sub Account Goal"
-                  /> */}
+                    className="!h-9 w-full rounded-md border !border-input !bg-transparent py-1 text-base shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:!ring-ring md:text-sm"
+                    placeholder="Objetivo de productos/servicios vendidos en el mes."
+                  />
                 </div>
               )}
               <Button type="submit">
@@ -369,7 +485,7 @@ const AgencyForm = ({ data }: Props) => {
             </form>
           </Form>
           {data?.id && (
-            <div className="border-l-4 border-red-500 rounded-md border p-4 mt-4">
+            <div className="border-l-4 border-red-500 rounded-md border p-4 mt-4 bg-red-50">
               <div className="flex items-start">
                 <div className="flex-shrink-0">
                   <XCircle className="h-5 w-5 text-red-500" />
@@ -408,8 +524,7 @@ const AgencyForm = ({ data }: Props) => {
               <AlertDialogAction
                 disabled={deletingAgency}
                 className="bg-destructive hover:bg-destructive"
-                // onClick={handleDeleteAgency}
-              >
+                onClick={handleDeleteAgency}>
                 Eliminar
               </AlertDialogAction>
             </AlertDialogFooter>

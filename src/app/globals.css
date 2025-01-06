@@ -101,4 +101,48 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  /* applied to button when uploading */
+  .uploadthing-custom-class > *[data-ut-element="button"][data-state="ready"] {
+    @apply focus-within:!ring-oranger;
+  }
+}
+
+/* applied to container */
+.uploadthing-custom-class {
+  background-color: none;
+}
+
+.uploadthing-custom-class > *[data-ut-element="label"] {
+  color: hsl(23, 97%, 46%);
+}
+
+.uploadthing-custom-class > *[data-ut-element="label"]:hover {
+  color: hsl(34, 95%, 49%);
+}
+
+/* applied to button */
+.uploadthing-custom-class > *[data-ut-element="button"] {
+  color: rgb(255, 255, 255);
+  background-color: hsl(34, 95%, 49%);
+}
+
+/* applied to button when uploading */
+.uploadthing-custom-class > *[data-ut-element="button"][data-state="readying"] {
+  background-color: hsl(23, 97%, 46%);
+  color: rgb(255, 255, 255);
+  cursor: not-allowed;
+}
+
+/* applied to the button when uploading */
+.uploadthing-custom-class
+  > *[data-ut-element="button"][data-state="uploading"] {
+  background-color: hsl(23, 97%, 46%);
+  color: rgb(255, 255, 255);
+  cursor: not-allowed;
+}
+
+/* applied to the upload indicator when uploading */
+.uploadthing-custom-class
+  > *[data-ut-element="button"][data-state="uploading"]::after {
+  background-color: hsl(23, 97%, 46%);
 }
