@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
+import ModalProvider from "@/lib/providers/modal-provider";
 
 export const metadata: Metadata = {
   title: env.APP_NAME,
@@ -89,7 +90,7 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange>
-          {children}
+          <ModalProvider>{children}</ModalProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -28,7 +28,6 @@ interface NavbarProps {
 
 export function Navbar({ id }: NavbarProps): React.JSX.Element {
   const [isOpen, setIsOpen] = React.useState(false);
-  console.log("id", id);
   return (
     <nav className="bg-background sticky top-0 z-40 w-full border-b">
       <div className="flex h-16 items-center justify-between px-4 sm:px-8">

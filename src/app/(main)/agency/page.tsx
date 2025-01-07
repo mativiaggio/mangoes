@@ -1,9 +1,9 @@
+import AgencyForm from "@/components/forms/agency-form";
 import { getAuthUserDetails, verifyAndAcceptInvitation } from "@/lib/queries";
 import { currentUser } from "@clerk/nextjs/server";
 import { Plan } from "@prisma/client";
 import { redirect } from "next/navigation";
 import React from "react";
-import AgencyForm from "./_components/agency-form";
 
 const Page = async ({
   searchParams,
@@ -12,7 +12,6 @@ const Page = async ({
 }) => {
   const { plan } = await searchParams;
   const agencyId = await verifyAndAcceptInvitation();
-  console.log(agencyId);
 
   //get the users details
   const user = await getAuthUserDetails();
@@ -30,8 +29,8 @@ const Page = async ({
   }
   const authUser = await currentUser();
   return (
-    <div className="!w-full flex justify-center items-center my-4">
-      <div className="!w-full max-w-[850px] rounded-xl">
+    <div className="flex justify-center items-center mt-4">
+      <div className="max-w-[850px] border-[1px] p-4 rounded-xl">
         <AgencyForm
           data={{
             companyEmail: authUser?.emailAddresses[0].emailAddress,

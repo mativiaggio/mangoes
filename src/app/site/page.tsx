@@ -105,7 +105,7 @@ export default function Home() {
       {/* Tusted  */}
       <section className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto text-center">
         <div className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto bg-[#fff8f0] dark:bg-card rounded-lg w-full flex flex-col gap-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-oranger">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-main-oranger">
             Algunas empresas que están usando Mangoes
           </h2>
           <div className="flex justify-between items-center font-extrabold text-3xl w-full text-muted-foreground">
@@ -247,7 +247,7 @@ export default function Home() {
                 key={plan.name}
                 className="w-full h-fit backdrop-blur-sm hover:shadow-xl border-0">
                 <CardHeader>
-                  <CardTitle className="text-xl font-bold text-oranger">
+                  <CardTitle className="text-xl font-bold text-main-oranger">
                     {plan.name}
                   </CardTitle>
                   <CardDescription className="text-sm">
@@ -261,7 +261,7 @@ export default function Home() {
                   <ul className="space-y-2">
                     {plan.features?.map((feature, index) => (
                       <li key={index} className="flex items-center">
-                        <Check className="mr-2 h-5 w-5 text-oranger" />
+                        <Check className="mr-2 h-5 w-5 text-main-oranger" />
                         <span className="text-sm text-primary">{feature}</span>
                       </li>
                     ))}
@@ -269,7 +269,7 @@ export default function Home() {
                 </CardContent>
                 <CardFooter>
                   <Link href={`/plans/${plan.id}/checkout`}>
-                    <Button className="w-full bg-orange hover:bg-oranger text-white">
+                    <Button className="w-full bg-main-orange hover:bg-main-oranger text-white">
                       Empezar ahora
                     </Button>
                   </Link>

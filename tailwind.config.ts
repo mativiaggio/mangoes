@@ -75,8 +75,8 @@ export default withUt({
         gradient: "var(--gradient)",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        orange: "hsl(var(--orange))",
-        oranger: "hsl(var(--oranger))",
+        "main-orange": "hsl(var(--main-orange))",
+        "main-oranger": "hsl(var(--main-oranger))",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

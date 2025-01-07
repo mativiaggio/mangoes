@@ -35,7 +35,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import FileUpload from "@/components/global/file-upload";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CircleHelp, Loader, Stars, XCircle } from "lucide-react";
@@ -61,21 +60,24 @@ import {
   upsertAgency,
 } from "@/lib/queries";
 import { v4 } from "uuid";
+import FileUpload from "@/components/file-upload";
 
 interface Props {
   data: Partial<Agency>;
 }
 
 const FormSchema = z.object({
-  name: z.string().min(2, { message: "Agency name must be atleast 2 chars." }),
-  companyEmail: z.string().min(1),
-  companyPhone: z.string().min(1),
+  name: z
+    .string()
+    .min(2, { message: "El nombre debe tener al menos 2 caracteres." }),
+  companyEmail: z.string().min(1, "Este campo es obligatorio"),
+  companyPhone: z.string().min(1, "Este campo es obligatorio"),
   whiteLabel: z.boolean().default(false),
-  address: z.string().min(1),
-  city: z.string().min(1),
-  zipCode: z.string().min(1),
-  state: z.string().min(1),
-  country: z.string().min(1),
+  address: z.string().min(1, "Este campo es obligatorio"),
+  city: z.string().min(1, "Este campo es obligatorio"),
+  zipCode: z.string().min(1, "Este campo es obligatorio"),
+  state: z.string().min(1, "Este campo es obligatorio"),
+  country: z.string().min(1, "Este campo es obligatorio"),
   agencyLogo: z.string().optional(),
 });
 
@@ -128,7 +130,6 @@ const AgencyForm = ({ data }: Props) => {
   };
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
-    // console.log("Entramos al submit");
     try {
       if (!data?.id) {
         const bodyData = {
@@ -155,31 +156,30 @@ const AgencyForm = ({ data }: Props) => {
       }
 
       await initUser({ role: "AGENCY_OWNER" });
-      if (!data?.id) {
-        const response = await upsertAgency({
-          id: data?.id ? data.id : v4(),
-          address: values.address,
-          agencyLogo: values.agencyLogo || "",
-          city: values.city,
-          companyPhone: values.companyPhone,
-          country: values.country,
-          name: values.name,
-          state: values.state,
-          whiteLabel: false,
-          zipCode: values.zipCode,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          companyEmail: values.companyEmail,
-          connectAccountId: "",
-          goal: 5,
-        });
-        toast({
-          title: "Created Agency",
-        });
-        if (data?.id) return router.refresh();
-        if (response) {
-          return router.refresh();
-        }
+
+      const response = await upsertAgency({
+        id: data?.id ? data.id : v4(),
+        address: values.address,
+        agencyLogo: values.agencyLogo || "",
+        city: values.city,
+        companyPhone: values.companyPhone,
+        country: values.country,
+        name: values.name,
+        state: values.state,
+        whiteLabel: false,
+        zipCode: values.zipCode,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        companyEmail: values.companyEmail,
+        connectAccountId: "",
+        goal: 5,
+      });
+      toast({
+        title: "Created Agency",
+      });
+      if (data?.id) return router.refresh();
+      if (response) {
+        return router.refresh();
       }
     } catch (error) {
       console.log(error);
@@ -213,7 +213,7 @@ const AgencyForm = ({ data }: Props) => {
 
   return (
     <AlertDialog>
-      <Card className="mt-4 w-full max-w-7xl">
+      <Card className="w-full max-w-7xl">
         <CardHeader>
           <CardTitle>Información de la marca.</CardTitle>
           <CardDescription>
@@ -477,8 +477,8 @@ const AgencyForm = ({ data }: Props) => {
                 {isLoading ? (
                   <Loader className="animate-spin" />
                 ) : (
-                  <span className="flex gap-2 text-white">
-                    Crear marca <Stars />
+                  <span className="flex gap-2 text-white items-center">
+                    Guardar <Stars />
                   </span>
                 )}
               </Button>

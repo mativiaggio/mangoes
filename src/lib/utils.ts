@@ -117,9 +117,11 @@ export const calcularDiasEntreFechas = (
   }
 };
 
-export const formatPriceToARS = (price: number): string => {
+export const formatPriceToARS = (price: number | string): string => {
+  const priceN = Number(price);
+
   return new Intl.NumberFormat("es-AR", {
     style: "currency",
     currency: "ARS",
-  }).format(price);
+  }).format(priceN);
 };

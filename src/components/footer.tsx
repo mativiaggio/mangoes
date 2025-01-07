@@ -17,7 +17,7 @@ export default function Footer() {
                   width={40}
                   alt="Mango"
                 />
-                <h1 className="text-2xl font-bold text-main-oranger">
+                <h1 className="text-2xl font-bold text-main-main-oranger">
                   Mangoes
                 </h1>
               </span>
