@@ -167,16 +167,16 @@ export default function CategoriesDataTable({
                   Eliminar{" "}
                   <span className="text-main-secondary">
                     {" "}
-                    {selectedCategories.size} categoryo
+                    {selectedCategories.size} categoría
                     {selectedCategories.size !== 1 && "s"}
                   </span>
                 </AlertDialogTitle>
                 <AlertDialogDescription>
                   Estás seguro/a de querer eliminar{" "}
                   {selectedCategories.size !== 1
-                    ? "los categoryoss"
-                    : "el categoryo"}{" "}
-                  seleccionado
+                    ? "las categorías"
+                    : "la categoría"}{" "}
+                  seleccionada
                   {selectedCategories.size !== 1 && "s"}?
                 </AlertDialogDescription>
               </AlertDialogHeader>
