@@ -18,19 +18,47 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ArrowUpDown, MoreHorizontal, Trash, Download } from "lucide-react";
 import {
-  ArrowUpDown,
-  MoreHorizontal,
-  Pencil,
-  Trash,
-  Download,
-  Loader2,
-} from "lucide-react";
-import { Product } from "@prisma/client";
+  Agency,
+  AgencySidebarOption,
+  Category,
+  Product,
+  SubAccount,
+  User,
+} from "@prisma/client";
 import { formatPriceToARS } from "@/lib/utils";
+import Image from "next/image";
+import DeleteProductButton from "./delete-button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import EditProductButton from "./edit-product-btn";
+import BulkDeleteProducts from "./bulk-delete-products";
 
 type Props = {
+  user: User & {
+    Agency:
+      | (
+          | Agency
+          | (null & {
+              SubAccount: SubAccount[];
+              SideBarOption: AgencySidebarOption[];
+            })
+        )
+      | null;
+  };
+  agencyId: string;
   products: Product[];
+  categories: Category[];
   onEdit?: (product: Product) => void;
   onDelete?: (product: Product) => void;
 };
@@ -38,9 +66,10 @@ type Props = {
 const ITEMS_PER_PAGE = 50;
 
 export default function ProductsDataTable({
+  user,
+  agencyId,
   products,
-  onEdit,
-  onDelete,
+  categories,
 }: Props) {
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(
     new Set()
@@ -51,7 +80,6 @@ export default function ProductsDataTable({
   }>({ key: "name", direction: "asc" });
   const [filterName, setFilterName] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const toggleSort = (key: keyof Product) => {
     setSortConfig({
@@ -101,15 +129,8 @@ export default function ProductsDataTable({
     setSelectedProducts(newSelected);
   };
 
-  const handleBulkDelete = async () => {
-    setIsDeleting(true);
-    try {
-      // Implement bulk delete functionality
-      console.log("Bulk delete:", Array.from(selectedProducts));
-    } finally {
-      setIsDeleting(false);
-      setSelectedProducts(new Set());
-    }
+  const resetSelectedProducts = () => {
+    setSelectedProducts(new Set());
   };
 
   return (
@@ -132,22 +153,51 @@ export default function ProductsDataTable({
             onClick={() => {}}
             className="h-8"
             disabled={selectedProducts.size == 0}>
-            <Download className="h-4 w-4 mr-2" />
+            <Download className="" />
             Exportar
           </Button>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={handleBulkDelete}
-            className="h-8"
-            disabled={selectedProducts.size == 0 || isDeleting}>
-            {isDeleting ? (
-              <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            ) : (
-              <Trash className="h-4 w-4 mr-2" />
-            )}
-            Eliminar
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                size="sm"
+                onClick={() => {}}
+                className="h-8"
+                disabled={selectedProducts.size == 0}>
+                <Trash />
+                Eliminar
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Eliminar{" "}
+                  <span className="text-main-secondary">
+                    {" "}
+                    {selectedProducts.size} producto
+                    {selectedProducts.size !== 1 && "s"}
+                  </span>
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Estás seguro/a de querer eliminar{" "}
+                  {selectedProducts.size !== 1
+                    ? "los productoss"
+                    : "el producto"}{" "}
+                  seleccionado
+                  {selectedProducts.size !== 1 && "s"}?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction>
+                  <BulkDeleteProducts
+                    agencyId={agencyId}
+                    selectedProducts={Array.from(selectedProducts)}
+                    onDeleteComplete={resetSelectedProducts}
+                  />
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
 
@@ -161,7 +211,8 @@ export default function ProductsDataTable({
                   onCheckedChange={toggleSelectAll}
                 />
               </TableHead>
-              <TableHead className="w-2/5">
+              <TableHead className="!w-28"></TableHead>
+              <TableHead className="w-/6">
                 <Button
                   variant="ghost"
                   onClick={() => toggleSort("name")}
@@ -170,7 +221,7 @@ export default function ProductsDataTable({
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead className="w-2/5">
+              <TableHead className="w-1/6">
                 <Button
                   variant="ghost"
                   onClick={() => toggleSort("price")}
@@ -179,7 +230,7 @@ export default function ProductsDataTable({
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead>
+              <TableHead className="w-1/6">
                 <Button
                   variant="ghost"
                   onClick={() => toggleSort("stock")}
@@ -193,12 +244,27 @@ export default function ProductsDataTable({
           </TableHeader>
           <TableBody>
             {paginatedProducts.map((product) => (
-              <TableRow key={product.id}>
+              <TableRow
+                key={product.id}
+                className={`${
+                  selectedProducts.has(product.id) ? "bg-muted" : ""
+                } hover:bg-muted`}>
                 <TableCell>
                   <Checkbox
                     checked={selectedProducts.has(product.id)}
                     onCheckedChange={() => toggleSelect(product.id)}
                   />
+                </TableCell>
+                <TableCell>
+                  {product.productImage && (
+                    <Image
+                      src={product.productImage}
+                      alt="app logo"
+                      height={80}
+                      width={80}
+                      className="rounded-md !max-h-80"
+                    />
+                  )}
                 </TableCell>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>
@@ -213,18 +279,54 @@ export default function ProductsDataTable({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={() => onEdit?.(product)}
-                        className="cursor-pointer">
-                        <Pencil className="h-4 w-4 mr-2" />
-                        Editar
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => onDelete?.(product)}
-                        className="cursor-pointer text-destructive">
-                        <Trash className="h-4 w-4 mr-2" />
-                        Eliminar
-                      </DropdownMenuItem>
+                      <AlertDialog>
+                        <EditProductButton
+                          details={product}
+                          user={user}
+                          categories={categories}
+                          className="w-[200px] self-end"
+                        />
+                      </AlertDialog>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <DropdownMenuItem
+                            onSelect={(e) => e.preventDefault()}>
+                            <div className="flex gap-2 items-center cursor-pointer text-main-secondary">
+                              <Trash className="h-4 w-4 mr-2" />
+                              Eliminar
+                            </div>
+                          </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Eliminar{" "}
+                              <span className="text-main-secondary">
+                                {" "}
+                                {product.name}
+                              </span>
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Estás seguro/a de querer eliminar el producto{" "}
+                              <span className="text-main-primary">
+                                {" "}
+                                {product.name}
+                              </span>
+                              ?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction>
+                              <DeleteProductButton
+                                agencyId={agencyId}
+                                productId={product.id}
+                                onDeleteComplete={resetSelectedProducts}
+                              />
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

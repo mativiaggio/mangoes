@@ -61,6 +61,7 @@ import {
 } from "@/lib/queries";
 import { v4 } from "uuid";
 import FileUpload from "@/components/file-upload";
+import PhoneInput from "react-phone-number-input";
 
 interface Props {
   data: Partial<Agency>;
@@ -173,6 +174,7 @@ const AgencyForm = ({ data }: Props) => {
         companyEmail: values.companyEmail,
         connectAccountId: "",
         goal: 5,
+        customerId: "",
       });
       toast({
         title: "Created Agency",
@@ -223,9 +225,7 @@ const AgencyForm = ({ data }: Props) => {
         <CardContent>
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(handleSubmit, (errors) => {
-                console.error("Validation errors:", errors);
-              })}
+              onSubmit={form.handleSubmit(handleSubmit)}
               className="space-y-4">
               <FormField
                 control={form.control}
@@ -285,7 +285,14 @@ const AgencyForm = ({ data }: Props) => {
                     <FormItem className="flex-1">
                       <FormLabel>Número de teléfono</FormLabel>
                       <FormControl>
-                        <Input placeholder="Teléfono" {...field} />
+                        <PhoneInput
+                          defaultCountry="AR"
+                          placeholder="Teléfono"
+                          international
+                          withCountryCallingCode
+                          onChange={field.onChange}
+                          className="input-phone"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

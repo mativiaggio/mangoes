@@ -6,7 +6,7 @@ import { UploadDropzone } from "@/lib/uploadthing";
 import { Button } from "./ui/button";
 
 type Props = {
-  apiEndpoint: "agencyLogo" | "avatar" | "subaccountLogo";
+  apiEndpoint: "agencyLogo" | "avatar" | "subaccountLogo" | "products";
   onChange: (url?: string) => void;
   value?: string;
 };
@@ -35,7 +35,7 @@ const FileUpload = ({ apiEndpoint, onChange, value }: Props) => {
               href={value}
               target="_blank"
               rel="noopener_noreferrer"
-              className="ml-2 text-sm text-main-oranger hover:underline">
+              className="ml-2 text-sm text-main-secondary hover:underline">
               View PDF
             </a>
           </div>

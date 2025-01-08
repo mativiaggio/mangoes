@@ -13,12 +13,12 @@ import React from "react";
 
 type Props = {
   children: React.ReactNode;
-  params: { agencyId: string };
+  params: Promise<{ agencyId: string }>;
 };
 
 const Layout = async ({ children, params }: Props) => {
   // Ensure params are properly awaited if needed
-  const { agencyId } = await params;
+  const agencyId = (await params).agencyId;
   const verifiedAgencyId = await verifyAndAcceptInvitation();
   const user = await currentUser();
 

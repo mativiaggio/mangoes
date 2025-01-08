@@ -3,6 +3,7 @@ export const env = {
   //APP, DOMAINS & URL
   APP_NAME: process.env.NEXT_PUBLIC_APP_NAME || "",
   URL: process.env.NEXT_PUBLIC_URL || "",
+  INVITATIONS_URL: process.env.NEXT_PUBLIC_INVITATIONS_URL || "",
   DOMAIN: process.env.NEXT_PUBLIC_DOMAIN || "",
   SCHEME: process.env.NEXT_PUBLIC_SCHEME || "",
 

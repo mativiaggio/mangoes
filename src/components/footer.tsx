@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <>
-      <footer className="bg-[#fff8f0] dark:bg-background border-t border-[#f48d06]/20 dark:border-[#f48d06]/10">
+      <footer className="bg-[#ebedee] dark:bg-background border-t border-main-primary/20 dark:border-main-primary/10">
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
           <div className="xl:grid xl:grid-cols-3 xl:gap-8">
             <div className="space-y-8 xl:col-span-1">
@@ -17,7 +17,7 @@ export default function Footer() {
                   width={40}
                   alt="Mango"
                 />
-                <h1 className="text-2xl font-bold text-main-main-oranger">
+                <h1 className="text-2xl font-bold text-main-main-secondary">
                   Mangoes
                 </h1>
               </span>
@@ -28,25 +28,25 @@ export default function Footer() {
               <div className="flex space-x-6">
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-[#e75b04]">
+                  className="text-muted-foreground hover:text-main-secondary">
                   <span className="sr-only">Facebook</span>
                   <Facebook className="h-6 w-6" />
                 </a>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-[#e75b04]">
+                  className="text-muted-foreground hover:text-main-secondary">
                   <span className="sr-only">Instagram</span>
                   <Instagram className="h-6 w-6" />
                 </a>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-[#e75b04]">
+                  className="text-muted-foreground hover:text-main-secondary">
                   <span className="sr-only">Twitter</span>
                   <Twitter className="h-6 w-6" />
                 </a>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-[#e75b04]">
+                  className="text-muted-foreground hover:text-main-secondary">
                   <span className="sr-only">LinkedIn</span>
                   <Linkedin className="h-6 w-6" />
                 </a>
@@ -55,7 +55,7 @@ export default function Footer() {
             <div className="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#e75b04] tracking-wider uppercase">
+                  <h3 className="text-sm font-semibold text-main-secondary tracking-wider uppercase">
                     Soluciones
                   </h3>
                   <ul className="mt-4 space-y-4">
@@ -68,7 +68,7 @@ export default function Footer() {
                       <li key={item}>
                         <Link
                           href="#"
-                          className="text-base text-muted-foreground hover:text-[#f48d06]">
+                          className="text-base text-muted-foreground hover:text-main-primary">
                           {item}
                         </Link>
                       </li>
@@ -76,7 +76,7 @@ export default function Footer() {
                   </ul>
                 </div>
                 <div className="mt-12 md:mt-0">
-                  <h3 className="text-sm font-semibold text-[#e75b04] tracking-wider uppercase">
+                  <h3 className="text-sm font-semibold text-main-secondary tracking-wider uppercase">
                     Soporte
                   </h3>
                   <ul className="mt-4 space-y-4">
@@ -85,7 +85,7 @@ export default function Footer() {
                         <li key={item}>
                           <Link
                             href="#"
-                            className="text-base text-muted-foreground hover:text-[#f48d06]">
+                            className="text-base text-muted-foreground hover:text-main-primary">
                             {item}
                           </Link>
                         </li>
@@ -96,7 +96,7 @@ export default function Footer() {
               </div>
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#e75b04] tracking-wider uppercase">
+                  <h3 className="text-sm font-semibold text-main-secondary tracking-wider uppercase">
                     Compañía
                   </h3>
                   <ul className="mt-4 space-y-4">
@@ -105,7 +105,7 @@ export default function Footer() {
                         <li key={item}>
                           <Link
                             href="#"
-                            className="text-base text-muted-foreground hover:text-[#f48d06]">
+                            className="text-base text-muted-foreground hover:text-main-primary">
                             {item}
                           </Link>
                         </li>
@@ -114,7 +114,7 @@ export default function Footer() {
                   </ul>
                 </div>
                 <div className="mt-12 md:mt-0">
-                  <h3 className="text-sm font-semibold text-[#e75b04] tracking-wider uppercase">
+                  <h3 className="text-sm font-semibold text-main-secondary tracking-wider uppercase">
                     Legal
                   </h3>
                   <ul className="mt-4 space-y-4">
@@ -122,7 +122,7 @@ export default function Footer() {
                       <li key={item}>
                         <Link
                           href="#"
-                          className="text-base text-muted-foreground hover:text-[#f48d06]">
+                          className="text-base text-muted-foreground hover:text-main-primary">
                           {item}
                         </Link>
                       </li>
@@ -132,7 +132,7 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          <div className="mt-12 border-t border-[#f48d06]/20 pt-8">
+          <div className="mt-12 border-t border-main-primary/20 pt-8">
             <p className="text-base text-muted-foreground xl:text-center">
               &copy; {new Date().getFullYear()} Mangoes, Inc. Todos los derechos
               reservados.

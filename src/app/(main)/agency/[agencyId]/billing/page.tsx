@@ -1,11 +1,11 @@
 import React from "react";
 
 type Props = {
-  params: { agencyId: string };
+  params: Promise<{ agencyId: string }>;
 };
 
 const BillingPage = async ({ params }: Props) => {
-  const { agencyId } = await params;
+  const agencyId = (await params).agencyId;
 
   console.log(agencyId);
 

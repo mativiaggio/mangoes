@@ -28,11 +28,11 @@ import DeleteButton from "./_components/delete-button";
 import { HelpCircle } from "lucide-react";
 
 type Props = {
-  params: { agencyId: string };
+  params: Promise<{ agencyId: string }>;
 };
 
 const AllSubaccountsPage = async ({ params }: Props) => {
-  const { agencyId } = await params;
+  const agencyId = (await params).agencyId;
   const user = await getAuthUserDetails();
   if (!user) return;
 
@@ -47,7 +47,7 @@ const AllSubaccountsPage = async ({ params }: Props) => {
         <Command className="rounded-lg bg-transparent">
           <CommandInput placeholder="Buusca una subcuenta..." />
           <CommandList>
-            <CommandEmpty>No Results Found.</CommandEmpty>
+            <CommandEmpty>No se encontraron resultados.</CommandEmpty>
             <CommandGroup heading="Subcuentas">
               {!!user.Agency?.SubAccount.length ? (
                 user.Agency.SubAccount.map((subaccount: SubAccount) => (

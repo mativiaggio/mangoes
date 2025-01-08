@@ -45,6 +45,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import PhoneInput from "react-phone-number-input";
 
 const formSchema = z.object({
   name: z.string().min(2, "El subnombre debe tener al menos 2 caracteres."),
@@ -57,10 +58,6 @@ const formSchema = z.object({
   city: z.string().optional(),
   zipCode: z.string().min(1, "Este campo es obligatorio"),
 });
-
-//CHALLENGE Give access for Subaccount Guest they should see a different view maybe a form that allows them to create tickets
-
-//CHALLENGE layout.tsx oonly runs once as a result if you remove permissions for someone and they keep navigating the layout.tsx wont fire again. solution- save the data inside metadata for current user.
 
 interface SubAccountFormProps {
   //To add the sub account to the agency
@@ -233,7 +230,14 @@ const SubAccountForm: React.FC<SubAccountFormProps> = ({
                   <FormItem className="flex-1">
                     <FormLabel>Número de teléfono</FormLabel>
                     <FormControl>
-                      <Input placeholder="Teléfono" required {...field} />
+                      <PhoneInput
+                        defaultCountry="AR"
+                        placeholder="Teléfono"
+                        international
+                        withCountryCallingCode
+                        onChange={field.onChange}
+                        className="input-phone"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -17,8 +17,8 @@ body {
 
 @layer base {
   :root {
-    --main-orange: 34, 95%, 49%;
-    --main-oranger: 23, 97%, 46%;
+    --main-primary: 0, 83%, 60%;
+    --main-secondary: 0, 84%, 41%;
     --background: 0 0% 100%;
     --bg-primary-foreground: 0 0% 98%;
     --foreground: 0 0% 3.9%;
@@ -58,8 +58,8 @@ body {
     --inactive-item: 0, 0%, 50%;
   }
   .dark {
-    --main-orange: 34, 95%, 49%;
-    --main-oranger: 23, 97%, 46%;
+    --main-primary: 0, 63%, 55%;
+    --main-secondary: 0, 63%, 50%;
     --background: 0 0% 3.9%;
     --bg-primary-foreground: 0, 0%, 4%;
     --foreground: 0 0% 98%;
@@ -108,7 +108,27 @@ body {
   }
   /* applied to button when uploading */
   .uploadthing-custom-class > *[data-ut-element="button"][data-state="ready"] {
-    @apply focus-within:!ring-main-oranger;
+    @apply focus-within:!ring-main-secondary;
+  }
+
+  .input-phone {
+    @apply mt-2 flex rounded-md pl-3 text-sm border !h-9 !important;
+  }
+
+  .input-phone img {
+    @apply mr-3 !h-6 w-6 fill-current;
+  }
+
+  .input-phone div {
+    @apply flex items-center justify-center !h-9;
+  }
+
+  .input-phone div select {
+    @apply hidden;
+  }
+
+  .input-phone input {
+    @apply w-full bg-transparent focus:bg-transparent active:bg-transparent focus:outline-none !h-9;
   }
 }
 
@@ -118,22 +138,22 @@ body {
 }
 
 .uploadthing-custom-class > *[data-ut-element="label"] {
-  color: hsl(23, 97%, 46%);
+  color: hsl(0, 84%, 41%);
 }
 
 .uploadthing-custom-class > *[data-ut-element="label"]:hover {
-  color: hsl(34, 95%, 49%);
+  color: hsl(0, 83%, 60%);
 }
 
 /* applied to button */
 .uploadthing-custom-class > *[data-ut-element="button"] {
   color: rgb(255, 255, 255);
-  background-color: hsl(34, 95%, 49%);
+  background-color: hsl(0, 83%, 60%);
 }
 
 /* applied to button when uploading */
 .uploadthing-custom-class > *[data-ut-element="button"][data-state="readying"] {
-  background-color: hsl(23, 97%, 46%);
+  background-color: hsl(0, 84%, 41%);
   color: rgb(255, 255, 255);
   cursor: not-allowed;
 }
@@ -141,7 +161,7 @@ body {
 /* applied to the button when uploading */
 .uploadthing-custom-class
   > *[data-ut-element="button"][data-state="uploading"] {
-  background-color: hsl(23, 97%, 46%);
+  background-color: hsl(0, 84%, 41%);
   color: rgb(255, 255, 255);
   cursor: not-allowed;
 }
@@ -149,5 +169,5 @@ body {
 /* applied to the upload indicator when uploading */
 .uploadthing-custom-class
   > *[data-ut-element="button"][data-state="uploading"]::after {
-  background-color: hsl(23, 97%, 46%);
+  background-color: hsl(0, 84%, 41%);
 }

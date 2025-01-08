@@ -7,19 +7,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { db } from "@/lib/db";
-import { CheckCircleIcon } from "lucide-react";
+import { CheckCircleIcon, HelpCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 type Props = {
-  params: {
-    agencyId: string;
-  };
+  params: Promise<{ agencyId: string }>;
 };
 
 const LaunchPadPage = async ({ params }: Props) => {
-  const { agencyId } = await params;
+  const agencyId = (await params).agencyId;
   const agencyDetails = await db.agency.findUnique({
     where: {
       id: agencyId,
@@ -77,14 +75,20 @@ const LaunchPadPage = async ({ params }: Props) => {
             </div>
             <div className="flex justify-between items-center w-full border p-4 rounded-lg gap-2">
               <div className="flex md:items-center gap-4 flex-col md:!flex-row">
-                <Image
-                  src={agencyDetails.agencyLogo}
-                  alt="app logo"
-                  height={80}
-                  width={80}
-                  className="rounded-md object-contain bg-gray-200 h-[40px] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100 mt-4 md:mt-0"
-                />
-                <p> Fill in all your bussiness details</p>
+                {agencyDetails.agencyLogo !== "" ? (
+                  <Image
+                    src={agencyDetails.agencyLogo}
+                    alt="app logo"
+                    height={80}
+                    width={80}
+                    className="rounded-md object-contain bg-gray-200 h-[40px] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100 mt-4 md:mt-0"
+                  />
+                ) : (
+                  <div className="w-fit h-full flex items-center justify-center">
+                    <HelpCircle className="!h-8 !w-8" />
+                  </div>
+                )}
+                <p>Completa la información de tu marca</p>
               </div>
               {allDetailsExist ? (
                 <CheckCircleIcon
@@ -93,9 +97,9 @@ const LaunchPadPage = async ({ params }: Props) => {
                 />
               ) : (
                 <Link
-                  className="bg-primary py-2 px-4 rounded-md text-white"
+                  className=" rounded-md text-white"
                   href={`/agency/${agencyId}/settings`}>
-                  Comenzar
+                  <Button>Comenzar</Button>
                 </Link>
               )}
             </div>

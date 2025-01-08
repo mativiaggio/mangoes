@@ -15,10 +15,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import { ChevronsUpDown, Compass, Menu, PlusCircleIcon } from "lucide-react";
+import {
+  ChevronsUpDown,
+  Compass,
+  HelpCircle,
+  Hexagon,
+  Menu,
+  PlusCircleIcon,
+} from "lucide-react";
 import clsx from "clsx";
 import Image from "next/image";
-import { AspectRatio } from "../ui/aspect-ratio";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
   Command,
@@ -62,7 +68,6 @@ const MenuOptions = ({
   defaultOpen,
   subAccounts,
   sidebarOptions,
-  sidebarLogo,
   details,
   user,
 }: Props) => {
@@ -104,16 +109,10 @@ const MenuOptions = ({
           This is the sidebar
         </SheetDescription>
         <div>
-          <AspectRatio
-            ratio={16 / 5}
-            className="bg-gray-200 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100 mt-4 md:mt-0">
-            <Image
-              src={sidebarLogo}
-              alt="Sidebar Logo"
-              fill
-              className="rounded-md object-contain"
-            />
-          </AspectRatio>
+          <div className="w-full text-2xl font-extrabold px-3 flex items-center gap-2">
+            <Hexagon />
+            {details.name}
+          </div>
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -148,12 +147,18 @@ const MenuOptions = ({
                               href={`/agency/${user?.Agency?.id}`}
                               className="flex gap-4 w-full h-full">
                               <div className="relative w-16">
-                                <Image
-                                  src={user?.Agency?.agencyLogo}
-                                  alt="Agency Logo"
-                                  fill
-                                  className="rounded-md object-contain"
-                                />
+                                {user?.Agency?.agencyLogo !== "" ? (
+                                  <Image
+                                    src={user?.Agency?.agencyLogo}
+                                    alt="Agency Logo"
+                                    fill
+                                    className="rounded-md object-contain"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center">
+                                    <HelpCircle className="!h-8 !w-8" />
+                                  </div>
+                                )}
                               </div>
                               <div className="flex flex-col flex-1">
                                 {user?.Agency?.name}
@@ -168,12 +173,18 @@ const MenuOptions = ({
                                 href={`/agency/${user?.Agency?.id}`}
                                 className="flex gap-4 w-full h-full">
                                 <div className="relative w-16">
-                                  <Image
-                                    src={user?.Agency?.agencyLogo}
-                                    alt="Agency Logo"
-                                    fill
-                                    className="rounded-md object-contain"
-                                  />
+                                  {user?.Agency?.agencyLogo !== "" ? (
+                                    <Image
+                                      src={user?.Agency?.agencyLogo}
+                                      alt="Agency Logo"
+                                      fill
+                                      className="rounded-md object-contain"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                      <HelpCircle className="!h-8 !w-8" />
+                                    </div>
+                                  )}
                                 </div>
                                 <div className="flex flex-col flex-1">
                                   {user?.Agency?.name}
@@ -287,9 +298,9 @@ const MenuOptions = ({
                         <CommandItem
                           key={sidebarOption.id}
                           className={cn(
-                            "md:w-[320px] w-full  hover:bg-orange-600/10 dark:hover:bg-orange-600/20",
+                            "md:w-[320px] w-full  hover:bg-red-500/20 dark:hover:bg-red-500/30",
                             currentPath === sidebarOption.link
-                              ? "!bg-main-orange dark:!bg-main-oranger"
+                              ? "!bg-main-primary dark:!bg-main-secondary !text-white hover:!text-white"
                               : ""
                           )}>
                           <Link

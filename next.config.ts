@@ -3,13 +3,13 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     dangerouslyAllowSVG: true,
-    domains: [
-      "www.svgrepo.com",
-      "cdn.dribbble.com",
-      "uploadthing.com",
-      "utfs.io",
-      "img.clerk.com",
-      "subdomain",
+    remotePatterns: [
+      { protocol: "https", hostname: "www.svgrepo.com" },
+      { protocol: "https", hostname: "cdn.dribbble.com" },
+      { protocol: "https", hostname: "uploadthing.com" },
+      { protocol: "https", hostname: "utfs.io" },
+      { protocol: "https", hostname: "img.clerk.com" },
+      { protocol: "https", hostname: "subdomain" },
     ],
   },
   reactStrictMode: false,

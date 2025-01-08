@@ -4,7 +4,7 @@ import { clerkClient, currentUser } from "@clerk/nextjs/server";
 
 import { db } from "./db";
 import { redirect } from "next/navigation";
-import { Agency, SubAccount, User } from "@prisma/client";
+import { Agency, Product, Role, SubAccount, User } from "@prisma/client";
 import { v4 } from "uuid";
 
 export const getAuthUserDetails = async () => {
@@ -251,12 +251,12 @@ export const upsertAgency = async (agency: Agency) => {
             },
             {
               name: "Launchpad",
-              icon: "clipboardIcon",
+              icon: "rocket",
               link: `/agency/${agency.id}/launchpad`,
             },
             {
               name: "Productos",
-              icon: "database",
+              icon: "archive",
               link: `/agency/${agency.id}/products`,
             },
             {
@@ -472,6 +472,136 @@ export const getAgencyProducts = async (agencyId: string) => {
     });
     return response;
   } catch (error) {
-    console.log(error);
+    if (error instanceof Error) {
+      console.log("Error: ", error.stack);
+    }
   }
+};
+
+export const getCategories = async () => {
+  try {
+    const response = await db.category.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error: ", error.stack);
+    }
+  }
+};
+
+export const upsertProduct = async (product: Product) => {
+  if (!product.id) return null;
+  console.log(product);
+  try {
+    const productDetails = await db.product.upsert({
+      where: {
+        id: product.id,
+      },
+      update: product,
+      create: product,
+    });
+    return productDetails;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error: ", error.stack);
+    }
+  }
+};
+
+export const deleteProduct = async (productId: string) => {
+  const response = await db.product.delete({
+    where: {
+      id: productId,
+    },
+  });
+
+  return response;
+};
+
+export const deleteProducts = async (productIds: string[]) => {
+  if (!productIds || productIds.length === 0) {
+    throw new Error("No se proporcionaron IDs para eliminar.");
+  }
+
+  try {
+    const response = await db.product.deleteMany({
+      where: {
+        id: {
+          in: productIds,
+        },
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error al eliminar productos:", error);
+    throw new Error("Error al eliminar productos.");
+  }
+};
+
+export const getProductDetails = async (productId: string) => {
+  const response = await db.product.findUnique({
+    where: {
+      id: productId,
+    },
+  });
+  return response;
+};
+
+export const sendInvitation = async (
+  role: Role,
+  email: string,
+  agencyId: string
+) => {
+  const resposne = await db.invitation.create({
+    data: { email, agencyId, role },
+  });
+
+  try {
+    const client = await clerkClient();
+
+    if (!process.env.NEXT_PUBLIC_URL) {
+      throw new Error("La variable NEXT_PUBLIC_URL no está definida.");
+    }
+
+    await client.invitations.createInvitation({
+      emailAddress: email,
+      redirectUrl: process.env.NEXT_PUBLIC_URL,
+      publicMetadata: {
+        throughInvitation: true,
+        role,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error: ", error.stack);
+    }
+  }
+
+  return resposne;
+};
+export const deleteUser = async (userId: string) => {
+  const client = clerkClient();
+  (await client).users.updateUserMetadata(userId, {
+    privateMetadata: {
+      role: undefined,
+    },
+  });
+  const deletedUser = await db.user.delete({ where: { id: userId } });
+
+  return deletedUser;
+};
+
+export const getUser = async (id: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return user;
 };

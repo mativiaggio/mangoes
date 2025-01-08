@@ -5,12 +5,13 @@ import { Plan } from "@prisma/client";
 import { redirect } from "next/navigation";
 import React from "react";
 
-const Page = async ({
-  searchParams,
-}: {
-  searchParams: { plan: Plan; state: string; code: string };
-}) => {
-  const { plan } = await searchParams;
+type Props = {
+  params: Promise<{ agencyId: string }>;
+  searchParams: Promise<{ [plan: string]: Plan | Plan[] | undefined }>;
+};
+
+const Page = async ({ searchParams }: Props) => {
+  const plan = (await searchParams).plan;
   const agencyId = await verifyAndAcceptInvitation();
 
   //get the users details
@@ -29,8 +30,8 @@ const Page = async ({
   }
   const authUser = await currentUser();
   return (
-    <div className="flex justify-center items-center mt-4">
-      <div className="max-w-[850px] border-[1px] p-4 rounded-xl">
+    <div className="flex justify-center items-center mt-4 w-full">
+      <div className="max-w-[850px] border-[1px] p-4 rounded-xl w-full">
         <AgencyForm
           data={{
             companyEmail: authUser?.emailAddresses[0].emailAddress,

@@ -67,7 +67,7 @@ export default function Home() {
         className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto"
         id="#home">
         <div className="text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-[#e75b04] mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-main-secondary mb-6">
             Crea tu tienda online con Mangoes
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
@@ -77,14 +77,14 @@ export default function Home() {
 
           <div className="flex gap-2 items-center justify-center">
             <a href={"#pricing"}>
-              <Button className="bg-[#f48d06] hover:bg-[#e75b04] text-white text-lg py-6 px-8 rounded-full transition-colors duration-300">
+              <Button className="bg-main-primary hover:bg-main-secondary text-white text-lg py-6 px-8 rounded-full transition-colors duration-300">
                 Comenzar ya
               </Button>
             </a>
             <Link href={"/agency"}>
               <Button
                 variant={"ghost"}
-                className="!border-[#f48d06] hover:!border-[#e75b04] text-primary text-lg py-6 px-8 rounded-full transition-colors duration-300 flex justify-center items-center gap-2">
+                className="!border-main-primary hover:!border-main-secondary text-primary text-lg py-6 px-8 rounded-full transition-colors duration-300 flex justify-center items-center gap-2">
                 Dashboard
                 <ChevronRight />
               </Button>
@@ -104,8 +104,8 @@ export default function Home() {
 
       {/* Tusted  */}
       <section className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto text-center">
-        <div className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto bg-[#fff8f0] dark:bg-card rounded-lg w-full flex flex-col gap-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-main-oranger">
+        <div className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto bg-[#ebedee] dark:bg-card rounded-lg w-full flex flex-col gap-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-main-secondary">
             Algunas empresas que están usando Mangoes
           </h2>
           <div className="flex justify-between items-center font-extrabold text-3xl w-full text-muted-foreground">
@@ -128,7 +128,7 @@ export default function Home() {
       <section
         className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto"
         id="features">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-[#e75b04] mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-center text-main-secondary mb-12">
           ¿Por qué elegir Mangoes?
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -174,7 +174,7 @@ export default function Home() {
               key={index}
               className="bg-white dark:bg-card p-6 rounded-lg shadow-md">
               <div className="text-4xl mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold text-[#f48d06] mb-2">
+              <h3 className="text-xl font-semibold text-main-primary mb-2">
                 {feature.title}
               </h3>
               <p className="text-muted-foreground">{feature.description}</p>
@@ -185,8 +185,8 @@ export default function Home() {
 
       {/* How It Works Section */}
       <section className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto bg-[#fff8f0] dark:bg-card rounded-lg">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-[#e75b04] mb-12">
+        <div className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto bg-[#ebedee] dark:bg-card rounded-lg">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-main-secondary mb-12">
             Cómo funciona
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -213,10 +213,10 @@ export default function Home() {
               <div
                 key={index}
                 className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-[#f48d06] rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">
+                <div className="w-16 h-16 bg-main-primary rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">
                   {step.step}
                 </div>
-                <h3 className="text-xl font-semibold text-[#e75b04] mb-2">
+                <h3 className="text-xl font-semibold text-main-secondary mb-2">
                   {step.title}
                 </h3>
                 <p className="text-muted-foreground">{step.description}</p>
@@ -247,7 +247,7 @@ export default function Home() {
                 key={plan.name}
                 className="w-full h-fit backdrop-blur-sm hover:shadow-xl border-0">
                 <CardHeader>
-                  <CardTitle className="text-xl font-bold text-main-oranger">
+                  <CardTitle className="text-xl font-bold text-main-secondary">
                     {plan.name}
                   </CardTitle>
                   <CardDescription className="text-sm">
@@ -261,7 +261,7 @@ export default function Home() {
                   <ul className="space-y-2">
                     {plan.features?.map((feature, index) => (
                       <li key={index} className="flex items-center">
-                        <Check className="mr-2 h-5 w-5 text-main-oranger" />
+                        <Check className="mr-2 h-5 w-5 text-main-secondary" />
                         <span className="text-sm text-primary">{feature}</span>
                       </li>
                     ))}
@@ -269,7 +269,7 @@ export default function Home() {
                 </CardContent>
                 <CardFooter>
                   <Link href={`/plans/${plan.id}/checkout`}>
-                    <Button className="w-full bg-main-orange hover:bg-main-oranger text-white">
+                    <Button className="w-full bg-main-primary hover:bg-main-secondary text-white">
                       Empezar ahora
                     </Button>
                   </Link>
