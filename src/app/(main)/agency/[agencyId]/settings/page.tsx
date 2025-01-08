@@ -37,15 +37,15 @@ const SettingsPage = async ({ params }: Props) => {
   const subAccounts = agencyDetails.SubAccount;
   return (
     <div className="flex lg:!flex-row flex-col gap-4 justify-center">
-      <Tabs defaultValue="account" className="w-full md:w-[50vw]">
+      <Tabs defaultValue="agency" className="w-full md:w-[50vw]">
         <TabsList className="grid grid-cols-2">
-          <TabsTrigger value="account">Marca</TabsTrigger>
-          <TabsTrigger value="password">Cuenta</TabsTrigger>
+          <TabsTrigger value="agency">Marca</TabsTrigger>
+          <TabsTrigger value="personal-account">Cuenta</TabsTrigger>
         </TabsList>
-        <TabsContent value="account">
+        <TabsContent value="agency">
           <AgencyForm data={agencyDetails} />
         </TabsContent>
-        <TabsContent value="password">
+        <TabsContent value="personal-account">
           <UserForm
             type="agency"
             id={agencyId}
