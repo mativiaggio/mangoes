@@ -4,8 +4,17 @@ import { clerkClient, currentUser } from "@clerk/nextjs/server";
 
 import { db } from "./db";
 import { redirect } from "next/navigation";
-import { Agency, Product, Role, SubAccount, User } from "@prisma/client";
+import {
+  Agency,
+  Category,
+  Icon,
+  Product,
+  Role,
+  SubAccount,
+  User,
+} from "@prisma/client";
 import { v4 } from "uuid";
+import { ProductWithCategory } from "./types";
 
 export const getAuthUserDetails = async () => {
   const user = await currentUser();
@@ -231,61 +240,129 @@ export const initUser = async (newUser: Partial<User>) => {
 
 export const upsertAgency = async (agency: Agency) => {
   if (!agency.companyEmail) return null;
+
+  // Definimos las opciones de Sidebar
+  const agencySidebarOptions = [
+    { name: "Dashboard", icon: Icon.category, link: `/agency/${agency.id}` },
+    {
+      name: "Launchpad",
+      icon: Icon.rocket,
+      link: `/agency/${agency.id}/launchpad`,
+    },
+    {
+      name: "Categorías",
+      icon: Icon.list,
+      link: `/agency/${agency.id}/categories`,
+    },
+    {
+      name: "Productos",
+      icon: Icon.archive,
+      link: `/agency/${agency.id}/products`,
+    },
+    {
+      name: "Inventario",
+      icon: Icon.packageOpen,
+      link: `/agency/${agency.id}/inventory`,
+    },
+    { name: "Ingresos", icon: Icon.wallet, link: `/agency/${agency.id}/sales` },
+    {
+      name: "Facturas de venta",
+      icon: Icon.fileInput,
+      link: `/agency/${agency.id}/sales-invoices`,
+    },
+    {
+      name: "Egresos",
+      icon: Icon.handCoins,
+      link: `/agency/${agency.id}/purchases`,
+    },
+    {
+      name: "Facturas de compra",
+      icon: Icon.fileOutput,
+      link: `/agency/${agency.id}/purchases-invoices`,
+    },
+    {
+      name: "Facturación",
+      icon: Icon.payment,
+      link: `/agency/${agency.id}/billing`,
+    },
+    {
+      name: "Configuración",
+      icon: Icon.settings,
+      link: `/agency/${agency.id}/settings`,
+    },
+    {
+      name: "Subcuentas",
+      icon: Icon.person,
+      link: `/agency/${agency.id}/all-subaccounts`,
+    },
+    { name: "Equipo", icon: Icon.shield, link: `/agency/${agency.id}/team` },
+  ];
+
+  console.log("entramos al upsertAgency");
+
   try {
+    // Realizar el upsert de la agencia
     const agencyDetails = await db.agency.upsert({
-      where: {
-        id: agency.id,
-      },
-      update: agency,
+      where: { id: agency.id },
+      update: { ...agency },
       create: {
-        users: {
-          connect: { email: agency.companyEmail },
-        },
+        users: { connect: { email: agency.companyEmail } },
         ...agency,
-        SidebarOption: {
-          create: [
-            {
-              name: "Dashboard",
-              icon: "category",
-              link: `/agency/${agency.id}`,
-            },
-            {
-              name: "Launchpad",
-              icon: "rocket",
-              link: `/agency/${agency.id}/launchpad`,
-            },
-            {
-              name: "Productos",
-              icon: "archive",
-              link: `/agency/${agency.id}/products`,
-            },
-            {
-              name: "Facturación",
-              icon: "payment",
-              link: `/agency/${agency.id}/billing`,
-            },
-            {
-              name: "Configuración",
-              icon: "settings",
-              link: `/agency/${agency.id}/settings`,
-            },
-            {
-              name: "Subcuentas",
-              icon: "person",
-              link: `/agency/${agency.id}/all-subaccounts`,
-            },
-            {
-              name: "Equipo",
-              icon: "shield",
-              link: `/agency/${agency.id}/team`,
-            },
-          ],
-        },
       },
     });
+
+    // Obtener las opciones existentes de la barra lateral
+    const existingSidebarOptions = await db.agencySidebarOption.findMany({
+      where: { agencyId: agency.id },
+    });
+
+    // Crear o actualizar opciones
+    for (const option of agencySidebarOptions) {
+      const existingOption = existingSidebarOptions.find(
+        (o) => o.name === option.name
+      );
+
+      if (existingOption) {
+        // Actualizar si existe pero cambió algún valor
+        if (
+          existingOption.icon !== option.icon ||
+          existingOption.link !== option.link
+        ) {
+          await db.agencySidebarOption.update({
+            where: { id: existingOption.id },
+            data: {
+              icon: option.icon,
+              link: option.link,
+            },
+          });
+        }
+      } else {
+        // Crear si no existe
+        await db.agencySidebarOption.create({
+          data: {
+            ...option,
+            agencyId: agency.id,
+          },
+        });
+      }
+    }
+
+    // Eliminar opciones antiguas que no están en agencySidebarOptions
+    const optionNames = agencySidebarOptions.map((o) => o.name);
+    const optionsToDelete = existingSidebarOptions.filter(
+      (o) => !optionNames.includes(o.name)
+    );
+
+    for (const option of optionsToDelete) {
+      await db.agencySidebarOption.delete({
+        where: { id: option.id },
+      });
+    }
+
     return agencyDetails;
   } catch (error) {
-    console.log(error);
+    console.error("Error en upsertAgency:", error);
+    throw error;
   }
 };
 
@@ -462,10 +539,15 @@ export const deleteSubAccount = async (subaccountId: string) => {
   return response;
 };
 
-export const getAgencyProducts = async (agencyId: string) => {
+export const getAgencyProducts = async (
+  agencyId: string
+): Promise<ProductWithCategory[]> => {
   try {
     const response = await db.product.findMany({
       where: { agencyId },
+      include: {
+        Category: true, // Incluye la categoría
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -475,21 +557,7 @@ export const getAgencyProducts = async (agencyId: string) => {
     if (error instanceof Error) {
       console.log("Error: ", error.stack);
     }
-  }
-};
-
-export const getCategories = async () => {
-  try {
-    const response = await db.category.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-    return response;
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log("Error: ", error.stack);
-    }
+    throw error; // Lanza el error para manejo adicional
   }
 };
 
@@ -547,6 +615,81 @@ export const getProductDetails = async (productId: string) => {
   const response = await db.product.findUnique({
     where: {
       id: productId,
+    },
+  });
+  return response;
+};
+
+export const getAgencyCategories = async (agencyId: string) => {
+  try {
+    const response = await db.category.findMany({
+      where: { agencyId },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error: ", error.stack);
+    }
+  }
+};
+
+export const upsertCategory = async (category: Category) => {
+  if (!category.id) return null;
+  console.log(category);
+  try {
+    const categoryDetails = await db.category.upsert({
+      where: {
+        id: category.id,
+      },
+      update: category,
+      create: category,
+    });
+    return categoryDetails;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error: ", error.stack);
+    }
+  }
+};
+
+export const deleteCategory = async (categoryId: string) => {
+  const response = await db.category.delete({
+    where: {
+      id: categoryId,
+    },
+  });
+
+  return response;
+};
+
+export const deleteCategories = async (categoryId: string[]) => {
+  if (!categoryId || categoryId.length === 0) {
+    throw new Error("No se proporcionaron IDs para eliminar.");
+  }
+
+  try {
+    const response = await db.product.deleteMany({
+      where: {
+        id: {
+          in: categoryId,
+        },
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error al eliminar categorias:", error);
+    throw new Error("Error al eliminar categorias.");
+  }
+};
+
+export const getCategoryDetails = async (categoryId: string) => {
+  const response = await db.category.findUnique({
+    where: {
+      id: categoryId,
     },
   });
   return response;

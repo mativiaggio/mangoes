@@ -23,13 +23,10 @@ import {
   Agency,
   AgencySidebarOption,
   Category,
-  Product,
   SubAccount,
   User,
 } from "@prisma/client";
-import { formatPriceToARS } from "@/lib/utils";
-import Image from "next/image";
-import DeleteProductButton from "./delete-button";
+import DeleteCategoryButton from "./delete-button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,9 +38,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import EditProductButton from "./edit-product-btn";
-import BulkDeleteProducts from "./bulk-delete-products";
-import { ProductWithCategory } from "@/lib/types";
+import EditCategoryButton from "./edit-category-btn";
+import BulkDeletecategories from "./bulk-delete-categories";
 
 type Props = {
   user: User & {
@@ -58,31 +54,28 @@ type Props = {
       | null;
   };
   agencyId: string;
-  products: ProductWithCategory[];
   categories: Category[];
-  onEdit?: (product: Product) => void;
-  onDelete?: (product: Product) => void;
+  onDelete?: (category: Category) => void;
 };
 
 const ITEMS_PER_PAGE = 50;
 
-export default function ProductsDataTable({
+export default function CategoriesDataTable({
   user,
   agencyId,
-  products,
   categories,
 }: Props) {
-  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(
+  const [selectedCategories, setselectedCategories] = useState<Set<string>>(
     new Set()
   );
   const [sortConfig, setSortConfig] = useState<{
-    key: keyof Product;
+    key: keyof Category;
     direction: "asc" | "desc";
   }>({ key: "name", direction: "asc" });
   const [filterName, setFilterName] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const toggleSort = (key: keyof Product) => {
+  const toggleSort = (key: keyof Category) => {
     setSortConfig({
       key,
       direction:
@@ -92,11 +85,11 @@ export default function ProductsDataTable({
     });
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(filterName.toLowerCase())
+  const filteredCategories = categories.filter((category) =>
+    category.name.toLowerCase().includes(filterName.toLowerCase())
   );
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
+  const sortedcategories = [...filteredCategories].sort((a, b) => {
     const aValue = a[sortConfig.key];
     const bValue = b[sortConfig.key];
 
@@ -105,33 +98,33 @@ export default function ProductsDataTable({
     return 0;
   });
 
-  const paginatedProducts = sortedProducts.slice(
+  const paginatedcategories = sortedcategories.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
 
-  const totalPages = Math.ceil(sortedProducts.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(sortedcategories.length / ITEMS_PER_PAGE);
 
   const toggleSelectAll = () => {
-    if (selectedProducts.size === paginatedProducts.length) {
-      setSelectedProducts(new Set());
+    if (selectedCategories.size === paginatedcategories.length) {
+      setselectedCategories(new Set());
     } else {
-      setSelectedProducts(new Set(paginatedProducts.map((p) => p.id)));
+      setselectedCategories(new Set(paginatedcategories.map((p) => p.id)));
     }
   };
 
   const toggleSelect = (id: string) => {
-    const newSelected = new Set(selectedProducts);
+    const newSelected = new Set(selectedCategories);
     if (newSelected.has(id)) {
       newSelected.delete(id);
     } else {
       newSelected.add(id);
     }
-    setSelectedProducts(newSelected);
+    setselectedCategories(newSelected);
   };
 
-  const resetSelectedProducts = () => {
-    setSelectedProducts(new Set());
+  const resetselectedCategories = () => {
+    setselectedCategories(new Set());
   };
 
   return (
@@ -145,15 +138,15 @@ export default function ProductsDataTable({
         />
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground hidden md:block">
-            {selectedProducts.size} seleccionado
-            {selectedProducts.size !== 1 && "s"}
+            {selectedCategories.size} seleccionado
+            {selectedCategories.size !== 1 && "s"}
           </span>
           <Button
             variant="outline"
             size="sm"
             onClick={() => {}}
             className="h-8"
-            disabled={selectedProducts.size == 0}>
+            disabled={selectedCategories.size == 0}>
             <Download className="" />
             Exportar
           </Button>
@@ -163,7 +156,7 @@ export default function ProductsDataTable({
                 size="sm"
                 onClick={() => {}}
                 className="h-8"
-                disabled={selectedProducts.size == 0}>
+                disabled={selectedCategories.size == 0}>
                 <Trash />
                 Eliminar
               </Button>
@@ -174,26 +167,26 @@ export default function ProductsDataTable({
                   Eliminar{" "}
                   <span className="text-main-secondary">
                     {" "}
-                    {selectedProducts.size} producto
-                    {selectedProducts.size !== 1 && "s"}
+                    {selectedCategories.size} categoryo
+                    {selectedCategories.size !== 1 && "s"}
                   </span>
                 </AlertDialogTitle>
                 <AlertDialogDescription>
                   Estás seguro/a de querer eliminar{" "}
-                  {selectedProducts.size !== 1
-                    ? "los productoss"
-                    : "el producto"}{" "}
+                  {selectedCategories.size !== 1
+                    ? "los categoryoss"
+                    : "el categoryo"}{" "}
                   seleccionado
-                  {selectedProducts.size !== 1 && "s"}?
+                  {selectedCategories.size !== 1 && "s"}?
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction>
-                  <BulkDeleteProducts
+                  <BulkDeletecategories
                     agencyId={agencyId}
-                    selectedProducts={Array.from(selectedProducts)}
-                    onDeleteComplete={resetSelectedProducts}
+                    selectedCategories={Array.from(selectedCategories)}
+                    onDeleteComplete={resetselectedCategories}
                   />
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -208,11 +201,12 @@ export default function ProductsDataTable({
             <TableRow className="bg-muted/50">
               <TableHead className="w-12">
                 <Checkbox
-                  checked={selectedProducts.size === paginatedProducts.length}
+                  checked={
+                    selectedCategories.size === paginatedcategories.length
+                  }
                   onCheckedChange={toggleSelectAll}
                 />
               </TableHead>
-              <TableHead className="!w-28"></TableHead>
               <TableHead className="w-/6">
                 <Button
                   variant="ghost"
@@ -222,66 +216,23 @@ export default function ProductsDataTable({
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead className="w-/6">
-                <Button
-                  variant="ghost"
-                  onClick={() => toggleSort("name")}
-                  className="flex items-center gap-1 p-0 hover:bg-transparent">
-                  Categoría
-                  <ArrowUpDown className="h-4 w-4" />
-                </Button>
-              </TableHead>
-              <TableHead className="w-1/6">
-                <Button
-                  variant="ghost"
-                  onClick={() => toggleSort("price")}
-                  className="flex items-center gap-1 p-0 hover:bg-transparent">
-                  Precio
-                  <ArrowUpDown className="h-4 w-4" />
-                </Button>
-              </TableHead>
-              <TableHead className="w-1/6">
-                <Button
-                  variant="ghost"
-                  onClick={() => toggleSort("stock")}
-                  className="flex items-center gap-1 p-0 hover:bg-transparent">
-                  Stock
-                  <ArrowUpDown className="h-4 w-4" />
-                </Button>
-              </TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedProducts.map((product) => (
+            {paginatedcategories.map((category) => (
               <TableRow
-                key={product.id}
+                key={category.id}
                 className={`${
-                  selectedProducts.has(product.id) ? "bg-muted" : ""
+                  selectedCategories.has(category.id) ? "bg-muted" : ""
                 } hover:bg-muted`}>
                 <TableCell>
                   <Checkbox
-                    checked={selectedProducts.has(product.id)}
-                    onCheckedChange={() => toggleSelect(product.id)}
+                    checked={selectedCategories.has(category.id)}
+                    onCheckedChange={() => toggleSelect(category.id)}
                   />
                 </TableCell>
-                <TableCell>
-                  {product.productImage && (
-                    <Image
-                      src={product.productImage}
-                      alt="app logo"
-                      height={80}
-                      width={80}
-                      className="rounded-md !max-h-80"
-                    />
-                  )}
-                </TableCell>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.Category.name}</TableCell>
-                <TableCell>
-                  {formatPriceToARS(product.price.toString())}
-                </TableCell>
-                <TableCell>{product.stock}</TableCell>
+                <TableCell>{category.name}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -291,10 +242,9 @@ export default function ProductsDataTable({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <AlertDialog>
-                        <EditProductButton
-                          details={product}
+                        <EditCategoryButton
+                          details={category}
                           user={user}
-                          categories={categories}
                           className="w-[200px] self-end"
                         />
                       </AlertDialog>
@@ -314,14 +264,14 @@ export default function ProductsDataTable({
                               Eliminar{" "}
                               <span className="text-main-secondary">
                                 {" "}
-                                {product.name}
+                                {category.name}
                               </span>
                             </AlertDialogTitle>
                             <AlertDialogDescription>
-                              Estás seguro/a de querer eliminar el producto{" "}
+                              Estás seguro/a de querer eliminar el categoryo{" "}
                               <span className="text-main-primary">
                                 {" "}
-                                {product.name}
+                                {category.name}
                               </span>
                               ?
                             </AlertDialogDescription>
@@ -329,10 +279,10 @@ export default function ProductsDataTable({
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction>
-                              <DeleteProductButton
+                              <DeleteCategoryButton
                                 agencyId={agencyId}
-                                productId={product.id}
-                                onDeleteComplete={resetSelectedProducts}
+                                categoryId={category.id}
+                                onDeleteComplete={resetselectedCategories}
                               />
                             </AlertDialogAction>
                           </AlertDialogFooter>
@@ -350,8 +300,8 @@ export default function ProductsDataTable({
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
           Mostrando {(currentPage - 1) * ITEMS_PER_PAGE + 1} a{" "}
-          {Math.min(currentPage * ITEMS_PER_PAGE, sortedProducts.length)} de{" "}
-          {sortedProducts.length} productos
+          {Math.min(currentPage * ITEMS_PER_PAGE, sortedcategories.length)} de{" "}
+          {sortedcategories.length} categoryos
         </p>
         <div className="flex items-center space-x-2">
           <Button

@@ -48,6 +48,11 @@ enum Icon {
   clipboardIcon
   rocket
   archive
+  list
+  packageOpen
+  handCoins
+  fileInput
+  fileOutput
 }
 
 model User {
@@ -105,7 +110,8 @@ model Agency {
   Notification     Notification[]
   Subscription     Subscription?
   AddOns           AddOns[]
-  Products         Product[]             // Relación con productos
+  Products         Product[]
+  Categories       Category[]
 }
 
 model SubAccount {
@@ -466,10 +472,13 @@ model Category {
   isActive  Boolean   @default(true)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  agencyId  String
+  Agency    Agency      @relation(fields: [agencyId], references: [id], onDelete: Cascade)
   userId    String
   User      User      @relation(fields: [userId], references: [id])
   Product   Product[]
 
   @@index([name])
+  @@index([agencyId])
   @@index([userId])
 }

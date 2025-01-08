@@ -2,7 +2,7 @@ import {
   deleteProduct,
   getAgencyProducts,
   getAuthUserDetails,
-  getCategories,
+  getAgencyCategories,
 } from "@/lib/queries";
 import React from "react";
 import ProductsDataTable from "./_components/products-data-table";
@@ -19,7 +19,7 @@ const ProductsPage = async ({ params }: Props) => {
   const products = await getAgencyProducts(agencyId);
   const data = JSON.parse(JSON.stringify(products));
   const user = await getAuthUserDetails();
-  const categories = await getCategories();
+  const categories = await getAgencyCategories(agencyId);
 
   if (!user || !categories) return;
 

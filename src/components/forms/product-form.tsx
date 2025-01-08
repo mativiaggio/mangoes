@@ -269,14 +269,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
         {showError && (
           <ErrorAlert
             title="Ocurrió un error al guardar los datos."
-            message="Verifique su contraseña y vuelva a intentarlo. Si el error persiste, póngase en contacto con el soporte técnico."
+            message="Vuelva a intentarlo. Si el error persiste, póngase en contacto con el soporte técnico."
             onClose={() => setShowError(false)}
           />
         )}
         {showSuccess && (
           <SuccessAlert
-            title="Contraseña actualizada con éxito."
-            message="Te estamos redirigiendo al inicio de sesión."
+            title="Éxito."
+            message="Datos cargados con éxito."
             onClose={() => setShowSuccess(false)}
           />
         )}

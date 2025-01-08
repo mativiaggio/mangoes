@@ -57,7 +57,13 @@ type Props = {
 const linkOrder = [
   "Dashboard",
   "Launchpad",
+  "Categorías",
   "Productos",
+  "Inventario",
+  "Ingresos",
+  "Facturas de venta",
+  "Egresos",
+  "Facturas de compra",
   "Facturación",
   "Configuración",
   "Subcuentas",

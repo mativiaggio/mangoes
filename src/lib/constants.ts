@@ -29,6 +29,11 @@ import Wallet from "@/components/icons/wallet";
 import Warning from "@/components/icons/warning";
 import Rocket from "@/components/icons/rocket";
 import Archive from "@/components/icons/archive";
+import PackageOpen from "@/components/icons/package-open";
+import HandCoins from "@/components/icons/hand-coins";
+import FileInput from "@/components/icons/file-input";
+import FileOutput from "@/components/icons/file-output";
+import List from "@/components/icons/list";
 export const pricingCards = [
   {
     title: "Starter",
@@ -218,6 +223,31 @@ export const icons = [
     value: "archive",
     label: "Archive",
     path: Archive,
+  },
+  {
+    value: "list",
+    label: "List",
+    path: List,
+  },
+  {
+    value: "packageOpen",
+    label: "Package Open",
+    path: PackageOpen,
+  },
+  {
+    value: "handCoins",
+    label: "Hand Coins",
+    path: HandCoins,
+  },
+  {
+    value: "fileInput",
+    label: "File Input",
+    path: FileInput,
+  },
+  {
+    value: "fileOutput",
+    label: "File Output",
+    path: FileOutput,
   },
 ];
 

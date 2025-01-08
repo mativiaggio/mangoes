@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Notification, Prisma, Role } from "@prisma/client";
+import { Category, Notification, Prisma, Product, Role } from "@prisma/client";
 import {
   _getTicketsWithAllRelations,
   getAuthUserDetails,
@@ -49,3 +49,7 @@ export type UsersWithAgencySubAccountPermissionsSidebarOptions =
   Prisma.PromiseReturnType<
     typeof __getUsersWithAgencySubAccountPermissionsSidebarOptions
   >;
+
+export type ProductWithCategory = Product & {
+  Category: Category;
+};
