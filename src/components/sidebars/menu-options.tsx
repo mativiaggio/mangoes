@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
-  Agency,
   AgencySidebarOption,
   SubAccount,
   SubAccountSidebarOption,
@@ -9,23 +8,15 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
 import {
-  ChevronsUpDown,
-  Compass,
-  HelpCircle,
-  Hexagon,
   Menu,
-  PlusCircleIcon,
 } from "lucide-react";
 import clsx from "clsx";
-import Image from "next/image";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
   Command,
   CommandEmpty,
@@ -36,13 +27,14 @@ import {
 } from "../ui/command";
 import Link from "next/link";
 import { Separator } from "../ui/separator";
-import { useModal } from "@/lib/providers/modal-provider";
+// import { useModal } from "@/lib/providers/modal-provider";
 import { icons } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-import CustomModal from "../custom-modal";
-import SubAccountForm from "../forms/subaccount-form";
+// import CustomModal from "../custom-modal";
+// import SubAccountForm from "../forms/subaccount-form";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import Image from 'next/image';
 
 type Props = {
   defaultOpen?: boolean;
@@ -68,16 +60,17 @@ const linkOrder = [
   "Configuración",
   "Subcuentas",
   "Equipo",
+  "Contactos",
 ];
 
 const MenuOptions = ({
   defaultOpen,
-  subAccounts,
+  // subAccounts,
   sidebarOptions,
   details,
-  user,
-}: Props) => {
-  const { setOpen } = useModal();
+}: // user,
+Props) => {
+  // const { setOpen } = useModal();
   const [isMounted, setIsMounted] = useState(false);
   const currentPath = usePathname();
 
@@ -116,10 +109,10 @@ const MenuOptions = ({
         </SheetDescription>
         <div>
           <div className="w-full text-2xl font-extrabold px-3 flex items-center gap-2">
-            <Hexagon />
+            <Image src={details.agencyLogo} height={30} width={30} alt='Agency Logo' />
             {details.name}
           </div>
-          <Popover>
+          {/* <Popover>
             <PopoverTrigger asChild>
               <Button
                 className="w-full my-4 flex items-center justify-between py-8"
@@ -279,8 +272,8 @@ const MenuOptions = ({
                 )}
               </Command>
             </PopoverContent>
-          </Popover>
-          <Separator />
+          </Popover> */}
+          <Separator className="mt-8" />
           <nav className="relative">
             <Command className="rounded-lg overflow-visible bg-transparent">
               <CommandInput placeholder="Buscar..." />
@@ -304,14 +297,14 @@ const MenuOptions = ({
                         <CommandItem
                           key={sidebarOption.id}
                           className={cn(
-                            "md:w-[320px] w-full  hover:bg-red-500/20 dark:hover:bg-red-500/30",
+                            "md:w-[320px] w-full  hover:bg-red-500/20 dark:hover:bg-red-500/30 !p-0",
                             currentPath === sidebarOption.link
                               ? "!bg-main-primary dark:!bg-main-secondary !text-white hover:!text-white"
                               : ""
                           )}>
                           <Link
                             href={sidebarOption.link}
-                            className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px]">
+                            className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px] px-2 py-1.5">
                             {val}
                             <span>{sidebarOption.name}</span>
                           </Link>

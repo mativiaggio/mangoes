@@ -32,7 +32,7 @@ export function ErrorAlert({
   if (!isVisible) return null;
 
   return (
-    <div className="fixed top-4 right-4 w-full max-w-sm animate-in slide-in-from-top-2 duration-300 z-50">
+    <div className="fixed bottom-4 right-4 w-full max-w-sm animate-in slide-in-from-top-2 duration-300 z-50">
       <div className="bg-red-50 border-l-4 border-red-500 rounded-md shadow-lg p-4">
         <div className="flex items-start">
           <div className="flex-shrink-0">

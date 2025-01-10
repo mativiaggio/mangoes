@@ -26,11 +26,14 @@ import {
 } from "@/components/ui/card";
 
 import { Agency, SubAccount } from "@prisma/client";
-import { saveActivityLogsNotification, upsertSubAccount } from "@/lib/queries";
+import {
+  createSubAccount,
+  saveActivityLogsNotification,
+  updateSubAccount,
+} from "@/lib/queries";
 import { useEffect, useState } from "react";
 import { useModal } from "@/lib/providers/modal-provider";
 import FileUpload from "../file-upload";
-import { useToast } from "@/hooks/use-toast";
 import {
   Tooltip,
   TooltipContent,
@@ -46,6 +49,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import PhoneInput from "react-phone-number-input";
+import { ErrorAlert } from "../alerts/error-alert";
+import { SuccessAlert } from "../alerts/success-alert";
 
 const formSchema = z.object({
   name: z.string().min(2, "El subnombre debe tener al menos 2 caracteres."),
@@ -71,7 +76,6 @@ const SubAccountForm: React.FC<SubAccountFormProps> = ({
   details,
   agencyDetails,
 }) => {
-  const { toast } = useToast();
   const { setClose } = useModal();
   const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -79,13 +83,15 @@ const SubAccountForm: React.FC<SubAccountFormProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [municipios, setMunicipios] = useState<any>(null);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const [showError, setShowError] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: details?.name || "",
       companyEmail: details?.companyEmail || "",
-      companyPhone: details?.companyPhone || "",
+      companyPhone: details?.companyPhone,
       address: details?.address || "",
       city: details?.city || "",
       zipCode: details?.zipCode || "",
@@ -99,7 +105,11 @@ const SubAccountForm: React.FC<SubAccountFormProps> = ({
     fetch("https://apis.datos.gob.ar/georef/api/provincias")
       .then((response) => response.json())
       .then((data) => setProvinces(data));
-  }, []);
+
+    if (details?.state) {
+      setSelectedProvince(details.state);
+    }
+  }, [details?.state]);
 
   useEffect(() => {
     if (selectedProvince) {
@@ -107,52 +117,80 @@ const SubAccountForm: React.FC<SubAccountFormProps> = ({
         `https://apis.datos.gob.ar/georef/api/municipios?provincia=${selectedProvince}&max=1000`
       )
         .then((response) => response.json())
-        .then((data) => setMunicipios(data))
+        .then((data) => {
+          setMunicipios(data);
+          // Verifica si `details.city` está en la lista de municipios y selecciónala
+          if (details?.city) {
+            const ciudadEncontrada = data.municipios.find(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (municipio: any) => municipio.nombre === details.city
+            );
+            if (ciudadEncontrada) {
+              form.setValue("city", ciudadEncontrada.nombre);
+            }
+          }
+        })
         .catch((error) => console.error("Error fetching municipios:", error));
     }
-  }, [selectedProvince]);
+  }, [selectedProvince, details?.city, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const response = await upsertSubAccount({
-        id: details?.id ? details.id : v4() || "",
-        address: values.address || "",
-        subAccountLogo: values.subAccountLogo || "",
-        city: values.city || "",
-        companyPhone: values.companyPhone || "",
-        country: values.country || "",
-        name: values.name || "",
-        state: values.state || "",
-        zipCode: values.zipCode || "",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        companyEmail: values.companyEmail || "",
-        agencyId: agencyDetails.id || "",
-        connectAccountId: "",
-        goal: 5000,
-      });
+      let response;
+
+      if (details?.id) {
+        response = await updateSubAccount({
+          id: details?.id ? details.id : v4() || "",
+          address: values.address || "",
+          subAccountLogo: values.subAccountLogo || "",
+          city: values.city || "",
+          companyPhone: values.companyPhone || "",
+          country: values.country || "",
+          name: values.name || "",
+          state: values.state || "",
+          zipCode: values.zipCode || "",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          companyEmail: values.companyEmail || "",
+          agencyId: agencyDetails.id || "",
+          connectAccountId: "",
+          goal: 5000,
+        });
+      } else {
+        response = await createSubAccount({
+          id: details?.id ? details.id : v4() || "",
+          address: values.address || "",
+          subAccountLogo: values.subAccountLogo || "",
+          city: values.city || "",
+          companyPhone: values.companyPhone || "",
+          country: values.country || "",
+          name: values.name || "",
+          state: values.state || "",
+          zipCode: values.zipCode || "",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          companyEmail: values.companyEmail || "",
+          agencyId: agencyDetails.id || "",
+          connectAccountId: "",
+          goal: 5000,
+        });
+      }
+
       if (!response) throw new Error("No response from server");
+      console.log("response", response);
       await saveActivityLogsNotification({
         agencyId: response.agencyId,
         description: `Subcuenta actualizada | ${response.name}`,
         subAccountId: response.id,
       });
 
-      toast({
-        title: "Detalles de la subcuenta guardados",
-        description:
-          "Se han guardado correctamente los detalles de la subcuenta.",
-      });
+      setShowSuccess(true);
 
       setClose();
       router.refresh();
     } catch (error) {
       console.log(error);
-      toast({
-        variant: "destructive",
-        title: "¡Ups!",
-        description: "No se pudieron guardar los detalles de la subcuenta.",
-      });
+      setShowError(true);
     }
   }
 
@@ -236,6 +274,7 @@ const SubAccountForm: React.FC<SubAccountFormProps> = ({
                         international
                         withCountryCallingCode
                         onChange={field.onChange}
+                        value={field.value}
                         className="input-phone"
                       />
                     </FormControl>
@@ -394,6 +433,20 @@ const SubAccountForm: React.FC<SubAccountFormProps> = ({
             </Button>
           </form>
         </Form>
+        {showError && (
+          <ErrorAlert
+            title="Ocurrió un error al guardar los datos."
+            message="Vuelva a intentarlo. Si el error persiste, póngase en contacto con el soporte técnico."
+            onClose={() => setShowError(false)}
+          />
+        )}
+        {showSuccess && (
+          <SuccessAlert
+            title="Éxito."
+            message="Datos cargados con éxito."
+            onClose={() => setShowSuccess(false)}
+          />
+        )}
       </CardContent>
     </Card>
   );

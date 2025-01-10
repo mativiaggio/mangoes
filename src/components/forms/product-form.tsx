@@ -35,11 +35,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 import FileUpload from "../file-upload";
-import { Loader, Stars } from "lucide-react";
-import { ErrorAlert } from "../alerts/error-alert";
-import { SuccessAlert } from "../alerts/success-alert";
-import { useState } from "react";
+import { CircleHelp, Loader, Stars } from "lucide-react";
+import { Switch } from "../ui/switch";
+import { Textarea } from "../ui/textarea";
 
 const formSchema = z.object({
   name: z
@@ -50,7 +55,8 @@ const formSchema = z.object({
   categoryId: z.string().min(1, "La categoría es obligatoria."),
   stock: z.coerce.number(),
   productImage: z.string().optional(),
-  isActive: z.boolean().optional(),
+  isActive: z.boolean().default(true),
+  featured: z.boolean().default(false),
 });
 
 interface ProductFormProps {
@@ -68,8 +74,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
 }) => {
   const { setClose } = useModal();
   const router = useRouter();
-  const [showSuccess, setShowSuccess] = useState<boolean>(false);
-  const [showError, setShowError] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -80,7 +84,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
       categoryId: details?.categoryId || "",
       stock: details?.stock || 0,
       productImage: details?.productImage || "",
-      isActive: details?.isActive || true,
+      isActive: details?.isActive,
+      featured: details?.featured,
     },
   });
 
@@ -94,7 +99,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
         categoryId: values.categoryId,
         stock: values.stock,
         productImage: values.productImage || "",
-        isActive: values.isActive || false,
+        isActive: values.isActive,
+        featured: values.featured,
         agencyId: agencyDetails.id,
         userId,
         createdAt: details?.createdAt || new Date(),
@@ -114,13 +120,11 @@ const ProductForm: React.FC<ProductFormProps> = ({
         });
       }
 
-      setShowSuccess(true);
 
       setClose();
       router.refresh();
     } catch (error) {
       console.error(error);
-      setShowError(true);
     }
   }
 
@@ -140,7 +144,25 @@ const ProductForm: React.FC<ProductFormProps> = ({
               name="productImage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Logo de la cuenta</FormLabel>
+                  <FormLabel>
+                    <span className="text-sm">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex gap-1 items-center w-fit">
+                              Imagen del Producto <CircleHelp size={12} />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-main-primary">
+                            <span className="text-white text-sm w-full">
+                              Es de suma importancia que intentes subir imagenes
+                              cuadradas
+                            </span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </span>
+                  </FormLabel>
                   <FormControl>
                     <FileUpload
                       apiEndpoint="products"
@@ -177,7 +199,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 <FormItem>
                   <FormLabel>Descripción</FormLabel>
                   <FormControl>
-                    <Input
+                    <Textarea
                       required
                       placeholder="Descripción del producto"
                       {...field}
@@ -252,6 +274,72 @@ const ProductForm: React.FC<ProductFormProps> = ({
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="isActive"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between">
+                  <span className="text-sm">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex gap-1 items-center w-fit">
+                            Activo <CircleHelp size={12} />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-main-primary">
+                          <span className="text-white text-sm w-full">
+                            Los productos marcados como inactivos no se
+                            mostrarán en tu página.
+                          </span>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </span>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="featured"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between">
+                  <span className="text-sm">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex gap-1 items-center w-fit">
+                            Destacado <CircleHelp size={12} />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-main-primary">
+                          <span className="text-white text-sm w-full">
+                            Los productos destacados se mostrarán en la página
+                            principal.
+                          </span>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </span>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button type="submit">
               {isLoading ? (
                 <>
@@ -266,20 +354,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
             </Button>
           </form>
         </Form>
-        {showError && (
-          <ErrorAlert
-            title="Ocurrió un error al guardar los datos."
-            message="Vuelva a intentarlo. Si el error persiste, póngase en contacto con el soporte técnico."
-            onClose={() => setShowError(false)}
-          />
-        )}
-        {showSuccess && (
-          <SuccessAlert
-            title="Éxito."
-            message="Datos cargados con éxito."
-            onClose={() => setShowSuccess(false)}
-          />
-        )}
       </CardContent>
     </Card>
   );

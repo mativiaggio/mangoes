@@ -295,13 +295,13 @@ const UserForm = ({ id, type, subAccounts, userData }: Props) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="AGENCY_ADMING">
-                        Agency Admin
+                      <SelectItem value="AGENCY_ADMIN">
+                        Administrador
                       </SelectItem>
                       {(data?.user?.role === "AGENCY_OWNER" ||
                         userData?.role === "AGENCY_OWNER") && (
                         <SelectItem value="AGENCY_OWNER">
-                          Agency Owner
+                          Propietario
                         </SelectItem>
                       )}
                       <SelectItem value="SUBACCOUNT_USER">

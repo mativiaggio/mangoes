@@ -269,10 +269,10 @@ export default function ProductsDataTable({
                   {product.productImage && (
                     <Image
                       src={product.productImage}
-                      alt="app logo"
-                      height={80}
-                      width={80}
-                      className="rounded-md !max-h-80"
+                      alt="Product Image"
+                      height={40}
+                      width={40}
+                      className="rounded-md !aspect-square object-contain"
                     />
                   )}
                 </TableCell>

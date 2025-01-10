@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import React from "react";
 
 type Props = {
-  params: Promise<{ domain: string; path: string }>;
+  params: Promise<{ domain: string; path: string; id: string }>;
 };
 
 const templateComponents: Record<
@@ -24,7 +24,7 @@ const Page = async ({ params }: Props) => {
 
   if (path === "products") {
     const TemplateComponent = templateComponents[website.template];
-    if (TemplateComponent) return <TemplateComponent website={website} />;
+    if (TemplateComponent) return <div>Pagina del producto</div>;
   }
 
   return <div>Ocurrió un error</div>;

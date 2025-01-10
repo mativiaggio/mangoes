@@ -1,15 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Category, Notification, Prisma, Product, Role } from "@prisma/client";
 import {
-  _getTicketsWithAllRelations,
-  getAuthUserDetails,
-  getUserPermissions,
-} from "./queries";
+  Agency,
+  Category,
+  Contact,
+  Notification,
+  Prisma,
+  Product,
+  Role,
+  User,
+  Website,
+} from "@prisma/client";
+import { getAuthUserDetails, getUserPermissions } from "./queries";
 import { db } from "./db";
-
-export type TicketDetails = Prisma.PromiseReturnType<
-  typeof _getTicketsWithAllRelations
->;
+import { z } from "zod";
 
 export type NotificationWithUser =
   | ({
@@ -52,4 +55,18 @@ export type UsersWithAgencySubAccountPermissionsSidebarOptions =
 
 export type ProductWithCategory = Product & {
   Category: Category;
+};
+
+export const ContactUserFormSchema = z.object({
+  name: z.string().min(1, "Required"),
+  email: z.string().email(),
+});
+
+export type CompleteWebsiteInfo = Website & {
+  Agency: Agency & {
+    Products: (Product & {
+      Category: Category;
+    })[];
+    Categories: Category[];
+  };
 };

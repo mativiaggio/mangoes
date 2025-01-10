@@ -6,7 +6,12 @@ import { UploadDropzone } from "@/lib/uploadthing";
 import { Button } from "./ui/button";
 
 type Props = {
-  apiEndpoint: "agencyLogo" | "avatar" | "subaccountLogo" | "products";
+  apiEndpoint:
+    | "agencyLogo"
+    | "avatar"
+    | "subaccountLogo"
+    | "products"
+    | "websiteLogo";
   onChange: (url?: string) => void;
   value?: string;
 };

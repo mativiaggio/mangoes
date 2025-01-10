@@ -111,23 +111,39 @@ const AgencyForm = ({ data }: Props) => {
   const isLoading = form.formState.isSubmitting;
 
   useEffect(() => {
-    if (data) {
-      form.reset(data);
-    }
-  }, [data, form]);
-
-  useEffect(() => {
     fetch("https://apis.datos.gob.ar/georef/api/provincias")
       .then((response) => response.json())
       .then((data) => setProvinces(data));
-  }, []);
+
+    // Establece la provincia inicial si está definida en `data`.
+    if (data?.state) {
+      form.setValue("state", data.state);
+      handleMunicipios(data.state); // Carga los municipios de la provincia inicial.
+    }
+  }, [data?.state, form]);
+
+  useEffect(() => {
+    // Una vez que se carguen los municipios, selecciona automáticamente la ciudad.
+    if (municipios?.municipios && data?.city) {
+      const ciudadEncontrada = municipios.municipios.find(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (municipio: any) => municipio.nombre === data.city
+      );
+      if (ciudadEncontrada) {
+        form.setValue("city", ciudadEncontrada.nombre);
+      }
+    }
+  }, [municipios, data?.city, form]);
 
   const handleMunicipios = (value: string) => {
     fetch(
       `https://apis.datos.gob.ar/georef/api/municipios?provincia=${value}&max=1000`
     )
       .then((response) => response.json())
-      .then((data) => setMunicipios(data));
+      .then((data) => setMunicipios(data))
+      .catch((error) =>
+        console.error("Error al cargar los municipios:", error)
+      );
   };
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
@@ -232,7 +248,25 @@ const AgencyForm = ({ data }: Props) => {
                 name="agencyLogo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Logo de la marca</FormLabel>
+                    <FormLabel>
+                    <span className="text-sm">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex gap-1 items-center w-fit">
+                              Logo de la marca <CircleHelp size={12} />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-main-primary">
+                            <span className="text-white text-sm w-full">
+                              Es de suma importancia que intentes subir imagenes
+                              cuadradas solo con el logo, no el nombre.
+                            </span>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </span>
+                    </FormLabel>
                     <FormControl>
                       <FileUpload
                         apiEndpoint="agencyLogo"
@@ -291,6 +325,7 @@ const AgencyForm = ({ data }: Props) => {
                           international
                           withCountryCallingCode
                           onChange={field.onChange}
+                          value={field.value}
                           className="input-phone"
                         />
                       </FormControl>

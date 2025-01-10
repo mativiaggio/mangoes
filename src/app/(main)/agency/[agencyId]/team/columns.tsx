@@ -89,7 +89,7 @@ export const columns: ColumnDef<UsersWithAgencySubAccountPermissionsSidebarOptio
             <div className="flex flex-col items-start">
               <div className="flex flex-col gap-2">
                 <Badge className="bg-slate-600 whitespace-nowrap">
-                  Agency - {row?.original?.Agency?.name}
+                  Marca - {row?.original?.Agency?.name}
                 </Badge>
               </div>
             </div>
@@ -102,7 +102,7 @@ export const columns: ColumnDef<UsersWithAgencySubAccountPermissionsSidebarOptio
                   <Badge
                     key={account.id}
                     className="bg-slate-600 w-fit whitespace-nowrap">
-                    Sub Account - {account.SubAccount.name}
+                    Sub Cuenta - {account.SubAccount.name}
                   </Badge>
                 ))
               ) : (
@@ -118,6 +118,22 @@ export const columns: ColumnDef<UsersWithAgencySubAccountPermissionsSidebarOptio
       header: "Rol",
       cell: ({ row }) => {
         const role: Role = row.getValue("role");
+
+        const getRoleEsp = (role: string) => {
+          switch (role) {
+            case "AGENCY_OWNER":
+              return "Propietario";
+
+            case "AGENCY_ADMIN":
+              return "Administrador";
+
+            case "SUBACCOUNT_USER":
+              return "Ususario";
+
+            default:
+              return "Invitado";
+          }
+        };
         return (
           <Badge
             className={clsx({
@@ -126,7 +142,7 @@ export const columns: ColumnDef<UsersWithAgencySubAccountPermissionsSidebarOptio
               "bg-primary": role === "SUBACCOUNT_USER",
               "bg-muted": role === "SUBACCOUNT_GUEST",
             })}>
-            {role}
+            {getRoleEsp(role)}
           </Badge>
         );
       },
