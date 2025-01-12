@@ -12,7 +12,7 @@ export default function Footer() {
             <div className="space-y-8 xl:col-span-1">
               <span className="flex items-center gap-2">
                 <Image
-                  src={"/assets/svg/mango.svg"}
+                  src={"/assets/svg/hexagon.svg"}
                   height={40}
                   width={40}
                   alt="Mango"

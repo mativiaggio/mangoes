@@ -956,6 +956,24 @@ export const getWebsiteByDomain = async (domain: string) => {
   }
 };
 
+export const getWebsiteByAgencyId = async (agencyId: string) => {
+  if (!agencyId) return null;
+
+  try {
+    const response = await db.website.findUnique({
+      where: {
+        agencyId: agencyId,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error: ", error.stack);
+    }
+  }
+};
+
 export const upsertWebsite = async (website: Website) => {
   if (!website.id) return null;
   try {

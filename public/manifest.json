@@ -21,6 +21,6 @@
   "lang": "es-419",
   "name": "Mangoes",
   "short_name": "Mangoes",
-  "start_url": "/",
-  "scope": "/"
+  "start_url": "/agency",
+  "scope": "/agency"
 }

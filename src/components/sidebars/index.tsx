@@ -1,4 +1,4 @@
-import { getAuthUserDetails } from "@/lib/queries";
+import { getAuthUserDetails, getWebsiteByAgencyId } from "@/lib/queries";
 import React from "react";
 import MenuOptions from "./menu-options";
 
@@ -12,6 +12,8 @@ const Sidebar = async ({ id, type }: Props) => {
   if (!user) return null;
   if (!user.Agency) return;
 
+  const website = await getWebsiteByAgencyId(user.Agency.id);
+
   const details =
     type === "agency"
       ? user?.Agency
@@ -20,7 +22,7 @@ const Sidebar = async ({ id, type }: Props) => {
   const isWhiteLabeledAgency = user.Agency.whiteLabel;
   if (!details) return null;
 
-  let sidebarLogo = user.Agency.agencyLogo || "/assets/svg/mango.svg";
+  let sidebarLogo = user.Agency.agencyLogo || "/assets/svg/hexagon.svg";
 
   if (!isWhiteLabeledAgency) {
     if (type === "subaccount") {
@@ -48,6 +50,7 @@ const Sidebar = async ({ id, type }: Props) => {
       <MenuOptions
         defaultOpen={true}
         details={details}
+        website={website || undefined}
         id={id}
         sidebarLogo={sidebarLogo}
         sidebarOptions={sidebarOptions}
@@ -57,6 +60,7 @@ const Sidebar = async ({ id, type }: Props) => {
 
       <MenuOptions
         details={details}
+        website={website || undefined}
         id={id}
         sidebarLogo={sidebarLogo}
         sidebarOptions={sidebarOptions}

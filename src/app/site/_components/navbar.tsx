@@ -34,7 +34,7 @@ export function Navbar({ id }: NavbarProps): React.JSX.Element {
         <div className="flex items-center">
           <Link href="/" className="flex items-center justify-center gap-2">
             <Image
-              src={"/assets/svg/mango.svg"}
+              src={"/assets/svg/hexagon.svg"}
               height={25}
               width={25}
               alt="Mango"
