@@ -18,7 +18,7 @@ const LaunchPadPage = async ({ params }: Props) => {
   const user = await getAuthUserDetails();
   const website = await getAgencyWebsite(agencyId);
 
-  if (!agencyDetails || !user) return <div>Ocurrio un error</div>;
+  if (!agencyDetails || !user) return <div>Ocurrió un error</div>;
 
   return (
     <div className="flex flex-col justify-center items-center">

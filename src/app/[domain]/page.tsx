@@ -4,6 +4,7 @@ import React from "react";
 import HomeDefault from "@/templates/default/home";
 import { CompleteWebsiteInfo } from "@/lib/types";
 import { Metadata } from "next";
+import NotFound from "@/components/pages/not-found";
 
 type Props = {
   params: Promise<{ domain: string }>;
@@ -80,7 +81,7 @@ const Page = async ({ params }: Props) => {
     return <TemplateComponent website={website} />;
   }
 
-  return <div>Ocurrió un error</div>;
+  return <NotFound />;
 };
 
 export default Page;

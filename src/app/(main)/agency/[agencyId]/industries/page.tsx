@@ -5,16 +5,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { getCompleteWebsiteByAgencyId } from "@/lib/queries";
-import Mock from "./_components/mock";
 
-type Props = {
-  params: Promise<{ agencyId: string }>;
-};
-
-const IndustriesPage = async ({ params }: Props) => {
-  const agencyId = (await params).agencyId;
-  const website = await getCompleteWebsiteByAgencyId(agencyId);
+const IndustriesPage = async () => {
   return (
     <div className="w-full flex flex-col items-center">
       <div className="container">
@@ -116,11 +108,6 @@ const IndustriesPage = async ({ params }: Props) => {
                 creado un template que combina diseño moderno y herramientas
                 prácticas para lograrlo.
               </p>
-              {website ? (
-                <Mock website={website} />
-              ) : (
-                "Configura tu página para ver una preview"
-              )}
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
