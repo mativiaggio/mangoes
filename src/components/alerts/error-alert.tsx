@@ -23,7 +23,7 @@ export function ErrorAlert({
         setIsVisible(false);
         onClose && onClose();
       },
-      timeToClose ? timeToClose : 15000
+      timeToClose ? timeToClose : 5000
     );
 
     return () => clearTimeout(timer);

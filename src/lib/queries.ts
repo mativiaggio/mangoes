@@ -956,6 +956,37 @@ export const getWebsiteByDomain = async (domain: string) => {
   }
 };
 
+export const getCompleteWebsiteByAgencyId = async (agencyId: string) => {
+  if (!agencyId) return null;
+
+  try {
+    const response = await db.website.findUnique({
+      where: {
+        agencyId: agencyId,
+        isActive: true,
+      },
+      include: {
+        Agency: {
+          include: {
+            Products: {
+              include: {
+                Category: true, // Incluye la categoría asociada a cada producto
+              },
+            },
+            Categories: true, // Incluye todas las categorías vinculadas a la agencia
+          },
+        },
+      },
+    });
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error: ", error.stack);
+    }
+  }
+};
+
 export const getWebsiteByAgencyId = async (agencyId: string) => {
   if (!agencyId) return null;
 

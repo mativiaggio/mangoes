@@ -28,7 +28,7 @@ import {
 import { Agency, Website } from "@prisma/client";
 import { saveActivityLogsNotification, upsertWebsite } from "@/lib/queries";
 import { useModal } from "@/lib/providers/modal-provider";
-import { ExternalLink, Loader, Stars } from "lucide-react";
+import { ExternalLink, InfoIcon, Loader, Stars } from "lucide-react";
 import { ErrorAlert } from "../alerts/error-alert";
 import { SuccessAlert } from "../alerts/success-alert";
 import { useState } from "react";
@@ -44,6 +44,7 @@ import { Switch } from "../ui/switch";
 import FileUpload from "../file-upload";
 import Link from "next/link";
 import { env } from "@/lib/env.config";
+import { WebsiteIndustry, WebsiteTemplates } from "@/lib/constants";
 
 const formSchema = z.object({
   name: z
@@ -55,7 +56,8 @@ const formSchema = z.object({
   domain: z
     .string()
     .min(2, "El nombre del producto debe tener al menos 2 caracteres."),
-  template: z.enum(["DEFAULT"]),
+  industry: z.enum(WebsiteIndustry),
+  template: z.enum(WebsiteTemplates),
   isActive: z.boolean(),
   websiteLogo: z.string().optional(),
 });
@@ -82,6 +84,7 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
       name: details?.name || "",
       description: details?.description || "",
       domain: details?.domain || "",
+      industry: details ? details.industry : "ECOMMERCE",
       template: details ? details.template : "DEFAULT",
       isActive: details?.isActive || true,
       websiteLogo: details?.websiteLogo || "",
@@ -95,6 +98,7 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
         name: values.name,
         description: values.description,
         domain: values.domain,
+        industry: values.industry,
         template: values.template,
         createdAt: details?.createdAt || new Date(),
         updatedAt: new Date(),
@@ -206,10 +210,6 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
                       {...field}
                       onChange={(e) => {
                         const value = e.target.value;
-
-                        // Reemplaza espacios por "-", convierte a minúsculas,
-                        // elimina caracteres no permitidos, reemplaza guiones consecutivos
-                        // y asegura que no comience con "-"
                         const formattedValue = value
                           .replace(/\s+/g, "-") // Reemplaza espacios con "-"
                           .toLowerCase() // Convierte todo a minúsculas
@@ -222,6 +222,37 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
                     />
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="industry"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Rubro</FormLabel>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                    }}
+                    defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona un rubro..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="ECOMMERCE">Tienda Online</SelectItem>
+                      <SelectItem value="RESTAURANT">Restaurante</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Link
+                    href={"industries"}
+                    className="text-sm text-main-primary hover:text-main-secondary flex items-center gap-1 w-fit">
+                    <InfoIcon size={14} />
+                    Conoces más acerca de roles
+                  </Link>
                 </FormItem>
               )}
             />
@@ -268,10 +299,13 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
             />
 
             <div className="flex gap-2">
-              <Button type="submit">
+              <Button type="submit" disabled={isLoading}>
                 {isLoading ? (
                   <>
-                    <Loader className="animate-spin" />
+                    <span className="text-white flex items-center gap-1">
+                      Guardando
+                      <Loader className="animate-spin" />
+                    </span>
                   </>
                 ) : (
                   <span className="text-white flex items-center gap-1">

@@ -32,6 +32,7 @@ import { ProductWithCategory } from "@/lib/types";
 import { formatPriceToARS } from "@/lib/utils";
 import { SuccessAlert } from "@/components/alerts/success-alert";
 import { useCart } from "@/lib/contexts/cart-context";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface ProductsProps {
   agency: Agency;
@@ -186,11 +187,11 @@ export default function Products({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-items-center sm:justify-items-start">
         {currentProducts.map((product) => (
           <Card
             key={product.id}
-            className="overflow-hidden h-fit w-[300px] rounded-xl">
+            className="overflow-hidden h-fit w-[300px] sm:w-full rounded-xl">
             <CardHeader className="h-full p-4">
               <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-xl">
                 <Image
@@ -220,24 +221,29 @@ export default function Products({
         ))}
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-8 gap-2">
+      {totalPages >= 1 && (
+        <div className="flex items-center justify-center mt-8 gap-2">
           <Button
             variant="outline"
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-            (pageNumber) => (
-              <Button
-                key={pageNumber}
-                variant={pageNumber === currentPage ? "default" : "outline"}
-                onClick={() => handlePageChange(pageNumber)}>
-                {pageNumber}
-              </Button>
-            )
-          )}
+          <ScrollArea>
+            <div className="flex w-max space-x-4 p-4">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (pageNumber) => (
+                  <Button
+                    key={pageNumber}
+                    variant={pageNumber === currentPage ? "default" : "outline"}
+                    onClick={() => handlePageChange(pageNumber)}>
+                    {pageNumber}
+                  </Button>
+                )
+              )}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
           <Button
             variant="outline"
             onClick={() => handlePageChange(currentPage + 1)}

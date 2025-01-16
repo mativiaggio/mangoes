@@ -15,6 +15,7 @@ import Link from "next/link";
 import { formatPriceToARS } from "@/lib/utils";
 import { Agency } from "@prisma/client";
 import { useCart } from "@/lib/contexts/cart-context";
+import Image from "next/image";
 
 type Props = {
   agency: Agency;
@@ -53,58 +54,68 @@ export function CartSummary({ agency }: Props) {
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className=" h-full">
-        <SheetHeader>
-          <SheetTitle>Tu carrito</SheetTitle>
-        </SheetHeader>
-        <div className="py-8 flex flex-col justify-between h-full">
-          <ScrollArea className="flex-grow">
+      <div className="h-full">
+        <SheetContent className="py-8 flex flex-col justify-between h-full">
+          <div className="h-full">
+            <SheetHeader>
+              <SheetTitle>Tu carrito</SheetTitle>
+            </SheetHeader>
             {cartItems.length === 0 ? (
-              <p className="text-center text-muted-foreground">
-                Tu carrito está vacío
-              </p>
-            ) : (
-              <ul className="space-y-4">
-                {cartItems.map((item) => (
-                  <li
-                    key={item.id}
-                    className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">{item.name}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {formatPriceToARS(item.price)}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Total: {formatPriceToARS(item.totalPrice)}
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleUpdateQuantity(item.id, -1)}>
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <span>{item.quantity}</span>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleUpdateQuantity(item.id, 1)}>
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeleteProduct(item.id)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </li>
-                ))}
+              <ul className="h-full">
+                <li className="flex flex-col items-center justify-center w-full h-full">
+                  <Image
+                    src={"/assets/svg/empty.svg"}
+                    height={1000}
+                    width={1000}
+                    alt="Empty cart"
+                  />
+                  <p>Ups! Tu carrito está vacío.</p>
+                </li>
               </ul>
+            ) : (
+              <ScrollArea className="flex-grow">
+                <ul>
+                  {cartItems.map((item) => (
+                    <li
+                      key={item.id}
+                      className="flex items-center justify-between py-4">
+                      <div>
+                        <h3 className="font-medium">{item.name}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {formatPriceToARS(item.price)}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Total: {formatPriceToARS(item.totalPrice)}
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleUpdateQuantity(item.id, -1)}>
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <span>{item.quantity}</span>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleUpdateQuantity(item.id, 1)}>
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteProduct(item.id)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </ScrollArea>
             )}
-          </ScrollArea>
-          <div className="border-t pt-4 mt-4">
+          </div>
+          <div className="border-t pt-4">
             <div className="flex justify-between items-center mb-4">
               <span className="font-semibold">Total:</span>
               <span className="font-semibold">
@@ -113,17 +124,6 @@ export function CartSummary({ agency }: Props) {
                 )}
               </span>
             </div>
-            {/* <Button
-              variant={totalQuantity == 0 ? "outline" : "default"}
-              className="w-full mb-2"
-              asChild
-              onClick={() => setIsOpen(false)}>
-              {totalQuantity == 0 ? (
-                <span className="cursor-default">Ir al checkout</span>
-              ) : (
-                <Link href="/checkout">Ir al checkout</Link>
-              )}
-            </Button> */}
             {totalQuantity == 0 ? (
               <>
                 <Button
@@ -134,7 +134,7 @@ export function CartSummary({ agency }: Props) {
                 </Button>
                 <Button
                   variant={"outline"}
-                  className="w-full mb-2 cursor-not-allowed select-none hover:bg-transparent"
+                  className="w-full cursor-not-allowed select-none hover:bg-transparent"
                   asChild>
                   <span className="cursor-default">Ver carrito completo</span>
                 </Button>
@@ -157,8 +157,8 @@ export function CartSummary({ agency }: Props) {
               </>
             )}
           </div>
-        </div>
-      </SheetContent>
+        </SheetContent>
+      </div>
     </Sheet>
   );
 }

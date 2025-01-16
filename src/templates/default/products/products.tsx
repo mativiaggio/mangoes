@@ -10,7 +10,7 @@ export default function DefaultProductsPage({ website }: Props) {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar website={website} />
-      <main className="flex-grow container mx-auto px-3 py-8 h-screen">
+      <main className="flex-grow container mx-auto px-3 h-screen py-6">
         <Products
           agency={website.Agency}
           products={website.Agency.Products.filter(

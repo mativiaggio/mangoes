@@ -221,6 +221,7 @@ model Website {
   name         String
   description  String
   domain       String   @unique
+  industry     Industry @default(ECOMMERCE)
   template     Temaplte
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -294,4 +295,9 @@ enum Plan {
 
 enum Temaplte {
   DEFAULT
+}
+
+enum Industry {
+  ECOMMERCE
+  RESTAURANT
 }

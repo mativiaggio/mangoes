@@ -14,7 +14,7 @@ export default function HomeDefault({ website }: Props) {
   return (
     <div className="flex flex-col">
       <Navbar website={website} />
-      <main className="w-full flex flex-col items-center py-12">
+      <main className={"w-full flex flex-col items-center py-12"}>
         <div className="container flex flex-col items-center px-3">
           <section className="py-20 text-center bg-card w-full rounded-xl border">
             <h2 className="text-4xl font-bold mb-4">

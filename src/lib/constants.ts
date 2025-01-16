@@ -272,3 +272,6 @@ export const defaultStyles: React.CSSProperties = {
   textAlign: "left",
   opacity: "100%",
 };
+
+export const WebsiteIndustry = ["ECOMMERCE", "RESTAURANT"] as const;
+export const WebsiteTemplates = ["DEFAULT"] as const;
