@@ -25,7 +25,14 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
-import { Agency, Category, Product } from "@prisma/client";
+import {
+  Agency,
+  AgencySidebarOption,
+  Category,
+  Product,
+  SubAccount,
+  User,
+} from "@prisma/client";
 import { saveActivityLogsNotification, upsertProduct } from "@/lib/queries";
 import { useModal } from "@/lib/providers/modal-provider";
 import {
@@ -63,14 +70,24 @@ interface ProductFormProps {
   agencyDetails: Agency;
   categories: Category[];
   details?: Partial<Product>;
-  userId: string;
+  user: User & {
+    Agency:
+      | (
+          | Agency
+          | (null & {
+              SubAccount: SubAccount[];
+              SideBarOption: AgencySidebarOption[];
+            })
+        )
+      | null;
+  };
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({
   details,
   agencyDetails,
   categories,
-  userId,
+  user,
 }) => {
   const { setClose } = useModal();
   const router = useRouter();
@@ -102,7 +119,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         isActive: values.isActive,
         featured: values.featured,
         agencyId: agencyDetails.id,
-        userId,
+        userId: user.id,
         createdAt: details?.createdAt || new Date(),
         updatedAt: new Date(),
       });
@@ -119,7 +136,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
           description: `Producto cargado | ${response.name}`,
         });
       }
-
 
       setClose();
       router.refresh();

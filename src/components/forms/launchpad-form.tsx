@@ -249,9 +249,10 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
                   </Select>
                   <Link
                     href={"industries"}
+                    target="_blank"
                     className="text-sm text-main-primary hover:text-main-secondary flex items-center gap-1 w-fit">
                     <InfoIcon size={14} />
-                    Conoces más acerca de roles
+                    Más acerca de roles
                   </Link>
                 </FormItem>
               )}
@@ -262,7 +263,7 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
               name="template"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Rol</FormLabel>
+                  <FormLabel>Plantilla</FormLabel>
                   <Select
                     onValueChange={(value) => {
                       field.onChange(value);

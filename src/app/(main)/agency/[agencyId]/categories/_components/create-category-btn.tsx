@@ -22,7 +22,7 @@ type Props = {
         )
       | null;
   };
-  className: string;
+  className?: string;
 };
 
 const CreateCategoryButton = ({ className, user }: Props) => {

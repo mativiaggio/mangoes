@@ -52,7 +52,7 @@ const EditProductButton = ({ className, user, categories, details }: Props) => {
             <ProductForm
               details={details}
               agencyDetails={agencyDetails}
-              userId={user.id}
+              user={user}
               categories={categories}
             />
           </CustomModal>

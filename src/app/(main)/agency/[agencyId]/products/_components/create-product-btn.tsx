@@ -48,7 +48,7 @@ const CreateProductButton = ({ className, user, categories }: Props) => {
             subheading="Ingresa los detalles del producto/servicio">
             <ProductForm
               agencyDetails={agencyDetails}
-              userId={user.id}
+              user={user}
               categories={categories}
             />
           </CustomModal>
