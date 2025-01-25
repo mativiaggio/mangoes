@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { z } from "zod";
 import {
   Card,
@@ -28,17 +28,15 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import { saveActivityLogsNotification, sendInvitation } from "@/lib/queries";
-import { ErrorAlert } from "../alerts/error-alert";
-import { SuccessAlert } from "../alerts/success-alert";
 import { Loader } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface SendInvitationProps {
   agencyId: string;
 }
 
 const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
-  const [showSuccess, setShowSuccess] = useState<boolean>(false);
-  const [showError, setShowError] = useState<boolean>(false);
+  const { toast } = useToast();
   const userDataSchema = z.object({
     email: z.string().email(),
     role: z.enum(["AGENCY_ADMIN", "SUBACCOUNT_USER", "SUBACCOUNT_GUEST"]),
@@ -61,10 +59,19 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
         description: `Invited ${res?.email}`,
         subAccountId: undefined,
       });
-      setShowSuccess(true);
+      toast({
+        title: "Éxito",
+        description: "Invitación enviada con éxito.",
+        variant: "success",
+      });
     } catch (error) {
       console.log(error);
-      setShowError(true);
+      toast({
+        title: "Error.",
+        description:
+          "Ocurrió un error al enviar la invitación. Intente nuevamente.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -137,20 +144,6 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
             </Button>
           </form>
         </Form>
-        {showError && (
-          <ErrorAlert
-            title="Ocurrió un error al enviar la invitación."
-            message="Intente nuevamente."
-            onClose={() => setShowError(false)}
-          />
-        )}
-        {showSuccess && (
-          <SuccessAlert
-            title="Éxito."
-            message="Invitación enviada con éxito."
-            onClose={() => setShowSuccess(false)}
-          />
-        )}
       </CardContent>
     </Card>
   );

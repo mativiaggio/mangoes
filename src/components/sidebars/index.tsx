@@ -32,12 +32,6 @@ const Sidebar = async ({ id, type }: Props) => {
     }
   }
 
-  const sidebarOptions =
-    type === "agency"
-      ? user.Agency.SidebarOption || []
-      : user.Agency.SubAccount.find((subaccount) => subaccount.id === id)
-          ?.SidebarOption || [];
-
   const subaccounts = user.Agency.SubAccount.filter((subaccount) =>
     user.Permissions.find(
       (permission) =>
@@ -53,7 +47,6 @@ const Sidebar = async ({ id, type }: Props) => {
         website={website || undefined}
         id={id}
         sidebarLogo={sidebarLogo}
-        sidebarOptions={sidebarOptions}
         subAccounts={subaccounts}
         user={user}
       />
@@ -63,7 +56,6 @@ const Sidebar = async ({ id, type }: Props) => {
         website={website || undefined}
         id={id}
         sidebarLogo={sidebarLogo}
-        sidebarOptions={sidebarOptions}
         subAccounts={subaccounts}
         user={user}
       />

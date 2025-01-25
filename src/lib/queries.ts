@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 import {
   Agency,
   Category,
-  Icon,
   Prisma,
   Product,
   Role,
@@ -17,6 +16,7 @@ import {
 import { v4 } from "uuid";
 import { ProductWithCategory } from "./types";
 import { env } from "./env.config";
+import { deleteFile } from "@/app/api/uploadthing/deleteFile";
 
 /** AUTHENTICATION & USER MANAGEMENT */
 
@@ -32,8 +32,7 @@ export const getAuthUserDetails = async () => {
     include: {
       Agency: {
         include: {
-          SidebarOption: true,
-          SubAccount: { include: { SidebarOption: true } },
+          SubAccount: true,
         },
       },
       Permissions: true,
@@ -358,10 +357,60 @@ export const updateAgencyDetails = async (
 };
 
 export const deleteAgency = async (agencyId: string) => {
-  const response = await db.agency.delete({
-    where: {
-      id: agencyId,
-    },
+  const deleteFileIfExists = async (fileUrl: string | null) => {
+    if (!fileUrl) return null;
+    const fileKey = fileUrl.split("/").pop();
+    if (!fileKey) return null;
+
+    try {
+      await deleteFile(fileKey);
+    } catch (error) {
+      console.error(`Error eliminando archivo ${fileKey}:`, error);
+    }
+  };
+
+  // Obtener productos de la agencia
+  const products = await db.product.findMany({
+    where: { agencyId },
+  });
+
+  // Eliminar imágenes asociadas a los productos
+  await Promise.all(
+    products.map((product) => deleteFileIfExists(product.productImage))
+  );
+
+  // Obtener el website asociado
+  const website = await db.website.findUnique({
+    where: { agencyId },
+  });
+
+  // Eliminar logo del website
+  if (website) await deleteFileIfExists(website?.websiteLogo);
+
+  // Obtener la agencia
+  const agency = await db.agency.findUnique({
+    where: { id: agencyId },
+  });
+
+  // Eliminar logo de la agencia
+  if (agency) await deleteFileIfExists(agency?.agencyLogo);
+
+  // Eliminar registros relacionados en la base de datos usando una transacción
+  const response = await db.$transaction(async (tx) => {
+    // Eliminar productos
+    await tx.product.deleteMany({
+      where: { agencyId },
+    });
+
+    // Eliminar website
+    await tx.website.deleteMany({
+      where: { agencyId },
+    });
+
+    // Eliminar agencia
+    return tx.agency.delete({
+      where: { id: agencyId },
+    });
   });
 
   return response;
@@ -369,63 +418,6 @@ export const deleteAgency = async (agencyId: string) => {
 
 export const upsertAgency = async (agency: Agency) => {
   if (!agency.companyEmail) return null;
-
-  // Definimos las opciones de Sidebar
-  const agencySidebarOptions = [
-    { name: "Dashboard", icon: Icon.category, link: `/agency/${agency.id}` },
-    {
-      name: "Launchpad",
-      icon: Icon.rocket,
-      link: `/agency/${agency.id}/launchpad`,
-    },
-    {
-      name: "Categorías",
-      icon: Icon.list,
-      link: `/agency/${agency.id}/categories`,
-    },
-    {
-      name: "Productos",
-      icon: Icon.archive,
-      link: `/agency/${agency.id}/products`,
-    },
-    {
-      name: "Inventario",
-      icon: Icon.packageOpen,
-      link: `/agency/${agency.id}/inventory`,
-    },
-    { name: "Ingresos", icon: Icon.wallet, link: `/agency/${agency.id}/sales` },
-    {
-      name: "Facturas de venta",
-      icon: Icon.fileInput,
-      link: `/agency/${agency.id}/sales-invoices`,
-    },
-    {
-      name: "Egresos",
-      icon: Icon.handCoins,
-      link: `/agency/${agency.id}/purchases`,
-    },
-    {
-      name: "Facturas de compra",
-      icon: Icon.fileOutput,
-      link: `/agency/${agency.id}/purchases-invoices`,
-    },
-    {
-      name: "Facturación",
-      icon: Icon.payment,
-      link: `/agency/${agency.id}/billing`,
-    },
-    {
-      name: "Configuración",
-      icon: Icon.settings,
-      link: `/agency/${agency.id}/settings`,
-    },
-    // {
-    //   name: "Subcuentas",
-    //   icon: Icon.person,
-    //   link: `/agency/${agency.id}/all-subaccounts`,
-    // },
-    { name: "Equipo", icon: Icon.shield, link: `/agency/${agency.id}/team` },
-  ];
 
   console.log("entramos al upsertAgency");
 
@@ -439,54 +431,6 @@ export const upsertAgency = async (agency: Agency) => {
         ...agency,
       },
     });
-
-    // Obtener las opciones existentes de la barra lateral
-    const existingSidebarOptions = await db.agencySidebarOption.findMany({
-      where: { agencyId: agency.id },
-    });
-
-    // Crear o actualizar opciones
-    for (const option of agencySidebarOptions) {
-      const existingOption = existingSidebarOptions.find(
-        (o) => o.name === option.name
-      );
-
-      if (existingOption) {
-        // Actualizar si existe pero cambió algún valor
-        if (
-          existingOption.icon !== option.icon ||
-          existingOption.link !== option.link
-        ) {
-          await db.agencySidebarOption.update({
-            where: { id: existingOption.id },
-            data: {
-              icon: option.icon,
-              link: option.link,
-            },
-          });
-        }
-      } else {
-        // Crear si no existe
-        await db.agencySidebarOption.create({
-          data: {
-            ...option,
-            agencyId: agency.id,
-          },
-        });
-      }
-    }
-
-    // Eliminar opciones antiguas que no están en agencySidebarOptions
-    const optionNames = agencySidebarOptions.map((o) => o.name);
-    const optionsToDelete = existingSidebarOptions.filter(
-      (o) => !optionNames.includes(o.name)
-    );
-
-    for (const option of optionsToDelete) {
-      await db.agencySidebarOption.delete({
-        where: { id: option.id },
-      });
-    }
 
     return agencyDetails;
   } catch (error) {
@@ -592,35 +536,6 @@ export const createSubAccount = async (subAccount: SubAccount) => {
 
   const permissionId = v4();
 
-  // Definir las opciones de la barra lateral
-  const subAccountSidebarOptions = [
-    {
-      name: "Launchpad",
-      icon: Icon.clipboardIcon,
-      link: `/subaccount/${subAccount.id}/launchpad`,
-    },
-    {
-      name: "Configuración",
-      icon: Icon.settings,
-      link: `/subaccount/${subAccount.id}/settings`,
-    },
-    {
-      name: "Contactos",
-      icon: Icon.person,
-      link: `/subaccount/${subAccount.id}/contacts`,
-    },
-    {
-      name: "Dashboard",
-      icon: Icon.category,
-      link: `/subaccount/${subAccount.id}`,
-    },
-    {
-      name: "Dashboard",
-      icon: Icon.category,
-      link: `/subaccount/${subAccount.id}`,
-    },
-  ];
-
   try {
     // Crear el subaccount
     const newSubAccount = await db.subAccount.create({
@@ -638,16 +553,6 @@ export const createSubAccount = async (subAccount: SubAccount) => {
 
     console.log(newSubAccount);
 
-    // Crear opciones de la barra lateral
-    for (const option of subAccountSidebarOptions) {
-      await db.subAccountSidebarOption.create({
-        data: {
-          ...option,
-          subAccountId: subAccount.id,
-        },
-      });
-    }
-
     return newSubAccount;
   } catch (error) {
     console.error("Error en createSubAccount:", error);
@@ -658,30 +563,6 @@ export const createSubAccount = async (subAccount: SubAccount) => {
 export const updateSubAccount = async (subAccount: SubAccount) => {
   if (!subAccount.companyEmail) return null;
 
-  // Definir las opciones de la barra lateral
-  const subAccountSidebarOptions = [
-    {
-      name: "Launchpad",
-      icon: Icon.clipboardIcon,
-      link: `/subaccount/${subAccount.id}/launchpad`,
-    },
-    {
-      name: "Configuración",
-      icon: Icon.settings,
-      link: `/subaccount/${subAccount.id}/settings`,
-    },
-    {
-      name: "Contactos",
-      icon: Icon.person,
-      link: `/subaccount/${subAccount.id}/contacts`,
-    },
-    {
-      name: "Dashboard",
-      icon: Icon.category,
-      link: `/subaccount/${subAccount.id}`,
-    },
-  ];
-
   try {
     // Actualizar el subaccount
     const updatedSubAccount = await db.subAccount.update({
@@ -690,54 +571,6 @@ export const updateSubAccount = async (subAccount: SubAccount) => {
     });
 
     console.log(updatedSubAccount);
-
-    // Obtener las opciones existentes de la barra lateral
-    const existingSidebarOptions = await db.subAccountSidebarOption.findMany({
-      where: { subAccountId: subAccount.id },
-    });
-
-    // Crear o actualizar opciones
-    for (const option of subAccountSidebarOptions) {
-      const existingOption = existingSidebarOptions.find(
-        (o) => o.name === option.name
-      );
-
-      if (existingOption) {
-        // Actualizar si existe pero cambió algún valor
-        if (
-          existingOption.icon !== option.icon ||
-          existingOption.link !== option.link
-        ) {
-          await db.subAccountSidebarOption.update({
-            where: { id: existingOption.id },
-            data: {
-              icon: option.icon,
-              link: option.link,
-            },
-          });
-        }
-      } else {
-        // Crear si no existe
-        await db.subAccountSidebarOption.create({
-          data: {
-            ...option,
-            subAccountId: subAccount.id,
-          },
-        });
-      }
-    }
-
-    // Eliminar opciones antiguas que no están en subAccountSidebarOptions
-    const optionNames = subAccountSidebarOptions.map((o) => o.name);
-    const optionsToDelete = existingSidebarOptions.filter(
-      (o) => !optionNames.includes(o.name)
-    );
-
-    for (const option of optionsToDelete) {
-      await db.subAccountSidebarOption.delete({
-        where: { id: option.id },
-      });
-    }
 
     return updatedSubAccount;
   } catch (error) {

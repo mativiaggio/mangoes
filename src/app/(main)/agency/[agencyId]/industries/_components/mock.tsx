@@ -2,9 +2,9 @@
 import { Button } from "@/components/ui/button";
 import { CartProvider } from "@/lib/contexts/cart-context";
 import { CompleteWebsiteInfo } from "@/lib/types";
-import { Footer } from "@/templates/default/_components/footer";
-import { Navbar } from "@/templates/default/_components/navbar";
-import Products from "@/templates/default/_components/products";
+import { Footer } from "@/templates/ecommerce/default/_components/footer";
+import { Navbar } from "@/templates/ecommerce/default/_components/navbar";
+import Products from "@/templates/ecommerce/default/_components/products";
 import { ArrowRight, Stars } from "lucide-react";
 import Link from "next/link";
 import React from "react";

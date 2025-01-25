@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import {
-  AgencySidebarOption,
-  SubAccount,
-  SubAccountSidebarOption,
-  Website,
-} from "@prisma/client";
+import { SubAccount, Website } from "@prisma/client";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Sheet,
@@ -39,7 +34,6 @@ import { env } from "@/lib/env.config";
 type Props = {
   defaultOpen?: boolean;
   subAccounts: SubAccount[];
-  sidebarOptions: AgencySidebarOption[] | SubAccountSidebarOption[];
   sidebarLogo: string;
   details: any;
   website?: Website;
@@ -64,10 +58,91 @@ const linkOrder = [
   "Contactos",
 ];
 
+const sidebarOptions = [
+  {
+    id: "dashboard",
+    name: "Dashboard",
+    link: "/agency/:id",
+    icon: "category",
+  },
+  {
+    id: "launchpad",
+    name: "Launchpad",
+    link: "/agency/:id/launchpad",
+    icon: "rocket",
+  },
+  {
+    id: "categories",
+    name: "Categorías",
+    link: "/agency/:id/categories",
+    icon: "list",
+  },
+  {
+    id: "products",
+    name: "Productos",
+    link: "/agency/:id/products",
+    icon: "archive",
+  },
+  {
+    id: "inventory",
+    name: "Inventario",
+    link: "/agency/:id/inventory",
+    icon: "packageOpen",
+  },
+  {
+    id: "sales",
+    name: "Ingresos",
+    link: "/agency/:id/sales",
+    icon: "wallet",
+  },
+  {
+    id: "sales-invoices",
+    name: "Facturas de venta",
+    link: "/agency/:id/sales-invoices",
+    icon: "fileInput",
+  },
+  {
+    id: "purchases",
+    name: "Egresos",
+    link: "/agency/:id/purchases",
+    icon: "handCoins",
+  },
+  {
+    id: "purchases-invoices",
+    name: "Facturas de compra",
+    link: "/agency/:id/purchases-invoices",
+    icon: "fileOutput",
+  },
+  {
+    id: "billing",
+    name: "Facturación",
+    link: "/agency/:id/billing",
+    icon: "payment",
+  },
+  {
+    id: "settings",
+    name: "Configuración",
+    link: "/agency/:id/settings",
+    icon: "settings",
+  },
+  {
+    id: "team",
+    name: "Equipo",
+    link: "/agency/:id/team",
+    icon: "shield",
+  },
+  {
+    id: "contacts",
+    name: "Contactos",
+    link: "/agency/:id/contacts",
+    icon: "person",
+  },
+];
+
 const MenuOptions = ({
   defaultOpen,
   // subAccounts,
-  sidebarOptions,
+  // sidebarOptions,
   details,
   website,
 }: // user,
@@ -132,33 +207,31 @@ Props) => {
                         linkOrder.indexOf(a.name) - linkOrder.indexOf(b.name)
                     )
                     .map((sidebarOption) => {
-                      let val;
-                      const result = icons.find(
-                        (icon) => icon.value === sidebarOption.icon
-                      );
-                      if (result) {
-                        val = <result.path />;
-                      }
+                      const IconComponent =
+                        icons.find((icon) => icon.value === sidebarOption.icon)
+                          ?.path || null;
+
                       return (
                         <CommandItem
                           key={sidebarOption.id}
                           className={cn(
-                            "md:w-[320px] w-full  hover:bg-red-500/20 dark:hover:bg-red-500/30 !p-0",
-                            currentPath === sidebarOption.link
+                            "md:w-[320px] w-full hover:bg-red-500/20 dark:hover:bg-red-500/30 !p-0",
+                            currentPath ===
+                              sidebarOption.link.replace(":id", details.id)
                               ? "!bg-main-primary dark:!bg-main-secondary !text-white hover:!text-white"
                               : ""
                           )}>
                           <Link
-                            href={sidebarOption.link}
+                            href={sidebarOption.link.replace(":id", details.id)}
                             className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px] px-2 py-1.5">
-                            {val}
+                            {IconComponent && <IconComponent />}
                             <span>{sidebarOption.name}</span>
                           </Link>
                         </CommandItem>
                       );
                     })}
                   {website && (
-                    <CommandItem className="md:w-[320px] w-full  hover:bg-red-500/20 dark:hover:bg-red-500/30 !p-0">
+                    <CommandItem className="md:w-[320px] w-full hover:bg-red-500/20 dark:hover:bg-red-500/30 !p-0">
                       <Link
                         href={`${env.SCHEME}${website.domain}.${env.DOMAIN}/`}
                         target="_blank"

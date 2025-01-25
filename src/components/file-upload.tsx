@@ -1,9 +1,11 @@
 "use client";
-import { FileIcon, X } from "lucide-react";
+import { FileIcon, Loader, X } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { Button } from "./ui/button";
+import { deleteFile } from "@/app/api/uploadthing/deleteFile";
+import { useToast } from "@/hooks/use-toast";
 
 type Props = {
   apiEndpoint:
@@ -17,9 +19,44 @@ type Props = {
 };
 
 const FileUpload = ({ apiEndpoint, onChange, value }: Props) => {
+  const [deletingFile, setDeletingFile] = useState(false);
   const type = value?.split(".").pop();
 
+  const { toast } = useToast();
+
   if (value) {
+    const handleDelete = async () => {
+      try {
+        const fileKey = value?.split("/").pop();
+        console.log(fileKey);
+
+        if (!fileKey) {
+          toast({
+            title: "Error",
+            description: "No se pudo eliminar el archivo.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        setDeletingFile(true);
+        await deleteFile(fileKey);
+
+        toast({
+          title: "Archivo eliminado",
+          description:
+            "El archivo se eliminó correctamente. Todavía debes guardar el registro.",
+          variant: "success",
+        });
+
+        onChange(""); // Limpia el estado del archivo
+        setDeletingFile(false);
+      } catch (error) {
+        console.error("Error eliminando el archivo:", error);
+        alert("Hubo un error eliminando el archivo. Intenta nuevamente.");
+      }
+    };
+
     return (
       <div className="flex flex-col justify-center items-center">
         {type !== "pdf" ? (
@@ -45,9 +82,22 @@ const FileUpload = ({ apiEndpoint, onChange, value }: Props) => {
             </a>
           </div>
         )}
-        <Button onClick={() => onChange("")} variant="ghost" type="button">
-          <X className="h-4 w-4" />
-          Eliminar Logo
+        <Button
+          onClick={handleDelete}
+          variant="ghost"
+          type="button"
+          disabled={deletingFile}>
+          {deletingFile ? (
+            <>
+              <Loader className="h-4 w-4 animate-spin" />
+              Eliminando
+            </>
+          ) : (
+            <>
+              <X className="h-4 w-4" />
+              Eliminar Imagen
+            </>
+          )}
         </Button>
       </div>
     );

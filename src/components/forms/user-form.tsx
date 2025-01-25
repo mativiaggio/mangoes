@@ -32,7 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  AuthUserWithAgencySidebarOptionsSubAccounts,
+  AuthUserSubAccounts,
   UserWithPermissionsAndSubAccounts,
 } from "@/lib/types";
 import { SubAccount, User } from "@prisma/client";
@@ -44,10 +44,9 @@ import { useForm } from "react-hook-form";
 import { v4 } from "uuid";
 import { Switch } from "../ui/switch";
 import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import FileUpload from "../file-upload";
-import { Stars } from "lucide-react";
+import { Submit } from "../buttons/submit";
 
 type Props = {
   id: string | null;
@@ -63,8 +62,9 @@ const UserForm = ({ id, type, subAccounts, userData }: Props) => {
   const { data, setClose } = useModal();
   const [roleState, setRoleState] = useState("");
   const [loadingPermissions, setLoadingPermissions] = useState(false);
-  const [authUserData, setAuthUserData] =
-    useState<AuthUserWithAgencySidebarOptionsSubAccounts | null>(null);
+  const [authUserData, setAuthUserData] = useState<AuthUserSubAccounts | null>(
+    null
+  );
 
   const { toast } = useToast();
   const router = useRouter();
@@ -191,7 +191,8 @@ const UserForm = ({ id, type, subAccounts, userData }: Props) => {
       if (updatedUser) {
         toast({
           title: "Éxito",
-          description: "Información del usuario actualizada",
+          description: "Información del usuario actualizada.",
+          variant: "success",
         });
         setClose();
         router.refresh();
@@ -206,6 +207,8 @@ const UserForm = ({ id, type, subAccounts, userData }: Props) => {
       console.log("Error could not submit");
     }
   };
+
+  const isLoading = form.formState.isSubmitting;
 
   return (
     <Card className="w-full">
@@ -317,19 +320,11 @@ const UserForm = ({ id, type, subAccounts, userData }: Props) => {
               )}
             />
 
-            <Button type="submit">
-              {form.formState.isSubmitting ? (
-                <>
-                  Guardando
-                  <Stars />
-                </>
-              ) : (
-                <span className="text-white flex items-center gap-1">
-                  Guardar
-                  <Stars />
-                </span>
-              )}
-            </Button>
+            <Submit
+              type="submit"
+              isLoading={isLoading}
+              className="overflow-hidden"
+            />
             {authUserData?.role === "AGENCY_OWNER" && (
               <div>
                 <Separator className="my-4" />

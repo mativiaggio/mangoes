@@ -28,10 +28,7 @@ import {
 import { Agency, Website } from "@prisma/client";
 import { saveActivityLogsNotification, upsertWebsite } from "@/lib/queries";
 import { useModal } from "@/lib/providers/modal-provider";
-import { ExternalLink, InfoIcon, Loader, Stars } from "lucide-react";
-import { ErrorAlert } from "../alerts/error-alert";
-import { SuccessAlert } from "../alerts/success-alert";
-import { useState } from "react";
+import { ExternalLink, InfoIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -41,10 +38,14 @@ import {
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import { Switch } from "../ui/switch";
-import FileUpload from "../file-upload";
+// import FileUpload from "../file-upload";
 import Link from "next/link";
 import { env } from "@/lib/env.config";
 import { WebsiteIndustry, WebsiteTemplates } from "@/lib/constants";
+import { useToast } from "@/hooks/use-toast";
+// import SavingButton from "../buttons/saving-button";
+// import SaveButton from "../buttons/save-button";
+import { Submit } from "../buttons/submit";
 
 const formSchema = z.object({
   name: z
@@ -75,8 +76,7 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
 }) => {
   const { setClose } = useModal();
   const router = useRouter();
-  const [showSuccess, setShowSuccess] = useState<boolean>(false);
-  const [showError, setShowError] = useState<boolean>(false);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -121,17 +121,26 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
         });
       }
 
-      setShowSuccess(true);
+      toast({
+        title: "Éxito",
+        description: "Datos cargados con éxito.",
+        variant: "success",
+      });
 
       setClose();
       router.refresh();
     } catch (error) {
       console.error(error);
-      setShowError(true);
+      toast({
+        title: "Ocurrió un error al guardar los datos.",
+        description:
+          "Vuelva a intentarlo. Si el error persiste, póngase en contacto con el soporte técnico.",
+        variant: "destructive",
+      });
     }
   }
 
-  const isLoading = form.formState.isSubmitting;
+  // const isLoading = form.formState.isSubmitting;
 
   return (
     <Card className="w-full border-none">
@@ -144,7 +153,7 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
+            {/* <FormField
               control={form.control}
               name="websiteLogo"
               render={({ field }) => (
@@ -160,7 +169,7 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="name"
@@ -300,21 +309,12 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
             />
 
             <div className="flex gap-2">
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <span className="text-white flex items-center gap-1">
-                      Guardando
-                      <Loader className="animate-spin" />
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-white flex items-center gap-1">
-                    Guardar
-                    <Stars />
-                  </span>
-                )}
-              </Button>
+              <Submit
+                type="submit"
+                isLoading={form.formState.isSubmitting}
+                className="overflow-hidden"
+              />
+
               {details?.domain && (
                 <Link
                   href={`${env.SCHEME}${details.domain}.${env.DOMAIN}/`}
@@ -330,20 +330,6 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
             </div>
           </form>
         </Form>
-        {showError && (
-          <ErrorAlert
-            title="Ocurrió un error al guardar los datos."
-            message="Vuelva a intentarlo. Si el error persiste, póngase en contacto con el soporte técnico."
-            onClose={() => setShowError(false)}
-          />
-        )}
-        {showSuccess && (
-          <SuccessAlert
-            title="Éxito."
-            message="Datos cargados con éxito."
-            onClose={() => setShowSuccess(false)}
-          />
-        )}
       </CardContent>
     </Card>
   );

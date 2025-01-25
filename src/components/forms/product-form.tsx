@@ -4,8 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { v4 } from "uuid";
-
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -25,14 +23,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
-import {
-  Agency,
-  AgencySidebarOption,
-  Category,
-  Product,
-  SubAccount,
-  User,
-} from "@prisma/client";
+import { Agency, Category, Product, SubAccount, User } from "@prisma/client";
 import { saveActivityLogsNotification, upsertProduct } from "@/lib/queries";
 import { useModal } from "@/lib/providers/modal-provider";
 import {
@@ -49,9 +40,10 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import FileUpload from "../file-upload";
-import { CircleHelp, Loader, Stars } from "lucide-react";
+import { CircleHelp } from "lucide-react";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
+import { Submit } from "../buttons/submit";
 
 const formSchema = z.object({
   name: z
@@ -76,7 +68,6 @@ interface ProductFormProps {
           | Agency
           | (null & {
               SubAccount: SubAccount[];
-              SideBarOption: AgencySidebarOption[];
             })
         )
       | null;
@@ -316,6 +307,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                     <Switch
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      defaultChecked={true}
                     />
                   </FormControl>
                   <FormMessage />
@@ -356,18 +348,11 @@ const ProductForm: React.FC<ProductFormProps> = ({
               )}
             />
 
-            <Button type="submit">
-              {isLoading ? (
-                <>
-                  <Loader className="animate-spin" />
-                </>
-              ) : (
-                <span className="text-white flex items-center gap-1">
-                  Guardar
-                  <Stars />
-                </span>
-              )}
-            </Button>
+            <Submit
+              type="submit"
+              isLoading={isLoading}
+              className="overflow-hidden"
+            />
           </form>
         </Form>
       </CardContent>

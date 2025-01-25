@@ -45,8 +45,9 @@ const __getUsersWithAgencySubAccountPermissionsSidebarOptions = async (
   });
 };
 
-export type AuthUserWithAgencySidebarOptionsSubAccounts =
-  Prisma.PromiseReturnType<typeof getAuthUserDetails>;
+export type AuthUserSubAccounts = Prisma.PromiseReturnType<
+  typeof getAuthUserDetails
+>;
 
 export type UsersWithAgencySubAccountPermissionsSidebarOptions =
   Prisma.PromiseReturnType<

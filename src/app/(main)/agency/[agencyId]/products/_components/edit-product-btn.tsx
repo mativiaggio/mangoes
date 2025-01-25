@@ -5,14 +5,7 @@ import ProductForm from "@/components/forms/product-form";
 import { Button } from "@/components/ui/button";
 import { useModal } from "@/lib/providers/modal-provider";
 
-import {
-  Agency,
-  AgencySidebarOption,
-  Category,
-  Product,
-  SubAccount,
-  User,
-} from "@prisma/client";
+import { Agency, Category, Product, SubAccount, User } from "@prisma/client";
 import { Edit } from "lucide-react";
 import React from "react";
 import { twMerge } from "tailwind-merge";
@@ -24,7 +17,6 @@ type Props = {
           | Agency
           | (null & {
               SubAccount: SubAccount[];
-              SideBarOption: AgencySidebarOption[];
             })
         )
       | null;

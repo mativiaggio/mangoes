@@ -37,7 +37,7 @@ export function Navbar({ website }: Props) {
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2 h-full">
               <Image
-                src={website.websiteLogo}
+                src={website.Agency.agencyLogo}
                 alt="Website Logo"
                 height={30}
                 width={30}

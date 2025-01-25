@@ -30,9 +30,9 @@ import {
 import { Agency, Category } from "@prisma/client";
 import { ProductWithCategory } from "@/lib/types";
 import { formatPriceToARS } from "@/lib/utils";
-import { SuccessAlert } from "@/components/alerts/success-alert";
 import { useCart } from "@/lib/contexts/cart-context";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductsProps {
   agency: Agency;
@@ -50,7 +50,7 @@ export default function Products({
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const { toast } = useToast();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([
     allCategories,
   ]);
@@ -131,7 +131,11 @@ export default function Products({
 
     // Actualizar el contexto con los nuevos datos del carrito
     loadCart(agencyId);
-    setShowSuccess(true);
+    toast({
+      title: "Éxito",
+      description: "Se ha agregado el producto al carrito.",
+      variant: "success",
+    });
   };
 
   return (
@@ -251,14 +255,6 @@ export default function Products({
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
-      )}
-
-      {showSuccess && (
-        <SuccessAlert
-          title="Éxito."
-          message="Se ha agregado el producto al carrito."
-          onClose={() => setShowSuccess(false)}
-        />
       )}
     </div>
   );

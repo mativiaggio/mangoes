@@ -19,13 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, MoreHorizontal, Trash, Download } from "lucide-react";
-import {
-  Agency,
-  AgencySidebarOption,
-  Category,
-  SubAccount,
-  User,
-} from "@prisma/client";
+import { Agency, Category, SubAccount, User } from "@prisma/client";
 import DeleteCategoryButton from "./delete-button";
 import {
   AlertDialog,
@@ -48,7 +42,6 @@ type Props = {
           | Agency
           | (null & {
               SubAccount: SubAccount[];
-              SideBarOption: AgencySidebarOption[];
             })
         )
       | null;
@@ -301,7 +294,7 @@ export default function CategoriesDataTable({
         <p className="text-sm text-muted-foreground">
           Mostrando {(currentPage - 1) * ITEMS_PER_PAGE + 1} a{" "}
           {Math.min(currentPage * ITEMS_PER_PAGE, sortedcategories.length)} de{" "}
-          {sortedcategories.length} categoryos
+          {sortedcategories.length} categorías
         </p>
         <div className="flex items-center space-x-2">
           <Button

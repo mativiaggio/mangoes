@@ -4,8 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { v4 } from "uuid";
-
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -28,10 +26,8 @@ import {
 import { Agency, Category } from "@prisma/client";
 import { saveActivityLogsNotification, upsertCategory } from "@/lib/queries";
 import { useModal } from "@/lib/providers/modal-provider";
-import { Loader, Stars } from "lucide-react";
-import { ErrorAlert } from "../alerts/error-alert";
-import { SuccessAlert } from "../alerts/success-alert";
-import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Submit } from "../buttons/submit";
 
 const formSchema = z.object({
   name: z
@@ -53,8 +49,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
 }) => {
   const { setClose } = useModal();
   const router = useRouter();
-  const [showSuccess, setShowSuccess] = useState<boolean>(false);
-  const [showError, setShowError] = useState<boolean>(false);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -89,13 +84,22 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         });
       }
 
-      setShowSuccess(true);
+      toast({
+        title: "Éxito",
+        description: "Datos cargados con éxito.",
+        variant: "success",
+      });
 
       setClose();
       router.refresh();
     } catch (error) {
       console.error(error);
-      setShowError(true);
+      toast({
+        title: "Error",
+        description:
+          "Ocurrió un error al guardar los datos, vuelva a intentarlo. Si el error persiste, póngase en contacto con el soporte técnico.",
+        variant: "destructive",
+      });
     }
   }
 
@@ -130,34 +134,13 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
               )}
             />
 
-            <Button type="submit">
-              {isLoading ? (
-                <>
-                  <Loader className="animate-spin" />
-                </>
-              ) : (
-                <span className="text-white flex items-center gap-1">
-                  Guardar
-                  <Stars />
-                </span>
-              )}
-            </Button>
+            <Submit
+              type="submit"
+              isLoading={isLoading}
+              className="overflow-hidden"
+            />
           </form>
         </Form>
-        {showError && (
-          <ErrorAlert
-            title="Ocurrió un error al guardar los datos."
-            message="Vuelva a intentarlo. Si el error persiste, póngase en contacto con el soporte técnico."
-            onClose={() => setShowError(false)}
-          />
-        )}
-        {showSuccess && (
-          <SuccessAlert
-            title="Éxito."
-            message="Datos cargados con éxito."
-            onClose={() => setShowSuccess(false)}
-          />
-        )}
       </CardContent>
     </Card>
   );

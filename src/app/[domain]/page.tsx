@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { getWebsiteByDomain } from "@/lib/queries";
 import React from "react";
-import HomeDefault from "@/templates/default/home";
+import EcommerceHomeDefault from "@/templates/ecommerce/default/home";
+import RestaurantHomeDefault from "@/templates/restaurant/default/home";
 import { CompleteWebsiteInfo } from "@/lib/types";
 import { Metadata } from "next";
 import NotFound from "@/components/pages/not-found";
@@ -10,11 +11,25 @@ type Props = {
   params: Promise<{ domain: string }>;
 };
 
-const templateComponents: Record<
+// Definir los componentes de templates organizados por industria
+const TemplateComponents: Record<
   string,
-  React.FC<{ website: CompleteWebsiteInfo }> | undefined
+  Record<string, React.FC<{ website: CompleteWebsiteInfo }> | undefined>
 > = {
-  DEFAULT: HomeDefault,
+  ECOMMERCE: {
+    DEFAULT: EcommerceHomeDefault,
+  },
+  RESTAURANT: {
+    DEFAULT: RestaurantHomeDefault,
+  },
+};
+
+// Función para obtener el componente correspondiente según industria y template
+const getTemplateComponent = (
+  industry: string,
+  template: string
+): React.FC<{ website: CompleteWebsiteInfo }> | undefined => {
+  return TemplateComponents[industry]?.[template];
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -43,7 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: website.description,
       images: [
         {
-          url: website.websiteLogo,
+          url: website.Agency.agencyLogo,
           width: 1200,
           height: 630,
           alt: website.name,
@@ -55,28 +70,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: website.name,
       description: website.description,
-      images: [website.websiteLogo],
+      images: [website.Agency.agencyLogo],
     },
     icons: {
-      icon: website.websiteLogo, // Ícono principal
-      shortcut: website.websiteLogo, // Ícono para accesos directos
-      apple: website.websiteLogo, // Ícono para dispositivos Apple
+      icon: website.Agency.agencyLogo,
+      shortcut: website.Agency.agencyLogo,
+      apple: website.Agency.agencyLogo,
     },
   };
 }
 
 const Page = async ({ params }: Props) => {
   const domain = (await params).domain.slice(0, -1);
-
   const website = await getWebsiteByDomain(domain);
 
   // Si no se encuentra el dominio, redirigir a 404
   if (!website) return notFound();
 
-  // Obtener el componente correspondiente al template
-  const TemplateComponent = templateComponents[website.template];
+  // Obtener el componente del template según industria y template
+  const TemplateComponent = getTemplateComponent(website.industry, website.template);
 
-  // Renderizar el componente o mostrar error
+  // Renderizar el componente o mostrar error si no existe
   if (TemplateComponent) {
     return <TemplateComponent website={website} />;
   }

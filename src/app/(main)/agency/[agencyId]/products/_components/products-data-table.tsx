@@ -19,14 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, MoreHorizontal, Trash, Download } from "lucide-react";
-import {
-  Agency,
-  AgencySidebarOption,
-  Category,
-  Product,
-  SubAccount,
-  User,
-} from "@prisma/client";
+import { Agency, Category, Product, SubAccount, User } from "@prisma/client";
 import { formatPriceToARS } from "@/lib/utils";
 import Image from "next/image";
 import DeleteProductButton from "./delete-button";
@@ -52,7 +45,6 @@ type Props = {
           | Agency
           | (null & {
               SubAccount: SubAccount[];
-              SideBarOption: AgencySidebarOption[];
             })
         )
       | null;

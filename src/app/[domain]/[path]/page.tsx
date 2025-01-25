@@ -1,8 +1,9 @@
-import NotFound from '@/components/pages/not-found';
+import NotFound from "@/components/pages/not-found";
 import { getWebsiteByDomain } from "@/lib/queries";
 import { CompleteWebsiteInfo } from "@/lib/types";
-import DefaultProductsPage from "@/templates/default/products/products";
-import { Metadata } from 'next';
+import DefaultProductsPage from "@/templates/ecommerce/default/products/products";
+import DefaultContactPage from "@/templates/ecommerce/default/contact/contact";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import React from "react";
 
@@ -10,11 +11,18 @@ type Props = {
   params: Promise<{ domain: string; path: string }>;
 };
 
-const templateComponents: Record<
+const productsTemplate: Record<
   string,
   React.FC<{ website: CompleteWebsiteInfo }> | undefined
 > = {
   DEFAULT: DefaultProductsPage,
+};
+
+const contactTemplate: Record<
+  string,
+  React.FC<{ website: CompleteWebsiteInfo }> | undefined
+> = {
+  DEFAULT: DefaultContactPage,
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -43,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: website.description,
       images: [
         {
-          url: website.websiteLogo,
+          url: website.Agency.agencyLogo,
           width: 1200,
           height: 630,
           alt: website.name,
@@ -55,12 +63,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: website.name,
       description: website.description,
-      images: [website.websiteLogo],
+      images: [website.Agency.agencyLogo],
     },
     icons: {
-      icon: website.websiteLogo, // Ícono principal
-      shortcut: website.websiteLogo, // Ícono para accesos directos
-      apple: website.websiteLogo, // Ícono para dispositivos Apple
+      icon: website.Agency.agencyLogo, // Ícono principal
+      shortcut: website.Agency.agencyLogo, // Ícono para accesos directos
+      apple: website.Agency.agencyLogo, // Ícono para dispositivos Apple
     },
   };
 }
@@ -74,7 +82,12 @@ const Page = async ({ params }: Props) => {
   if (!website) return notFound();
 
   if (path === "products") {
-    const TemplateComponent = templateComponents[website.template];
+    const TemplateComponent = productsTemplate[website.template];
+    if (TemplateComponent) return <TemplateComponent website={website} />;
+  }
+
+  if (path === "contact") {
+    const TemplateComponent = contactTemplate[website.template];
     if (TemplateComponent) return <TemplateComponent website={website} />;
   }
 

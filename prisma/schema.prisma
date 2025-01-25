@@ -17,7 +17,7 @@ model User {
   updatedAt    DateTime       @updatedAt
   role         Role           @default(SUBACCOUNT_USER)
   agencyId     String?
-  Agency       Agency?        @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  Agency       Agency?        @relation(fields: [agencyId], references: [id], onDelete: SetNull)
   Permissions  Permissions[]
   Notification Notification[]
   Product      Product[]
@@ -57,7 +57,6 @@ model Agency {
   updatedAt        DateTime              @updatedAt
   users            User[]
   SubAccount       SubAccount[]
-  SidebarOption    AgencySidebarOption[]
   Invitation       Invitation[]
   Notification     Notification[]
   Subscription     Subscription?
@@ -83,7 +82,6 @@ model SubAccount {
   country          String
   agencyId         String
   Agency           Agency                    @relation(fields: [agencyId], references: [id], onDelete: Cascade)
-  SidebarOption    SubAccountSidebarOption[]
   Permissions      Permissions[]
   Contact          Contact[]
   Notification     Notification[]
@@ -95,36 +93,11 @@ model Contact {
   id           String     @id @default(uuid())
   name         String
   email        String
+  phone        String
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   subAccountId String
   Subaccount   SubAccount @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
-
-  @@index([subAccountId])
-}
-
-model AgencySidebarOption {
-  id        String   @id @default(uuid())
-  name      String   @default("Menu")
-  link      String   @default("#")
-  icon      Icon     @default(info)
-  agencyId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Agency    Agency?  @relation(fields: [agencyId], references: [id], onDelete: Cascade)
-
-  @@index([agencyId])
-}
-
-model SubAccountSidebarOption {
-  id           String      @id @default(uuid())
-  name         String      @default("Menu")
-  link         String      @default("#")
-  icon         Icon        @default(info)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  subAccountId String?
-  SubAccount   SubAccount? @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
 
   @@index([subAccountId])
 }
@@ -188,7 +161,7 @@ model Product {
   isActive     Boolean  @default(true)
   featured     Boolean  @default(false)
   productImage String
-  User         User     @relation(fields: [userId], references: [id])
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   Agency       Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
   Category     Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
@@ -207,7 +180,7 @@ model Category {
   agencyId  String
   userId    String
   Agency    Agency    @relation(fields: [agencyId], references: [id], onDelete: Cascade)
-  User      User      @relation(fields: [userId], references: [id])
+  User      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   Product   Product[]
 
   @@index([name])
@@ -228,7 +201,7 @@ model Website {
   agencyId     String   @unique // Campo único para la relación uno a uno
   userId       String
   isActive     Boolean  @default(true)
-  Agency       Agency   @relation(name: "AgencyToWebsite", fields: [agencyId], references: [id]) // Definición de la relación
+  Agency       Agency   @relation(name: "AgencyToWebsite", fields: [agencyId], references: [id], onDelete: Cascade) // Definición de la relación
 
   @@index([name])
   @@index([agencyId])

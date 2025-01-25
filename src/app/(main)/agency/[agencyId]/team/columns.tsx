@@ -35,7 +35,7 @@ import { UsersWithAgencySubAccountPermissionsSidebarOptions } from "@/lib/types"
 import { useModal } from "@/lib/providers/modal-provider";
 import CustomModal from "@/components/custom-modal";
 import UserForm from "@/components/forms/user-form";
-import { SuccessAlert } from "@/components/alerts/success-alert";
+import { useToast } from "@/hooks/use-toast";
 
 export const columns: ColumnDef<UsersWithAgencySubAccountPermissionsSidebarOptions>[] =
   [
@@ -164,7 +164,7 @@ interface CellActionsProps {
 const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
   const { setOpen } = useModal();
   const [loading, setLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const { toast } = useToast();
   const router = useRouter();
   if (!rowData) return;
   if (!rowData.Agency) return;
@@ -237,7 +237,12 @@ const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
               onClick={async () => {
                 setLoading(true);
                 await deleteUser(rowData.id);
-                setShowSuccess(true);
+                toast({
+                  title: "Éxito",
+                  description:
+                    "El usuario ha sido eliminado de esta organización.",
+                  variant: "success",
+                });
                 setLoading(false);
                 router.refresh();
               }}>
@@ -246,13 +251,6 @@ const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      {showSuccess && (
-        <SuccessAlert
-          title="Éxito."
-          message="El usuario ha sido eliminado de esta organización."
-          onClose={() => setShowSuccess(false)}
-        />
-      )}
     </>
   );
 };

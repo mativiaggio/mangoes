@@ -62,6 +62,7 @@ import {
 import { v4 } from "uuid";
 import FileUpload from "@/components/file-upload";
 import PhoneInput from "react-phone-number-input";
+import { Submit } from "../buttons/submit";
 
 interface Props {
   data: Partial<Agency>;
@@ -193,7 +194,9 @@ const AgencyForm = ({ data }: Props) => {
         customerId: "",
       });
       toast({
-        title: "Created Agency",
+        title: "Éxito",
+        description: "La marca ha sido creada con éxito.",
+        variant: "success",
       });
       if (data?.id) return router.refresh();
       if (response) {
@@ -217,6 +220,7 @@ const AgencyForm = ({ data }: Props) => {
       toast({
         title: "Marca eliminada",
         description: "Se eliminó la marca y toda su información con éxito.",
+        variant: "success",
       });
       router.refresh();
     } catch (error) {
@@ -249,23 +253,24 @@ const AgencyForm = ({ data }: Props) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                    <span className="text-sm">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div className="flex gap-1 items-center w-fit">
-                              Logo de la marca <CircleHelp size={12} />
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent className="bg-main-primary">
-                            <span className="text-white text-sm w-full">
-                              Es de suma importancia que intentes subir imagenes
-                              cuadradas solo con el logo, no el nombre.
-                            </span>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </span>
+                      <span className="text-sm">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex gap-1 items-center w-fit">
+                                Logo de la marca <CircleHelp size={12} />
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent className="bg-main-primary">
+                              <span className="text-white text-sm w-full">
+                                Es de suma importancia que intentes subir
+                                imagenes cuadradas solo con el logo, no el
+                                nombre.
+                              </span>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </span>
                     </FormLabel>
                     <FormControl>
                       <FileUpload
@@ -515,15 +520,11 @@ const AgencyForm = ({ data }: Props) => {
                   />
                 </div>
               )}
-              <Button type="submit">
-                {isLoading ? (
-                  <Loader className="animate-spin" />
-                ) : (
-                  <span className="flex gap-2 text-white items-center">
-                    Guardar <Stars />
-                  </span>
-                )}
-              </Button>
+              <Submit
+                type="submit"
+                isLoading={isLoading}
+                className="overflow-hidden"
+              />
             </form>
           </Form>
           {data?.id && (
