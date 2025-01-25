@@ -261,7 +261,7 @@ const AgencyForm = ({ data }: Props) => {
                                 Logo de la marca <CircleHelp size={12} />
                               </div>
                             </TooltipTrigger>
-                            <TooltipContent className="bg-main-primary">
+                            <TooltipContent className="bg-main-primary w-80">
                               <span className="text-white text-sm w-full">
                                 Es de suma importancia que intentes subir
                                 imagenes cuadradas solo con el logo, no el
@@ -362,9 +362,9 @@ const AgencyForm = ({ data }: Props) => {
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <div className="flex gap-1 items-center w-fit">
+                              <FormLabel className="flex gap-1 items-center w-fit">
                                 País <CircleHelp size={12} />
-                              </div>
+                              </FormLabel>
                             </TooltipTrigger>
                             <TooltipContent>
                               <p>
@@ -481,10 +481,10 @@ const AgencyForm = ({ data }: Props) => {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <div className="flex gap-1 items-center w-fit">
+                            <FormLabel className="flex gap-1 items-center w-fit">
                               Objetivo de productos/servicios{" "}
                               <CircleHelp size={12} />
-                            </div>
+                            </FormLabel>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>

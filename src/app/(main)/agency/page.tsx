@@ -1,4 +1,5 @@
 import AgencyForm from "@/components/forms/agency-form";
+import NotFound from "@/components/pages/not-found";
 import { getAuthUserDetails, verifyAndAcceptInvitation } from "@/lib/queries";
 import { currentUser } from "@clerk/nextjs/server";
 import { Plan } from "@prisma/client";
@@ -25,7 +26,7 @@ const Page = async ({ searchParams }: Props) => {
       }
       return redirect(`/agency/${agencyId}`);
     } else {
-      return <div>Not authorized</div>;
+      return <NotFound />;
     }
   }
   const authUser = await currentUser();

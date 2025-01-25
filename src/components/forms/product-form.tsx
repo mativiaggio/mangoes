@@ -44,6 +44,7 @@ import { CircleHelp } from "lucide-react";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 import { Submit } from "../buttons/submit";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   name: z
@@ -53,6 +54,7 @@ const formSchema = z.object({
   price: z.coerce.number(),
   categoryId: z.string().min(1, "La categoría es obligatoria."),
   stock: z.coerce.number(),
+  unlimitedStock: z.boolean().default(false),
   productImage: z.string().optional(),
   isActive: z.boolean().default(true),
   featured: z.boolean().default(false),
@@ -91,6 +93,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
       price: details?.price ? Number(details.price) : 0,
       categoryId: details?.categoryId || "",
       stock: details?.stock || 0,
+      unlimitedStock: details?.unlimitedStock,
       productImage: details?.productImage || "",
       isActive: details?.isActive,
       featured: details?.featured,
@@ -106,6 +109,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         price: values.price,
         categoryId: values.categoryId,
         stock: values.stock,
+        unlimitedStock: values.unlimitedStock,
         productImage: values.productImage || "",
         isActive: values.isActive,
         featured: values.featured,
@@ -160,7 +164,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                               Imagen del Producto <CircleHelp size={12} />
                             </div>
                           </TooltipTrigger>
-                          <TooltipContent className="bg-main-primary">
+                          <TooltipContent className="bg-main-primary w-80">
                             <span className="text-white text-sm w-full">
                               Es de suma importancia que intentes subir imagenes
                               cuadradas
@@ -237,15 +241,59 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
             <FormField
               control={form.control}
+              name="unlimitedStock"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between">
+                  <span className="text-sm">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <FormLabel className="flex gap-1 items-center w-fit">
+                            Stock ilimitado <CircleHelp size={12} />
+                          </FormLabel>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-main-primary w-80">
+                          <span className="text-white text-sm w-full">
+                            Es recomendable marcar un producto como stock
+                            ilimitado solo en caso de que realmente lo sea.
+                            Ejemplo: un plato de comida.
+                          </span>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </span>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={(value) => {
+                        field.onChange(value); // Actualiza el valor del formulario para "unlimitedStock"
+                        if (value) {
+                          form.setValue("stock", 0); // Si es ilimitado, establece el stock en 0
+                        }
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="stock"
               render={({ field }) => (
-                <FormItem>
+                <FormItem
+                  className={cn(
+                    form.watch("unlimitedStock") &&
+                      "text-muted-foreground cursor-not-allowed"
+                  )}>
                   <FormLabel>Stock</FormLabel>
                   <FormControl>
                     <Input
                       required
                       type="number"
                       placeholder="Cantidad en stock"
+                      disabled={form.watch("unlimitedStock")}
                       {...field}
                     />
                   </FormControl>
@@ -290,11 +338,11 @@ const ProductForm: React.FC<ProductFormProps> = ({
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className="flex gap-1 items-center w-fit">
+                          <FormLabel className="flex gap-1 items-center w-fit">
                             Activo <CircleHelp size={12} />
-                          </div>
+                          </FormLabel>
                         </TooltipTrigger>
-                        <TooltipContent className="bg-main-primary">
+                        <TooltipContent className="bg-main-primary w-80">
                           <span className="text-white text-sm w-full">
                             Los productos marcados como inactivos no se
                             mostrarán en tu página.
@@ -324,11 +372,11 @@ const ProductForm: React.FC<ProductFormProps> = ({
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className="flex gap-1 items-center w-fit">
+                          <FormLabel className="flex gap-1 items-center w-fit">
                             Destacado <CircleHelp size={12} />
-                          </div>
+                          </FormLabel>
                         </TooltipTrigger>
-                        <TooltipContent className="bg-main-primary">
+                        <TooltipContent className="bg-main-primary w-80">
                           <span className="text-white text-sm w-full">
                             Los productos destacados se mostrarán en la página
                             principal.

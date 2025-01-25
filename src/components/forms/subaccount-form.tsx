@@ -313,9 +313,9 @@ const SubAccountForm: React.FC<SubAccountFormProps> = ({
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <div className="flex gap-1 items-center w-fit">
+                            <FormLabel className="flex gap-1 items-center w-fit">
                               País <CircleHelp size={12} />
-                            </div>
+                            </FormLabel>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>

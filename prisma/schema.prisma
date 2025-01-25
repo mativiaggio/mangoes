@@ -148,22 +148,23 @@ model Subscription {
 }
 
 model Product {
-  id           String   @id @default(uuid())
-  name         String
-  description  String
-  price        Float    @default(0.0)
-  categoryId   String
-  stock        Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  agencyId     String
-  userId       String
-  isActive     Boolean  @default(true)
-  featured     Boolean  @default(false)
-  productImage String
-  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Agency       Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
-  Category     Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  id              String      @id @default(uuid())
+  name            String
+  description     String
+  price           Float       @default(0.0)
+  categoryId      String
+  stock           Int         @default(0)
+  unlimitedStock  Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  agencyId        String
+  userId          String
+  isActive        Boolean     @default(true)
+  featured        Boolean     @default(false)
+  productImage    String
+  User            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Agency          Agency      @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  Category        Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@index([agencyId])
   @@index([name])

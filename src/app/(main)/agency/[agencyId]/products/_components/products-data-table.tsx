@@ -273,7 +273,9 @@ export default function ProductsDataTable({
                 <TableCell>
                   {formatPriceToARS(product.price.toString())}
                 </TableCell>
-                <TableCell>{product.stock}</TableCell>
+                <TableCell>
+                  {product.unlimitedStock ? "Ilimitado" : product.stock}
+                </TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

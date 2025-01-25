@@ -213,7 +213,7 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
                 <FormItem>
                   <FormLabel>Dominio</FormLabel>
                   <FormControl>
-                    <Input
+                    {/* <Input
                       required
                       placeholder="Descripción de la página"
                       {...field}
@@ -228,7 +228,29 @@ const LaunchpadForm: React.FC<LaunchpadFormProps> = ({
 
                         field.onChange(formattedValue);
                       }}
-                    />
+                    /> */}
+                    <div className="flex items-center overflow-hidden rounded-md border border-input focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-[0.1px]">
+                      <Input
+                        className="flex-grow border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        required
+                        placeholder="Dominio"
+                        {...field}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          const formattedValue = value
+                            .replace(/\s+/g, "-")
+                            .toLowerCase()
+                            .replace(/[^a-z0-9-]/g, "")
+                            .replace(/-+/g, "-")
+                            .replace(/^-/, "");
+
+                          field.onChange(formattedValue);
+                        }}
+                      />
+                      <span className="bg-muted px-3 py-2 text-sm text-muted-foreground">
+                        .{env.DOMAIN}
+                      </span>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
