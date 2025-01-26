@@ -1,6 +1,7 @@
 import LaunchpadForm from "@/components/forms/launchpad-form";
 import { db } from "@/lib/db";
 import { getAgencyWebsite, getAuthUserDetails } from "@/lib/queries";
+import { notFound } from "next/navigation";
 import React from "react";
 
 type Props = {
@@ -18,7 +19,7 @@ const LaunchPadPage = async ({ params }: Props) => {
   const user = await getAuthUserDetails();
   const website = await getAgencyWebsite(agencyId);
 
-  if (!agencyDetails || !user) return <div>Ocurrió un error</div>;
+  if (!agencyDetails || !user) return notFound();
 
   return (
     <div className="flex flex-col justify-center items-center">

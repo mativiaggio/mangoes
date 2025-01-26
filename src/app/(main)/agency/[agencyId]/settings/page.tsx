@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{ agencyId: string }>;
@@ -13,7 +14,7 @@ const SettingsPage = async ({ params }: Props) => {
   const agencyId = (await params).agencyId;
 
   const authUser = await currentUser();
-  if (!authUser) return null;
+  if (!authUser) return notFound();
 
   const userDetails = await db.user.findUnique({
     where: {
@@ -30,16 +31,16 @@ const SettingsPage = async ({ params }: Props) => {
     },
   });
 
-  if (!agencyDetails) return null;
+  if (!agencyDetails) return notFound();
 
-  if (!userDetails) return null;
+  if (!userDetails) return notFound();
 
   const subAccounts = agencyDetails.SubAccount;
   return (
     <div className="flex lg:!flex-row flex-col gap-4 justify-center">
       <Tabs defaultValue="agency" className="w-full md:w-[50vw]">
         <TabsList className="grid grid-cols-2">
-          <TabsTrigger value="agency">Marca</TabsTrigger>
+          <TabsTrigger value="agency">Agencia</TabsTrigger>
           <TabsTrigger value="personal-account">Cuenta</TabsTrigger>
         </TabsList>
         <TabsContent value="agency">

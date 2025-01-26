@@ -40,7 +40,7 @@ const SubaccountSettingPage = async ({ params }: Props) => {
         <div className="flex lg:!flex-row flex-col gap-4 justify-center items-center  w-full">
           <Tabs defaultValue="agency" className="w-full md:w-[50vw]">
             <TabsList className="grid grid-cols-2">
-              <TabsTrigger value="agency">Marca</TabsTrigger>
+              <TabsTrigger value="agency">Agencia</TabsTrigger>
               <TabsTrigger value="personal-account">Cuenta</TabsTrigger>
             </TabsList>
             <TabsContent value="agency">

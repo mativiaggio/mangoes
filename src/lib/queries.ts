@@ -397,16 +397,6 @@ export const deleteAgency = async (agencyId: string) => {
 
   // Eliminar registros relacionados en la base de datos usando una transacción
   const response = await db.$transaction(async (tx) => {
-    // Eliminar productos
-    await tx.product.deleteMany({
-      where: { agencyId },
-    });
-
-    // Eliminar website
-    await tx.website.deleteMany({
-      where: { agencyId },
-    });
-
     // Eliminar agencia
     return tx.agency.delete({
       where: { id: agencyId },
@@ -414,6 +404,64 @@ export const deleteAgency = async (agencyId: string) => {
   });
 
   return response;
+};
+
+export const deleteAgencies = async (agencyId: string[]) => {
+  const deleteFileIfExists = async (fileUrl: string | null) => {
+    if (!fileUrl) return null;
+    const fileKey = fileUrl.split("/").pop();
+    if (!fileKey) return null;
+
+    try {
+      await deleteFile(fileKey);
+    } catch (error) {
+      console.error(`Error eliminando archivo ${fileKey}:`, error);
+    }
+  };
+
+  try {
+    Promise.all(
+      agencyId.map(async (id) => {
+        // Obtener productos de la agencia
+        const products = await db.product.findMany({
+          where: { agencyId: id },
+        });
+
+        // Eliminar imágenes asociadas a los productos
+        await Promise.all(
+          products.map((product) => deleteFileIfExists(product.productImage))
+        );
+
+        // Obtener el website asociado
+        const website = await db.website.findUnique({
+          where: { agencyId: id },
+        });
+
+        // Eliminar logo del website
+        if (website) await deleteFileIfExists(website?.websiteLogo);
+
+        // Obtener la agencia
+        const agency = await db.agency.findUnique({
+          where: { id },
+        });
+
+        // Eliminar logo de la agencia
+        if (agency) await deleteFileIfExists(agency?.agencyLogo);
+
+        // Eliminar registros relacionados en la base de datos usando una transacción
+        const response = await db.$transaction(async (tx) => {
+          // Eliminar agencia
+          return tx.agency.delete({
+            where: { id: id },
+          });
+        });
+        return response;
+      })
+    );
+  } catch (error) {
+    console.error("Error al eliminar categorias:", error);
+    throw new Error("Error al eliminar categorias.");
+  }
 };
 
 export const upsertAgency = async (agency: Agency) => {

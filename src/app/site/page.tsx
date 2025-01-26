@@ -201,7 +201,7 @@ export default function Home() {
                 step: "2",
                 title: "Personaliza tu tienda",
                 description:
-                  "Selecciona una template y personalízala con tus productos y marca",
+                  "Selecciona una template y personalízala con tus productos y agencia",
               },
               {
                 step: "3",

@@ -65,7 +65,7 @@ const IndustriesPage = async () => {
             <span className="font-bold">Fácil personalización:</span> Aunque los
             templates están predefinidos, los usuarios tienen la flexibilidad de
             ajustar ciertos aspectos, como colores, logotipos e imágenes, para
-            reflejar la identidad específica de su marca.
+            reflejar la identidad específica de su agencia.
           </li>
         </ol>
         <br />

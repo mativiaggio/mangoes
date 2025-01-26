@@ -249,7 +249,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <FormLabel className="flex gap-1 items-center w-fit">
-                            Stock ilimitado <CircleHelp size={12} />
+                            Es servicio <CircleHelp size={12} />
                           </FormLabel>
                         </TooltipTrigger>
                         <TooltipContent className="bg-main-primary w-80">

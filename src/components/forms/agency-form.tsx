@@ -195,7 +195,7 @@ const AgencyForm = ({ data }: Props) => {
       });
       toast({
         title: "Éxito",
-        description: "La marca ha sido creada con éxito.",
+        description: "La agencia ha sido creada con éxito.",
         variant: "success",
       });
       if (data?.id) return router.refresh();
@@ -207,7 +207,7 @@ const AgencyForm = ({ data }: Props) => {
       toast({
         variant: "destructive",
         title: "Oops!",
-        description: "Ocurrió un error y no pudimos crear tu marca.",
+        description: "Ocurrió un error y no pudimos crear tu agencia.",
       });
     }
   };
@@ -218,15 +218,15 @@ const AgencyForm = ({ data }: Props) => {
     try {
       await deleteAgency(data?.id);
       toast({
-        title: "Marca eliminada",
-        description: "Se eliminó la marca y toda su información con éxito.",
+        title: "Agencia eliminada",
+        description: "Se eliminó la agencia y toda su información con éxito.",
         variant: "success",
       });
       router.refresh();
     } catch (error) {
       toast({
         title: "Oops!",
-        description: "Ocurrió un error al eliminar la marca.",
+        description: "Ocurrió un error al eliminar la agencia.",
         variant: "destructive",
       });
     }
@@ -237,9 +237,9 @@ const AgencyForm = ({ data }: Props) => {
     <AlertDialog>
       <Card className="w-full max-w-7xl">
         <CardHeader>
-          <CardTitle>Información de la marca.</CardTitle>
+          <CardTitle>Información de la agencia.</CardTitle>
           <CardDescription>
-            Completa el formulario para crear una marca dentro de Mangoes.
+            Completa el formulario para crear una agencia dentro de Mangoes.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -258,7 +258,7 @@ const AgencyForm = ({ data }: Props) => {
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <div className="flex gap-1 items-center w-fit">
-                                Logo de la marca <CircleHelp size={12} />
+                                Logo de la agencia <CircleHelp size={12} />
                               </div>
                             </TooltipTrigger>
                             <TooltipContent className="bg-main-primary w-80">
@@ -290,9 +290,9 @@ const AgencyForm = ({ data }: Props) => {
                   name="name"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Nombre de la marca</FormLabel>
+                      <FormLabel>Nombre de la agencia</FormLabel>
                       <FormControl>
-                        <Input placeholder="Nombre de la marca" {...field} />
+                        <Input placeholder="Nombre de la agencia" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -303,11 +303,11 @@ const AgencyForm = ({ data }: Props) => {
                   name="companyEmail"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Email de la marca</FormLabel>
+                      <FormLabel>Email de la agencia</FormLabel>
                       <FormControl>
                         <Input
                           readOnly
-                          placeholder="Email de marca"
+                          placeholder="Email de agencia"
                           {...field}
                         />
                       </FormControl>
@@ -509,7 +509,7 @@ const AgencyForm = ({ data }: Props) => {
                       await updateAgencyDetails(data.id, { goal: val });
                       await saveActivityLogsNotification({
                         agencyId: data.id,
-                        description: `Se actualizó el objetivo de la marca a | ${val} productos vendidos`,
+                        description: `Se actualizó el objetivo de la agencia a | ${val} productos vendidos`,
                         subAccountId: undefined,
                       });
                       router.refresh();
@@ -538,7 +538,7 @@ const AgencyForm = ({ data }: Props) => {
                     Zona de peligro
                   </p>
                   <p className="text-sm font-medium text-red-800">
-                    Eliminar una marca de Mongoes es una acción irreversible.{" "}
+                    Eliminar una agencia de Mongoes es una acción irreversible.{" "}
                     <br /> Esta acción eliminara todas las subcuentas junto con
                     toda la Información. Ya no tendrás acceso a las webs
                     creadas.
@@ -546,7 +546,7 @@ const AgencyForm = ({ data }: Props) => {
                   <AlertDialogTrigger
                     disabled={isLoading || deletingAgency}
                     className="bg-[#ef4444] p-1 rounded-md text-white text-sm mt-2">
-                    {deletingAgency ? "Eliminando..." : "Eliminar marca"}
+                    {deletingAgency ? "Eliminando..." : "Eliminar agencia"}
                   </AlertDialogTrigger>
                 </div>
               </div>
@@ -558,8 +558,8 @@ const AgencyForm = ({ data }: Props) => {
                 Estás seguro/a?
               </AlertDialogTitle>
               <AlertDialogDescription className="text-left">
-                Esta acción es irreversible. Estás a punto de eliminar la marca
-                y toda su información.
+                Esta acción es irreversible. Estás a punto de eliminar la
+                agencia y toda su información.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="flex flex-row w-full items-center justify-end gap-2">

@@ -89,7 +89,7 @@ export const columns: ColumnDef<UsersWithAgencySubAccountPermissionsSidebarOptio
             <div className="flex flex-col items-start">
               <div className="flex flex-col gap-2">
                 <Badge className="bg-slate-600 whitespace-nowrap">
-                  Marca - {row?.original?.Agency?.name}
+                  Agencia - {row?.original?.Agency?.name}
                 </Badge>
               </div>
             </div>

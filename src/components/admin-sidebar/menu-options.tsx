@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { SubAccount, Website } from "@prisma/client";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Sheet,
@@ -9,7 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import { ExternalLink, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import clsx from "clsx";
 import {
   Command,
@@ -29,122 +28,31 @@ import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { env } from "@/lib/env.config";
 
 type Props = {
   defaultOpen?: boolean;
-  subAccounts: SubAccount[];
-  sidebarLogo: string;
-  details: any;
-  website?: Website;
   user: any;
-  id: string;
 };
 
-const linkOrder = [
-  "Dashboard",
-  "Launchpad",
-  "Categorías",
-  "Productos",
-  "Inventario",
-  "Ingresos",
-  "Facturas de venta",
-  "Egresos",
-  "Facturas de compra",
-  "Facturación",
-  "Configuración",
-  "Subcuentas",
-  "Equipo",
-  "Contactos",
-];
+const linkOrder = ["Dashboard", "Agencias"];
 
 const sidebarOptions = [
   {
     id: "dashboard",
     name: "Dashboard",
-    link: "/agency/:id",
+    link: "/admin",
     icon: "category",
   },
   {
-    id: "launchpad",
-    name: "Launchpad",
-    link: "/agency/:id/launchpad",
-    icon: "rocket",
-  },
-  {
-    id: "categories",
-    name: "Categorías",
-    link: "/agency/:id/categories",
-    icon: "list",
-  },
-  {
-    id: "products",
-    name: "Productos",
-    link: "/agency/:id/products",
-    icon: "archive",
-  },
-  {
-    id: "inventory",
-    name: "Inventario",
-    link: "/agency/:id/inventory",
-    icon: "packageOpen",
-  },
-  {
-    id: "sales",
-    name: "Ingresos",
-    link: "/agency/:id/sales",
-    icon: "wallet",
-  },
-  {
-    id: "sales-invoices",
-    name: "Facturas de venta",
-    link: "/agency/:id/sales-invoices",
-    icon: "fileInput",
-  },
-  {
-    id: "purchases",
-    name: "Egresos",
-    link: "/agency/:id/purchases",
-    icon: "handCoins",
-  },
-  {
-    id: "purchases-invoices",
-    name: "Facturas de compra",
-    link: "/agency/:id/purchases-invoices",
-    icon: "fileOutput",
-  },
-  {
-    id: "billing",
-    name: "Facturación",
-    link: "/agency/:id/billing",
-    icon: "payment",
-  },
-  {
-    id: "settings",
-    name: "Configuración",
-    link: "/agency/:id/settings",
-    icon: "settings",
-  },
-  {
-    id: "team",
-    name: "Equipo",
-    link: "/agency/:id/team",
-    icon: "shield",
-  },
-  {
-    id: "contacts",
-    name: "Contactos",
-    link: "/agency/:id/contacts",
+    id: "agencies",
+    name: "Agencias",
+    link: "/admin/agencies",
     icon: "person",
   },
 ];
 
 const MenuOptions = ({
   defaultOpen,
-  // subAccounts,
-  // sidebarOptions,
-  details,
-  website,
 }: // user,
 Props) => {
   // const { setOpen } = useModal();
@@ -186,15 +94,13 @@ Props) => {
         </SheetDescription>
         <div>
           <div className="w-full text-2xl font-extrabold px-3 flex items-center gap-2">
-            {details.agencyLogo && (
-              <Image
-                src={details.agencyLogo}
-                height={30}
-                width={30}
-                alt="Agency Logo"
-              />
-            )}
-            {details.name}
+            <Image
+              src={"/assets/svg/hexagon.svg"}
+              height={30}
+              width={30}
+              alt="Agency Logo"
+            />
+            Mangoes Admin
           </div>
           <Separator className="mt-8" />
           <nav className="relative">
@@ -218,13 +124,12 @@ Props) => {
                           key={sidebarOption.id}
                           className={cn(
                             "md:w-[320px] w-full hover:bg-red-500/20 dark:hover:bg-red-500/30 !p-0",
-                            currentPath ===
-                              sidebarOption.link.replace(":id", details.id)
+                            currentPath === sidebarOption.link
                               ? "!bg-main-primary dark:!bg-main-secondary !text-white hover:!text-white"
                               : ""
                           )}>
                           <Link
-                            href={sidebarOption.link.replace(":id", details.id)}
+                            href={sidebarOption.link}
                             className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px] px-2 py-1.5">
                             {IconComponent && <IconComponent />}
                             <span>{sidebarOption.name}</span>
@@ -232,17 +137,6 @@ Props) => {
                         </CommandItem>
                       );
                     })}
-                  {website && (
-                    <CommandItem className="md:w-[320px] w-full hover:bg-red-500/20 dark:hover:bg-red-500/30 !p-0">
-                      <Link
-                        href={`${env.SCHEME}${website.domain}.${env.DOMAIN}/`}
-                        target="_blank"
-                        className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px] px-2 py-1.5">
-                        <ExternalLink />
-                        <span>Ir a la página</span>
-                      </Link>
-                    </CommandItem>
-                  )}
                 </CommandGroup>
               </CommandList>
             </Command>

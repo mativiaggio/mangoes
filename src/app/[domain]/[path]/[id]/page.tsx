@@ -27,7 +27,7 @@ const Page = async ({ params }: Props) => {
     if (TemplateComponent) return <div>Pagina del producto</div>;
   }
 
-  return <div>Ocurrió un error</div>;
+  return notFound();
 };
 
 export default Page;

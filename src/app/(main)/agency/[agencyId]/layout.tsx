@@ -3,12 +3,13 @@ import BlurPage from "@/components/blur-page";
 import InfoBar from "@/components/infobar";
 import Sidebar from "@/components/sidebars";
 import Unauthorized from "@/components/unauthorized";
+import { db } from "@/lib/db";
 import {
   getNotificationAndUser,
   verifyAndAcceptInvitation,
 } from "@/lib/queries";
 import { currentUser } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import React from "react";
 
 type Props = {
@@ -31,6 +32,17 @@ const Layout = async ({ children, params }: Props) => {
     user.privateMetadata.role !== "AGENCY_ADMIN"
   )
     return <Unauthorized />;
+
+  const agencyDetails = await db.agency.findUnique({
+    where: {
+      id: agencyId,
+    },
+    include: {
+      SubAccount: true,
+    },
+  });
+
+  if (!agencyDetails) return notFound();
 
   let allNotifications: any = [];
 
