@@ -1,11 +1,11 @@
 import NotFound from "@/components/pages/not-found";
-import { getWebsiteByDomain } from "@/lib/queries";
-import { CompleteWebsiteInfo } from "@/lib/types";
+import { CompleteWebsiteInfo } from "@/database/website/types";
 import DefaultProductsPage from "@/templates/ecommerce/default/products/products";
 import DefaultContactPage from "@/templates/ecommerce/default/contact/contact";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import React from "react";
+import { getWebsiteByDomain } from "@/database/website/queries";
 
 type Props = {
   params: Promise<{ domain: string; path: string }>;

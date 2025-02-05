@@ -1,4 +1,4 @@
-import { CompleteWebsiteInfo } from "@/lib/types";
+import { CompleteWebsiteInfo } from "@/database/website/types";
 import Link from "next/link";
 
 type Props = {

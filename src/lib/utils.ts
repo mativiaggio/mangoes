@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { useLanguage } from "./contexts/language-context";
+import { translations } from "./translate";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -124,4 +126,22 @@ export const formatPriceToARS = (price: number | string): string => {
     style: "currency",
     currency: "ARS",
   }).format(priceN);
+};
+
+export const useTranslate = () => {
+  const { language } = useLanguage();
+
+  return (key: keyof (typeof translations)["esp"]) => {
+    return translations[language as keyof typeof translations][key] || key;
+  };
+};
+
+export const translateWithPlaceholders = (
+  template: string,
+  placeholders: Record<string, string | number>
+): string => {
+  return template.replace(
+    /{(\w+)}/g,
+    (_, key) => placeholders[key]?.toString() || ""
+  );
 };

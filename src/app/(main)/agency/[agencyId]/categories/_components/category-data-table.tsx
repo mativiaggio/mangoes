@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import EditCategoryButton from "./edit-category-btn";
 import BulkDeletecategories from "./bulk-delete-categories";
+import { useLanguage } from "@/lib/contexts/language-context";
 
 type Props = {
   user: User & {
@@ -67,6 +68,7 @@ export default function CategoriesDataTable({
   }>({ key: "name", direction: "asc" });
   const [filterName, setFilterName] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const { t } = useLanguage();
 
   const toggleSort = (key: keyof Category) => {
     setSortConfig({
@@ -124,7 +126,7 @@ export default function CategoriesDataTable({
     <div className="w-full space-y-4">
       <div className="flex items-end justify-between gap-2">
         <Input
-          placeholder="Filtrar por nombre..."
+          placeholder={t.filterByName + "..."}
           value={filterName}
           onChange={(e) => setFilterName(e.target.value)}
           className="max-w-xs"

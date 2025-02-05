@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
-import { getWebsiteByDomain } from "@/lib/queries";
 import React from "react";
 import EcommerceHomeDefault from "@/templates/ecommerce/default/home";
 import RestaurantHomeDefault from "@/templates/restaurant/default/home";
-import { CompleteWebsiteInfo } from "@/lib/types";
+import { CompleteWebsiteInfo } from "@/database/website/types";
 import { Metadata } from "next";
 import NotFound from "@/components/pages/not-found";
+import { getWebsiteByDomain } from "@/database/website/queries";
 
 type Props = {
   params: Promise<{ domain: string }>;
@@ -88,7 +88,10 @@ const Page = async ({ params }: Props) => {
   if (!website) return notFound();
 
   // Obtener el componente del template según industria y template
-  const TemplateComponent = getTemplateComponent(website.industry, website.template);
+  const TemplateComponent = getTemplateComponent(
+    website.industry,
+    website.template
+  );
 
   // Renderizar el componente o mostrar error si no existe
   if (TemplateComponent) {

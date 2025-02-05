@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { CartProvider } from "@/lib/contexts/cart-context";
-import { CompleteWebsiteInfo } from "@/lib/types";
+import { CompleteWebsiteInfo } from "@/database/website/types";
 import { Footer } from "@/templates/ecommerce/default/_components/footer";
 import { Navbar } from "@/templates/ecommerce/default/_components/navbar";
 import Products from "@/templates/ecommerce/default/_components/products";

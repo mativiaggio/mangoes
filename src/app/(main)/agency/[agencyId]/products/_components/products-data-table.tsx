@@ -36,7 +36,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import EditProductButton from "./edit-product-btn";
 import BulkDeleteProducts from "./bulk-delete-products";
-import { ProductWithCategory } from "@/lib/types";
+import { ProductWithCategory } from "@/database/product/types";
+import { useLanguage } from "@/lib/contexts/language-context";
 
 type Props = {
   user: User & {
@@ -73,6 +74,7 @@ export default function ProductsDataTable({
   }>({ key: "name", direction: "asc" });
   const [filterName, setFilterName] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const { t } = useLanguage();
 
   const toggleSort = (key: keyof Product) => {
     setSortConfig({
@@ -130,7 +132,7 @@ export default function ProductsDataTable({
     <div className="w-full space-y-4">
       <div className="flex items-end justify-between gap-2">
         <Input
-          placeholder="Filtrar por nombre..."
+          placeholder={t.filterByName + "..."}
           value={filterName}
           onChange={(e) => setFilterName(e.target.value)}
           className="max-w-xs"

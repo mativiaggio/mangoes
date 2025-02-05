@@ -1,4 +1,3 @@
-import { getAuthUserDetails } from "@/lib/queries";
 import React from "react";
 import {
   AlertDialog,
@@ -26,6 +25,7 @@ import { AlertDescription } from "@/components/ui/alert";
 import CreateSubaccountButton from "./_components/create-subaccount-btn";
 import DeleteButton from "./_components/delete-button";
 import { HelpCircle } from "lucide-react";
+import { getAuthUserDetails } from "@/database/auth/queries";
 
 type Props = {
   params: Promise<{ agencyId: string }>;

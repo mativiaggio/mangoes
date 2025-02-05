@@ -1,6 +1,6 @@
 import { Footer } from "./_components/footer";
 import { Navbar } from "./_components/navbar";
-import { CompleteWebsiteInfo } from "@/lib/types";
+import { CompleteWebsiteInfo } from "@/database/website/types";
 import Products from "./_components/products";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Stars } from "lucide-react";

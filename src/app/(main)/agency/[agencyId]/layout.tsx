@@ -3,11 +3,9 @@ import BlurPage from "@/components/blur-page";
 import InfoBar from "@/components/infobar";
 import Sidebar from "@/components/sidebars";
 import Unauthorized from "@/components/unauthorized";
-import { db } from "@/lib/db";
-import {
-  getNotificationAndUser,
-  verifyAndAcceptInvitation,
-} from "@/lib/queries";
+import { db } from "@/database/db";
+import { verifyAndAcceptInvitation } from "@/database/invitation/queries";
+import { getNotificationAndUser } from "@/database/notification/queries";
 import { currentUser } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 import React from "react";

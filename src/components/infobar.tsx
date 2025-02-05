@@ -1,5 +1,4 @@
 "use client";
-import { NotificationWithUser } from "@/lib/types";
 import { UserButton } from "@clerk/nextjs";
 import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -17,6 +16,8 @@ import { Card } from "./ui/card";
 import { Switch } from "./ui/switch";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { ModeToggle } from "./mode-toggle";
+import { NotificationWithUser } from "@/database/notification/types";
+import LanguageSwitcher from "./language-switcher";
 
 type Props = {
   notifications: NotificationWithUser | [];
@@ -51,6 +52,7 @@ const InfoBar = ({ notifications, subAccountId, className, role }: Props) => {
           className
         )}>
         <div className="flex items-center gap-2 ml-auto">
+          <LanguageSwitcher />
           <UserButton afterSignOutUrl="/" />
           <Sheet>
             <SheetTrigger>

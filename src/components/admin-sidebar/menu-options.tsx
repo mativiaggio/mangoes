@@ -20,42 +20,43 @@ import {
 } from "../ui/command";
 import Link from "next/link";
 import { Separator } from "../ui/separator";
-// import { useModal } from "@/lib/providers/modal-provider";
 import { icons } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-// import CustomModal from "../custom-modal";
-// import SubAccountForm from "../forms/subaccount-form";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useLanguage } from "@/lib/contexts/language-context";
 
 type Props = {
   defaultOpen?: boolean;
   user: any;
 };
 
-const linkOrder = ["Dashboard", "Agencias"];
+const linkOrder = ["dashboard", "plans", "agencies"];
 
 const sidebarOptions = [
   {
     id: "dashboard",
-    name: "Dashboard",
+    translationKey: "dashboard",
     link: "/admin",
     icon: "category",
   },
   {
+    id: "plans",
+    translationKey: "plans",
+    link: "/admin/plans",
+    icon: "payment",
+  },
+  {
     id: "agencies",
-    name: "Agencias",
+    translationKey: "agencies",
     link: "/admin/agencies",
     icon: "person",
   },
 ];
 
-const MenuOptions = ({
-  defaultOpen,
-}: // user,
-Props) => {
-  // const { setOpen } = useModal();
+const MenuOptions = ({ defaultOpen }: Props) => {
+  const { t }: { t: Record<string, string> } = useLanguage(); // Contexto de traducción
   const [isMounted, setIsMounted] = useState(false);
   const currentPath = usePathname();
 
@@ -105,14 +106,15 @@ Props) => {
           <Separator className="mt-8" />
           <nav className="relative">
             <Command className="rounded-lg overflow-visible bg-transparent">
-              <CommandInput placeholder="Buscar..." />
+              <CommandInput placeholder={t.search + "..."} />
               <CommandList className="py-4 overflow-visible">
-                <CommandEmpty>No Results Found</CommandEmpty>
+                <CommandEmpty>{t.noResults}</CommandEmpty>
                 <CommandGroup className="overflow-visible">
                   {sidebarOptions
                     .sort(
                       (a, b) =>
-                        linkOrder.indexOf(a.name) - linkOrder.indexOf(b.name)
+                        linkOrder.indexOf(a.translationKey) -
+                        linkOrder.indexOf(b.translationKey)
                     )
                     .map((sidebarOption) => {
                       const IconComponent =
@@ -123,16 +125,16 @@ Props) => {
                         <CommandItem
                           key={sidebarOption.id}
                           className={cn(
-                            "md:w-[320px] w-full hover:bg-red-500/20 dark:hover:bg-red-500/30 !p-0",
+                            "w-full hover:bg-red-500/20 dark:hover:bg-red-500/30 !p-0 mb-1",
                             currentPath === sidebarOption.link
                               ? "!bg-main-primary dark:!bg-main-secondary !text-white hover:!text-white"
                               : ""
                           )}>
                           <Link
                             href={sidebarOption.link}
-                            className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px] px-2 py-1.5">
+                            className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-full px-2 py-1.5">
                             {IconComponent && <IconComponent />}
-                            <span>{sidebarOption.name}</span>
+                            <span>{t[sidebarOption.translationKey]}</span>
                           </Link>
                         </CommandItem>
                       );

@@ -24,10 +24,11 @@ import {
 } from "@/components/ui/card";
 
 import { Agency, Category } from "@prisma/client";
-import { saveActivityLogsNotification, upsertCategory } from "@/lib/queries";
 import { useModal } from "@/lib/providers/modal-provider";
 import { useToast } from "@/hooks/use-toast";
 import { Submit } from "../buttons/submit";
+import { upsertCategory } from "@/database/category/queries";
+import { saveActivityLogsNotification } from "@/database/notification/queries";
 
 const formSchema = z.object({
   name: z

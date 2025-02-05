@@ -1,6 +1,7 @@
-import { getAuthUserDetails, getWebsiteByAgencyId } from "@/lib/queries";
 import React from "react";
 import MenuOptions from "./menu-options";
+import { getAuthUserDetails } from "@/database/auth/queries";
+import { getWebsiteByAgencyId } from "@/database/website/queries";
 
 type Props = {
   id: string;

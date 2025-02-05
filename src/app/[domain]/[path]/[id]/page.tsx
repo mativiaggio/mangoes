@@ -1,5 +1,5 @@
-import { getWebsiteByDomain } from "@/lib/queries";
-import { CompleteWebsiteInfo } from "@/lib/types";
+import { getWebsiteByDomain } from "@/database/website/queries";
+import { CompleteWebsiteInfo } from "@/database/website/types";
 import DefaultProductsPage from "@/templates/ecommerce/default/products/products";
 import { notFound } from "next/navigation";
 import React from "react";

@@ -10,6 +10,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 import ModalProvider from "@/lib/providers/modal-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { LanguageProvider } from "@/lib/contexts/language-context";
 
 export const metadata: Metadata = {
   title: env.APP_NAME,
@@ -91,7 +92,9 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange>
-          <ModalProvider>{children}</ModalProvider>
+          <ModalProvider>
+            <LanguageProvider>{children}</LanguageProvider>
+          </ModalProvider>
           <Toaster />
         </ThemeProvider>
       </body>

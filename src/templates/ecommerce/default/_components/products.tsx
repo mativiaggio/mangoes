@@ -28,7 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Agency, Category } from "@prisma/client";
-import { ProductWithCategory } from "@/lib/types";
+import { ProductWithCategory } from "@/database/product/types";
 import { formatPriceToARS } from "@/lib/utils";
 import { useCart } from "@/lib/contexts/cart-context";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";

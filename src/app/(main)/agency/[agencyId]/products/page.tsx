@@ -1,14 +1,14 @@
-import {
-  deleteProduct,
-  getAgencyProducts,
-  getAuthUserDetails,
-  getAgencyCategories,
-} from "@/lib/queries";
 import React from "react";
 import ProductsDataTable from "./_components/products-data-table";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import CreateProductButton from "./_components/create-product-btn";
 import { Product } from "@prisma/client";
+import {
+  getAgencyCategories,
+  getAgencyProducts,
+} from "@/database/agency/queries";
+import { getAuthUserDetails } from "@/database/auth/queries";
+import { deleteProduct } from "@/database/product/queries";
 
 type Props = {
   params: Promise<{ agencyId: string }>;

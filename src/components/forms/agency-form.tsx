@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+import * as z from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { Agency } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -7,7 +7,6 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NumberInput } from "@tremor/react";
-import * as z from "zod";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,9 +35,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { CircleHelp, Loader, Stars, XCircle } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
+import { CircleHelp, XCircle } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -52,17 +49,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  deleteAgency,
-  initUser,
-  saveActivityLogsNotification,
-  updateAgencyDetails,
-  upsertAgency,
-} from "@/lib/queries";
 import { v4 } from "uuid";
 import FileUpload from "@/components/file-upload";
 import PhoneInput from "react-phone-number-input";
 import { Submit } from "../buttons/submit";
+import {
+  deleteAgency,
+  updateAgencyDetails,
+  upsertAgency,
+} from "@/database/agency/queries";
+import { initUser } from "@/database/auth/queries";
+import { saveActivityLogsNotification } from "@/database/notification/queries";
 
 interface Props {
   data: Partial<Agency>;
@@ -149,30 +146,6 @@ const AgencyForm = ({ data }: Props) => {
 
   const handleSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
-      if (!data?.id) {
-        const bodyData = {
-          email: values.companyEmail,
-          name: values.name,
-          shipping: {
-            address: {
-              city: values.city,
-              country: values.country,
-              line1: values.address,
-              postal_code: values.zipCode,
-              state: values.zipCode,
-            },
-            name: values.name,
-          },
-          address: {
-            city: values.city,
-            country: values.country,
-            line1: values.address,
-            postal_code: values.zipCode,
-            state: values.zipCode,
-          },
-        };
-      }
-
       await initUser({ role: "AGENCY_OWNER" });
 
       const response = await upsertAgency({
@@ -224,6 +197,7 @@ const AgencyForm = ({ data }: Props) => {
       });
       router.refresh();
     } catch (error) {
+      console.log(error);
       toast({
         title: "Oops!",
         description: "Ocurrió un error al eliminar la agencia.",

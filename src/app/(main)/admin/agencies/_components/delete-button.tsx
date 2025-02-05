@@ -1,5 +1,6 @@
 "use client";
-import { deleteAgency } from "@/lib/queries";
+
+import { deleteAgency } from "@/database/agency/queries";
 import { useRouter } from "next/navigation";
 import React from "react";
 

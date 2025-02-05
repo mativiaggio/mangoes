@@ -134,17 +134,30 @@ model Subscription {
   id                   String   @id @default(uuid())
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
-  plan                 Plan?
   price                String?
   active               Boolean  @default(false)
-  priceId              String
   customerId           String
   currentPeriodEndDate DateTime
   subscritiptionId     String   @unique
+  planId               String?  @unique
   agencyId             String?  @unique
-  Agency               Agency?  @relation(fields: [agencyId], references: [id])
+  plan                 Plan?    @relation(fields: [planId], references: [id], onDelete: Cascade)
+  Agency               Agency?  @relation(fields: [agencyId], references: [id], onDelete: Cascade)
 
   @@index([customerId])
+}
+
+model Plan {
+  id               String        @id @default(uuid())
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  name             String
+  description      String
+  price            String
+  features         String[]
+
+  @@index([name])
+  Subscription Subscription[]
 }
 
 model Product {
@@ -260,11 +273,6 @@ enum InvitationStatus {
   ACCEPTED
   REVOKED
   PENDING
-}
-
-enum Plan {
-  price_1OYxkqFj9oKEERu1NbKUxXxN
-  price_1OYxkqFj9oKEERu1KfJGWxgN
 }
 
 enum Temaplte {

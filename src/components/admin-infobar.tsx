@@ -3,6 +3,7 @@ import { UserButton } from "@clerk/nextjs";
 import React from "react";
 import { twMerge } from "tailwind-merge";
 import { ModeToggle } from "./mode-toggle";
+import LanguageSwitcher from "./language-switcher";
 
 type Props = {
   className?: string;
@@ -17,6 +18,7 @@ const AdminInfoBar = ({ className }: Props) => {
           className
         )}>
         <div className="flex items-center gap-2 ml-auto">
+          <LanguageSwitcher />
           <UserButton afterSignOutUrl="/" />
           <ModeToggle />
         </div>

@@ -1,5 +1,6 @@
 "use client";
-import { deleteCategories, saveActivityLogsNotification } from "@/lib/queries";
+import { deleteCategories } from "@/database/category/queries";
+import { saveActivityLogsNotification } from "@/database/notification/queries";
 import { useRouter } from "next/navigation";
 import React from "react";
 

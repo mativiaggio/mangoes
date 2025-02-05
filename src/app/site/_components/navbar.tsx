@@ -15,6 +15,8 @@ import {
 import Image from "next/image";
 import { ModeToggle } from "@/components/mode-toggle";
 import { UserButton } from "@clerk/nextjs";
+import LanguageSwitcher from "@/components/language-switcher";
+import { useLanguage } from "@/lib/contexts/language-context";
 
 const navItems = [
   { name: "Inicio", href: "#home" },
@@ -28,6 +30,7 @@ interface NavbarProps {
 
 export function Navbar({ id }: NavbarProps): React.JSX.Element {
   const [isOpen, setIsOpen] = React.useState(false);
+  const { t } = useLanguage();
   return (
     <nav className="bg-background sticky top-0 z-40 w-full border-b">
       <div className="flex h-16 items-center justify-between px-4 sm:px-8">
@@ -45,25 +48,32 @@ export function Navbar({ id }: NavbarProps): React.JSX.Element {
         <div className="flex gap-4 justify-end">
           {/* Desktop navigation */}
           <div className="hidden md:flex md:items-center md:gap-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-foreground/60 transition-colors hover:text-foreground">
-                {item.name}
-              </Link>
-            ))}
+            <Link
+              href={"#home"}
+              className="text-foreground/60 transition-colors hover:text-foreground">
+              {t.home}
+            </Link>
+            <Link
+              href={"#features"}
+              className="text-foreground/60 transition-colors hover:text-foreground">
+              {t.features}
+            </Link>
+            <Link
+              href={"#pricing"}
+              className="text-foreground/60 transition-colors hover:text-foreground">
+              {t.pricing}
+            </Link>
             {!id && (
               <>
                 <Link
                   href={"/sign-up"}
                   className="text-foreground/60 transition-colors hover:text-foreground">
-                  Crear cuenta
+                  {t.signUp}
                 </Link>
                 <Link
                   href={"/sign-in"}
                   className="text-foreground/60 transition-colors hover:text-foreground">
-                  Iniciar sesión
+                  {t.signIn}
                 </Link>
               </>
             )}
@@ -72,10 +82,11 @@ export function Navbar({ id }: NavbarProps): React.JSX.Element {
             <Link
               href={"/agency"}
               className="text-foreground/60 transition-colors hover:text-foreground text-sm md:text-base flex items-center justify-center gap-2">
-              Dashboard
+              {t.dashboard}
               <ChevronRight size={14} />
             </Link>
           </div>
+          <LanguageSwitcher />
           {id && <UserButton />}
           <ModeToggle />
           {/* Mobile navigation */}
@@ -106,10 +117,10 @@ export function Navbar({ id }: NavbarProps): React.JSX.Element {
                 {!id && (
                   <>
                     <Link href={"/sign-up"} className="block px-2 py-1 text-lg">
-                      Crear cuenta
+                      {t.signUp}
                     </Link>
                     <Link href={"/sign-in"} className="block px-2 py-1 text-lg">
-                      Iniciar sesión
+                      {t.signIn}
                     </Link>
                   </>
                 )}

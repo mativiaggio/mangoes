@@ -24,11 +24,6 @@ import {
 } from "@/components/ui/card";
 
 import { Agency, SubAccount } from "@prisma/client";
-import {
-  createSubAccount,
-  saveActivityLogsNotification,
-  updateSubAccount,
-} from "@/lib/queries";
 import { useEffect, useState } from "react";
 import { useModal } from "@/lib/providers/modal-provider";
 import FileUpload from "../file-upload";
@@ -49,6 +44,11 @@ import {
 import PhoneInput from "react-phone-number-input";
 import { useToast } from "@/hooks/use-toast";
 import { Submit } from "../buttons/submit";
+import {
+  createSubAccount,
+  updateSubAccount,
+} from "@/database/subaccount/queries";
+import { saveActivityLogsNotification } from "@/database/notification/queries";
 
 const formSchema = z.object({
   name: z.string().min(2, "El subnombre debe tener al menos 2 caracteres."),

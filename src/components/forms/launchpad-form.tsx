@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/card";
 
 import { Agency, Website } from "@prisma/client";
-import { saveActivityLogsNotification, upsertWebsite } from "@/lib/queries";
 import { useModal } from "@/lib/providers/modal-provider";
 import { ExternalLink, InfoIcon } from "lucide-react";
 import {
@@ -46,6 +45,8 @@ import { useToast } from "@/hooks/use-toast";
 // import SavingButton from "../buttons/saving-button";
 // import SaveButton from "../buttons/save-button";
 import { Submit } from "../buttons/submit";
+import { upsertWebsite } from "@/database/website/queries";
+import { saveActivityLogsNotification } from "@/database/notification/queries";
 
 const formSchema = z.object({
   name: z

@@ -1,7 +1,7 @@
 import SubAccountForm from "@/components/forms/subaccount-form";
 import UserForm from "@/components/forms/user-form";
 import BlurPage from "@/components/blur-page";
-import { db } from "@/lib/db";
+import { db } from "@/database/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";

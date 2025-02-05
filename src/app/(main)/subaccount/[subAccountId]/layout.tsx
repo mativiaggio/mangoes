@@ -1,11 +1,9 @@
 import InfoBar from "@/components/infobar";
 import Sidebar from "@/components/sidebars";
 import Unauthorized from "@/components/unauthorized";
-import {
-  getAuthUserDetails,
-  getNotificationAndUser,
-  verifyAndAcceptInvitation,
-} from "@/lib/queries";
+import { getAuthUserDetails } from "@/database/auth/queries";
+import { verifyAndAcceptInvitation } from "@/database/invitation/queries";
+import { getNotificationAndUser } from "@/database/notification/queries";
 import { currentUser } from "@clerk/nextjs/server";
 import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";

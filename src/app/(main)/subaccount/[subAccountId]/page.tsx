@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { db } from "@/lib/db";
+import { db } from "@/database/db";
 import { AreaChart } from "@tremor/react";
 import { Contact2 } from "lucide-react";
 import React from "react";

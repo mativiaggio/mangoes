@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,9 +17,11 @@ import {
   Drill,
   ShoppingBag,
 } from "lucide-react";
+import { useLanguage } from "@/lib/contexts/language-context";
 import { formatPriceToARS } from "@/lib/utils";
 
 export default function Home() {
+  const { t } = useLanguage();
   const plans = [
     {
       id: 1,
@@ -68,24 +71,23 @@ export default function Home() {
         id="#home">
         <div className="text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-main-secondary mb-6">
-            Crea tu tienda online con Mangoes
+            {t.createYourOnlineStore}
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            La plataforma perfecta para pymes y emprendedores que quieren llevar
-            su negocio al siguiente nivel
+            {t.perfectPlatform}
           </p>
 
           <div className="flex gap-2 items-center justify-center">
             <a href={"#pricing"}>
               <Button className="bg-main-primary hover:bg-main-secondary text-white text-lg py-6 px-8 rounded-full transition-colors duration-300">
-                Comenzar ya
+                {t.startNow}
               </Button>
             </a>
             <Link href={"/agency"}>
               <Button
                 variant={"ghost"}
                 className="!border-main-primary hover:!border-main-secondary text-primary text-lg py-6 px-8 rounded-full transition-colors duration-300 flex justify-center items-center gap-2">
-                Dashboard
+                {t.dashboard}
                 <ChevronRight />
               </Button>
             </Link>
@@ -94,7 +96,7 @@ export default function Home() {
         <div className="mt-16">
           <Image
             src="https://cdn.dribbble.com/userupload/17340975/file/original-8d77f6fac42fbb1dd9cf8ca86f982470.png?resize=1024x768&vertical=center"
-            alt="Mangoes Dashboard"
+            alt={t.dashboardImageAlt}
             width={1366}
             height={1366}
             className="rounded-lg mx-auto"
@@ -102,23 +104,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Tusted  */}
+      {/* Trusted */}
       <section className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto text-center">
         <div className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto bg-[#ebedee] dark:bg-card rounded-lg w-full flex flex-col gap-4">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-main-secondary">
-            Algunas empresas que están usando Mangoes
+            {t.someBusinessesUsing}
           </h2>
           <div className="flex justify-between items-center font-extrabold text-3xl w-full text-muted-foreground">
             <p className="flex gap-2 items-center">
-              <Drill size={32} /> Herramientas OTOL
+              <Drill size={32} /> {t.toolsOtol}
             </p>
             <p className="flex gap-2 items-center">
               <ShoppingBag size={32} />
-              Buy Everywhere
+              {t.buyEverywhere}
             </p>
             <p className="flex gap-2 items-center">
               <Armchair size={32} />
-              Deacon Diseñadora
+              {t.deaconDesigner}
             </p>
           </div>
         </div>
@@ -129,44 +131,38 @@ export default function Home() {
         className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto"
         id="features">
         <h2 className="text-3xl md:text-4xl font-bold text-center text-main-secondary mb-12">
-          ¿Por qué elegir Mangoes?
+          {t.whyChoose}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             {
-              title: "Diseños profesionales",
-              description:
-                "Elige entre una variedad de templates prediseñadas y personalizables",
+              title: t.professionalDesigns,
+              description: t.chooseTemplates,
               icon: "🎨",
             },
             {
-              title: "Fácil de usar",
-              description:
-                "Interfaz intuitiva que te permite crear y gestionar tu tienda sin conocimientos técnicos",
+              title: t.easyToUse,
+              description: t.intuitiveInterface,
               icon: "🚀",
             },
             {
-              title: "Soporte 24/7",
-              description:
-                "Nuestro equipo está siempre disponible para ayudarte en cada paso del camino",
+              title: t.support247,
+              description: t.alwaysAvailable,
               icon: "🛟",
             },
             {
-              title: "Gestión de inventario",
-              description:
-                "Nuestro aplicación tiene integrada un sistema de gestión de inventario ideal para vos.",
+              title: t.inventoryManagement,
+              description: t.inventorySystem,
               icon: "📦",
             },
             {
-              title: "Órdenes de Compra/Venta",
-              description:
-                "Gestiona fácilmente todas tus órdenes de compra y venta llevando un control detallado de todos tus movimientos comerciales.",
+              title: t.purchaseOrders,
+              description: t.manageOrders,
               icon: "📋",
             },
             {
-              title: "Comprobantes de Compra/Venta",
-              description:
-                "Genera comprobantes internos de compra y venta al instante para un registro organizado de tus transacciones.",
+              title: t.purchaseReceipts,
+              description: t.generateReceipts,
               icon: "📄",
             },
           ].map((feature, index) => (
@@ -187,27 +183,24 @@ export default function Home() {
       <section className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto bg-[#ebedee] dark:bg-card rounded-lg">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-main-secondary mb-12">
-            Cómo funciona
+            {t.howItWorks}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
                 step: "1",
-                title: "Crea tu cuenta",
-                description:
-                  "Regístrate en Mangoes y elige el plan que mejor se adapte a tus necesidades",
+                title: t.createAccount,
+                description: t.registerAndChoosePlan,
               },
               {
                 step: "2",
-                title: "Personaliza tu tienda",
-                description:
-                  "Selecciona una template y personalízala con tus productos y agencia",
+                title: t.customizeStore,
+                description: t.selectTemplate,
               },
               {
                 step: "3",
-                title: "¡Lanza tu negocio online!",
-                description:
-                  "Publica tu tienda y empieza a vender a clientes de todo el país",
+                title: t.launchBusiness,
+                description: t.publishAndSell,
               },
             ].map((step, index) => (
               <div
@@ -232,14 +225,10 @@ export default function Home() {
         id="pricing">
         <div className="w-full flex flex-col items-center">
           <h1 className="text-4xl md:text-2xl font-bold mb-2 text-center">
-            Elige tu plan perfecto
+            {t.choosePerfectPlan}
           </h1>
           <p className="max-w-6xl text-sm mb-8 text-muted-foreground">
-            Nuestros planes están diseñados para ofrecerte las herramientas y el
-            soporte que necesitas para hacer crecer tu negocio. Ya sea que estés
-            comenzando o busques expandir tu empresa, tenemos la opción perfecta
-            para ti. Elige el plan que mejor se adapte a tus necesidades y
-            empieza a disfrutar de los beneficios desde el primer día.
+            {t.pricingDescription}
           </p>
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 max-w-6xl w-full">
             {plans.map((plan) => (

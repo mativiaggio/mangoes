@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ContactUserFormSchema } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -22,6 +21,7 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Loader, Stars } from "lucide-react";
+import { ContactUserFormSchema } from "@/database/category/types";
 
 type Props = {
   title: string;

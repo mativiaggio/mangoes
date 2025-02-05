@@ -1,13 +1,11 @@
-import {
-  deleteCategory,
-  getAuthUserDetails,
-  getAgencyCategories,
-} from "@/lib/queries";
 import React from "react";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import CreateCategoryButton from "./_components/create-category-btn";
 import { Category } from "@prisma/client";
 import CategoriesDataTable from "./_components/category-data-table";
+import { getAgencyCategories } from "@/database/agency/queries";
+import { getAuthUserDetails } from "@/database/auth/queries";
+import { deleteCategory } from "@/database/category/queries";
 
 type Props = {
   params: Promise<{ agencyId: string }>;

@@ -1,5 +1,5 @@
 "use client";
-import { CompleteWebsiteInfo } from "@/lib/types";
+import { CompleteWebsiteInfo } from "@/database/website/types";
 import { Footer } from "../_components/footer";
 import { Navbar } from "../_components/navbar";
 import Products from "../_components/products";

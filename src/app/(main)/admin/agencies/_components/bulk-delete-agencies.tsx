@@ -1,6 +1,6 @@
 "use client";
+import { deleteAgencies } from "@/database/agency/queries";
 import { useToast } from "@/hooks/use-toast";
-import { deleteAgencies } from "@/lib/queries";
 import { useRouter } from "next/navigation";
 import React from "react";
 

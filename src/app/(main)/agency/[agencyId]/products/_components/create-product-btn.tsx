@@ -39,6 +39,7 @@ const CreateProductButton = ({ className, user, categories }: Props) => {
 
   return (
     <Button
+      variant={"default"}
       className={twMerge("w-full flex gap-4 mb-4", className)}
       onClick={() => {
         setOpen(

@@ -1,6 +1,6 @@
 import { Footer } from "./_components/footer";
 import { Navbar } from "./_components/navbar";
-import { CompleteWebsiteInfo } from "@/lib/types";
+import { CompleteWebsiteInfo } from "@/database/website/types";
 
 type Props = {
   website: CompleteWebsiteInfo;

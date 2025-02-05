@@ -21,15 +21,13 @@ import {
 } from "../ui/command";
 import Link from "next/link";
 import { Separator } from "../ui/separator";
-// import { useModal } from "@/lib/providers/modal-provider";
 import { icons } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-// import CustomModal from "../custom-modal";
-// import SubAccountForm from "../forms/subaccount-form";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { env } from "@/lib/env.config";
+import { useLanguage } from "@/lib/contexts/language-context";
 
 type Props = {
   defaultOpen?: boolean;
@@ -42,112 +40,97 @@ type Props = {
 };
 
 const linkOrder = [
-  "Dashboard",
-  "Launchpad",
-  "Categorías",
-  "Productos",
-  "Inventario",
-  "Ingresos",
-  "Facturas de venta",
-  "Egresos",
-  "Facturas de compra",
-  "Facturación",
-  "Configuración",
-  "Subcuentas",
-  "Equipo",
-  "Contactos",
+  "dashboard",
+  "launchpad",
+  "categories",
+  "products",
+  "inventory",
+  "sales",
+  "salesInvoices",
+  "purchases",
+  "purchasesInvoices",
+  "settings",
+  "contacts",
+  "team",
 ];
 
 const sidebarOptions = [
   {
     id: "dashboard",
-    name: "Dashboard",
+    translationKey: "dashboard",
     link: "/agency/:id",
     icon: "category",
   },
   {
     id: "launchpad",
-    name: "Launchpad",
+    translationKey: "launchpad",
     link: "/agency/:id/launchpad",
     icon: "rocket",
   },
   {
     id: "categories",
-    name: "Categorías",
+    translationKey: "categories",
     link: "/agency/:id/categories",
     icon: "list",
   },
   {
     id: "products",
-    name: "Productos",
+    translationKey: "products",
     link: "/agency/:id/products",
     icon: "archive",
   },
   {
     id: "inventory",
-    name: "Inventario",
+    translationKey: "inventory",
     link: "/agency/:id/inventory",
     icon: "packageOpen",
   },
   {
     id: "sales",
-    name: "Ingresos",
+    translationKey: "sales",
     link: "/agency/:id/sales",
     icon: "wallet",
   },
   {
     id: "sales-invoices",
-    name: "Facturas de venta",
+    translationKey: "salesInvoices",
     link: "/agency/:id/sales-invoices",
     icon: "fileInput",
   },
   {
     id: "purchases",
-    name: "Egresos",
+    translationKey: "purchases",
     link: "/agency/:id/purchases",
     icon: "handCoins",
   },
   {
     id: "purchases-invoices",
-    name: "Facturas de compra",
+    translationKey: "purchasesInvoices",
     link: "/agency/:id/purchases-invoices",
     icon: "fileOutput",
   },
   {
-    id: "billing",
-    name: "Facturación",
-    link: "/agency/:id/billing",
-    icon: "payment",
-  },
-  {
     id: "settings",
-    name: "Configuración",
+    translationKey: "settings",
     link: "/agency/:id/settings",
     icon: "settings",
   },
   {
     id: "team",
-    name: "Equipo",
+    translationKey: "team",
     link: "/agency/:id/team",
     icon: "shield",
   },
   {
     id: "contacts",
-    name: "Contactos",
+    translationKey: "contacts",
     link: "/agency/:id/contacts",
     icon: "person",
   },
 ];
 
-const MenuOptions = ({
-  defaultOpen,
-  // subAccounts,
-  // sidebarOptions,
-  details,
-  website,
-}: // user,
-Props) => {
-  // const { setOpen } = useModal();
+const MenuOptions = ({ defaultOpen, details, website }: Props) => {
+  const { t }: { t: Record<string, string> } = useLanguage(); // Contexto de traducción
   const [isMounted, setIsMounted] = useState(false);
   const currentPath = usePathname();
 
@@ -161,6 +144,7 @@ Props) => {
   }, []);
 
   if (!isMounted) return null;
+
   return (
     <Sheet modal={false} {...openState}>
       <SheetTrigger
@@ -199,14 +183,15 @@ Props) => {
           <Separator className="mt-8" />
           <nav className="relative">
             <Command className="rounded-lg overflow-visible bg-transparent">
-              <CommandInput placeholder="Buscar..." />
+              <CommandInput placeholder={t.search + "..."} />
               <CommandList className="py-4 overflow-visible">
-                <CommandEmpty>No Results Found</CommandEmpty>
+                <CommandEmpty>{t.noResults}</CommandEmpty>
                 <CommandGroup className="overflow-visible">
                   {sidebarOptions
                     .sort(
                       (a, b) =>
-                        linkOrder.indexOf(a.name) - linkOrder.indexOf(b.name)
+                        linkOrder.indexOf(a.translationKey) -
+                        linkOrder.indexOf(b.translationKey)
                     )
                     .map((sidebarOption) => {
                       const IconComponent =
@@ -227,7 +212,7 @@ Props) => {
                             href={sidebarOption.link.replace(":id", details.id)}
                             className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px] px-2 py-1.5">
                             {IconComponent && <IconComponent />}
-                            <span>{sidebarOption.name}</span>
+                            <span>{t[sidebarOption.translationKey]}</span>
                           </Link>
                         </CommandItem>
                       );
@@ -239,7 +224,7 @@ Props) => {
                         target="_blank"
                         className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px] px-2 py-1.5">
                         <ExternalLink />
-                        <span>Ir a la página</span>
+                        <span>{t.goToWebsite}</span>
                       </Link>
                     </CommandItem>
                   )}

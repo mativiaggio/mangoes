@@ -1,6 +1,6 @@
-import { getAuthUserDetails } from "@/lib/queries";
 import React from "react";
 import MenuOptions from "./menu-options";
+import { getAuthUserDetails } from "@/database/auth/queries";
 
 const AdminSidebar = async () => {
   const user = await getAuthUserDetails();

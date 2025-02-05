@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { ModeToggle } from "@/components/mode-toggle";
 import Image from "next/image";
-import { CompleteWebsiteInfo } from "@/lib/types";
+import { CompleteWebsiteInfo } from "@/database/website/types";
 import { CartSummary } from "./cart-summary";
 
 const navItems = [

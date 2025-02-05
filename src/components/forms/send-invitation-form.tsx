@@ -27,9 +27,10 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
-import { saveActivityLogsNotification, sendInvitation } from "@/lib/queries";
 import { Loader } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { sendInvitation } from "@/database/invitation/queries";
+import { saveActivityLogsNotification } from "@/database/notification/queries";
 
 interface SendInvitationProps {
   agencyId: string;

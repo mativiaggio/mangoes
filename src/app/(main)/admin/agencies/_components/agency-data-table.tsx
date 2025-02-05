@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState } from "react";
@@ -19,8 +18,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown, MoreHorizontal, Trash, Download } from "lucide-react";
-import { Agency, User } from "@prisma/client";
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  Trash,
+  Download,
+  RefreshCcw,
+} from "lucide-react";
+import { Agency, Subscription, User } from "@prisma/client";
 import DeleteAgencyButton from "./delete-button";
 import {
   AlertDialog,
@@ -35,16 +40,18 @@ import {
 } from "@/components/ui/alert-dialog";
 import EditAgencyButton from "./edit-agency-btn";
 import BulkDeleteAgencies from "./bulk-delete-agencies";
+import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/contexts/language-context";
 
 type Props = {
   user: User;
-  agencies: Agency[];
+  agencies: (Agency & { Subscription?: Subscription | null })[];
   onDelete?: (agency: Agency) => void;
 };
 
 const ITEMS_PER_PAGE = 50;
 
-export default function AgenciesDataTable({ user, agencies }: Props) {
+export default function AgenciesDataTable({ agencies }: Props) {
   const [selectedAgencies, setselectedAgencies] = useState<Set<string>>(
     new Set()
   );
@@ -54,6 +61,8 @@ export default function AgenciesDataTable({ user, agencies }: Props) {
   }>({ key: "name", direction: "asc" });
   const [filterName, setFilterName] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const router = useRouter();
+  const { t } = useLanguage();
 
   const toggleSort = (key: keyof Agency) => {
     setSortConfig({
@@ -112,7 +121,7 @@ export default function AgenciesDataTable({ user, agencies }: Props) {
     <div className="w-full space-y-4">
       <div className="flex items-end justify-between gap-2">
         <Input
-          placeholder="Filtrar por nombre..."
+          placeholder={t.filterByName + "..."}
           value={filterName}
           onChange={(e) => setFilterName(e.target.value)}
           className="max-w-xs"
@@ -192,7 +201,17 @@ export default function AgenciesDataTable({ user, agencies }: Props) {
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead className="w-12"></TableHead>
+              <TableHead className="w-12 text-center">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    router.refresh();
+                  }}
+                  className="h-8">
+                  <RefreshCcw />
+                </Button>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -209,7 +228,7 @@ export default function AgenciesDataTable({ user, agencies }: Props) {
                   />
                 </TableCell>
                 <TableCell>{agency.name}</TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="h-8 w-8 p-0">
@@ -218,11 +237,10 @@ export default function AgenciesDataTable({ user, agencies }: Props) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <AlertDialog>
-                        {/* <EditAgencyButton
-                          details={agency}
-                          user={user}
+                        <EditAgencyButton
+                          agency={agency}
                           className="w-[200px] self-end"
-                        /> */}
+                        />
                       </AlertDialog>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>

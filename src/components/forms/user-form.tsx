@@ -2,13 +2,6 @@
 import { useToast } from "@/hooks/use-toast";
 import { useModal } from "@/lib/providers/modal-provider";
 import {
-  changeUserPermissions,
-  getAuthUserDetails,
-  getUserPermissions,
-  saveActivityLogsNotification,
-  updateUser,
-} from "@/lib/queries";
-import {
   Card,
   CardContent,
   CardDescription,
@@ -31,10 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  AuthUserSubAccounts,
-  UserWithPermissionsAndSubAccounts,
-} from "@/lib/types";
 import { SubAccount, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -47,6 +36,17 @@ import { Separator } from "../ui/separator";
 import { Input } from "../ui/input";
 import FileUpload from "../file-upload";
 import { Submit } from "../buttons/submit";
+import {
+  AuthUserSubAccounts,
+  UserWithPermissionsAndSubAccounts,
+} from "@/database/auth/types";
+import {
+  changeUserPermissions,
+  getAuthUserDetails,
+  getUserPermissions,
+  updateUser,
+} from "@/database/auth/queries";
+import { saveActivityLogsNotification } from "@/database/notification/queries";
 
 type Props = {
   id: string | null;

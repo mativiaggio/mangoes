@@ -1,21 +1,19 @@
 "use client";
 import CustomModal from "@/components/custom-modal";
-import CategoryForm from "@/components/forms/category-form";
-
+import AdminAgencyForm from "@/components/forms/admin-agency-form";
 import { Button } from "@/components/ui/button";
 import { useModal } from "@/lib/providers/modal-provider";
-
-import { Agency, Category, SubAccount, User } from "@prisma/client";
+import { Agency, Subscription } from "@prisma/client";
 import { Edit } from "lucide-react";
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
 type Props = {
+  agency: Agency & { Subscription?: Subscription | null };
   className: string;
-  details: Category;
 };
 
-const EditAgencyButton = ({ className }: Props) => {
+const EditAgencyButton = ({ agency, className }: Props) => {
   const { setOpen } = useModal();
 
   return (
@@ -25,9 +23,9 @@ const EditAgencyButton = ({ className }: Props) => {
       onClick={() => {
         setOpen(
           <CustomModal
-            title="Carga un producto / servicio"
-            subheading="Ingresa los detalles del producto/servicio">
-            <p></p>
+            title={`Controlador de ${agency.name}`}
+            subheading="Modifica el estado de la suscripción de la agencia">
+            <AdminAgencyForm agency={agency} />
           </CustomModal>
         );
       }}>

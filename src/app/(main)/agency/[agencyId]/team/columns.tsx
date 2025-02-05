@@ -28,137 +28,136 @@ import {
 import { Button } from "@/components/ui/button";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 
-import { deleteUser, getUser } from "@/lib/queries";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { UsersWithAgencySubAccountPermissionsSidebarOptions } from "@/lib/types";
 import { useModal } from "@/lib/providers/modal-provider";
 import CustomModal from "@/components/custom-modal";
 import UserForm from "@/components/forms/user-form";
 import { useToast } from "@/hooks/use-toast";
+import { UsersWithAgencySubAccountPermissions } from "@/database/auth/types";
+import { deleteUser, getUser } from "@/database/auth/queries";
 
-export const columns: ColumnDef<UsersWithAgencySubAccountPermissionsSidebarOptions>[] =
-  [
-    {
-      accessorKey: "id",
-      header: "",
-      cell: () => {
-        return null;
-      },
+export const columns: ColumnDef<UsersWithAgencySubAccountPermissions>[] = [
+  {
+    accessorKey: "id",
+    header: "",
+    cell: () => {
+      return null;
     },
-    {
-      accessorKey: "name",
-      header: "Nombre",
-      cell: ({ row }) => {
-        const avatarUrl = row.getValue("avatarUrl") as string;
-        return (
-          <div className="flex items-center gap-4">
-            <div className="h-11 w-11 relative flex-none">
-              <Image
-                src={avatarUrl}
-                fill
-                className="rounded-full object-cover"
-                alt="avatar image"
-              />
-            </div>
-            <span>{row.getValue("name")}</span>
+  },
+  {
+    accessorKey: "name",
+    header: "Nombre",
+    cell: ({ row }) => {
+      const avatarUrl = row.getValue("avatarUrl") as string;
+      return (
+        <div className="flex items-center gap-4">
+          <div className="h-11 w-11 relative flex-none">
+            <Image
+              src={avatarUrl}
+              fill
+              className="rounded-full object-cover"
+              alt="avatar image"
+            />
           </div>
-        );
-      },
+          <span>{row.getValue("name")}</span>
+        </div>
+      );
     },
-    {
-      accessorKey: "avatarUrl",
-      header: "",
-      cell: () => {
-        return null;
-      },
+  },
+  {
+    accessorKey: "avatarUrl",
+    header: "",
+    cell: () => {
+      return null;
     },
-    { accessorKey: "email", header: "Email" },
+  },
+  { accessorKey: "email", header: "Email" },
 
-    {
-      accessorKey: "SubAccount",
-      header: "Cuentas Propietarias",
-      cell: ({ row }) => {
-        const isAgencyOwner = row.getValue("role") === "AGENCY_OWNER";
-        const ownedAccounts = row.original?.Permissions.filter(
-          (per) => per.access
-        );
+  {
+    accessorKey: "SubAccount",
+    header: "Cuentas Propietarias",
+    cell: ({ row }) => {
+      const isAgencyOwner = row.getValue("role") === "AGENCY_OWNER";
+      const ownedAccounts = row.original?.Permissions.filter(
+        (per) => per.access
+      );
 
-        if (isAgencyOwner)
-          return (
-            <div className="flex flex-col items-start">
-              <div className="flex flex-col gap-2">
-                <Badge className="bg-slate-600 whitespace-nowrap">
-                  Agencia - {row?.original?.Agency?.name}
-                </Badge>
-              </div>
-            </div>
-          );
+      if (isAgencyOwner)
         return (
           <div className="flex flex-col items-start">
             <div className="flex flex-col gap-2">
-              {ownedAccounts?.length ? (
-                ownedAccounts.map((account) => (
-                  <Badge
-                    key={account.id}
-                    className="bg-slate-600 w-fit whitespace-nowrap">
-                    Sub Cuenta - {account.SubAccount.name}
-                  </Badge>
-                ))
-              ) : (
-                <div className="text-muted-foreground">Sin acceso</div>
-              )}
+              <Badge className="bg-slate-600 whitespace-nowrap">
+                Agencia - {row?.original?.Agency?.name}
+              </Badge>
             </div>
           </div>
         );
-      },
+      return (
+        <div className="flex flex-col items-start">
+          <div className="flex flex-col gap-2">
+            {ownedAccounts?.length ? (
+              ownedAccounts.map((account) => (
+                <Badge
+                  key={account.id}
+                  className="bg-slate-600 w-fit whitespace-nowrap">
+                  Sub Cuenta - {account.SubAccount.name}
+                </Badge>
+              ))
+            ) : (
+              <div className="text-muted-foreground">Sin acceso</div>
+            )}
+          </div>
+        </div>
+      );
     },
-    {
-      accessorKey: "role",
-      header: "Rol",
-      cell: ({ row }) => {
-        const role: Role = row.getValue("role");
+  },
+  {
+    accessorKey: "role",
+    header: "Rol",
+    cell: ({ row }) => {
+      const role: Role = row.getValue("role");
 
-        const getRoleEsp = (role: string) => {
-          switch (role) {
-            case "AGENCY_OWNER":
-              return "Propietario";
+      const getRoleEsp = (role: string) => {
+        switch (role) {
+          case "AGENCY_OWNER":
+            return "Propietario";
 
-            case "AGENCY_ADMIN":
-              return "Administrador";
+          case "AGENCY_ADMIN":
+            return "Administrador";
 
-            case "SUBACCOUNT_USER":
-              return "Ususario";
+          case "SUBACCOUNT_USER":
+            return "Ususario";
 
-            default:
-              return "Invitado";
-          }
-        };
-        return (
-          <Badge
-            className={clsx({
-              "bg-emerald-500": role === "AGENCY_OWNER",
-              "bg-orange-400": role === "AGENCY_ADMIN",
-              "bg-primary": role === "SUBACCOUNT_USER",
-              "bg-muted": role === "SUBACCOUNT_GUEST",
-            })}>
-            {getRoleEsp(role)}
-          </Badge>
-        );
-      },
+          default:
+            return "Invitado";
+        }
+      };
+      return (
+        <Badge
+          className={clsx({
+            "bg-emerald-500": role === "AGENCY_OWNER",
+            "bg-orange-400": role === "AGENCY_ADMIN",
+            "bg-primary": role === "SUBACCOUNT_USER",
+            "bg-muted": role === "SUBACCOUNT_GUEST",
+          })}>
+          {getRoleEsp(role)}
+        </Badge>
+      );
     },
-    {
-      id: "actions",
-      cell: ({ row }) => {
-        const rowData = row.original;
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const rowData = row.original;
 
-        return <CellActions rowData={rowData} />;
-      },
+      return <CellActions rowData={rowData} />;
     },
-  ];
+  },
+];
 
 interface CellActionsProps {
-  rowData: UsersWithAgencySubAccountPermissionsSidebarOptions;
+  rowData: UsersWithAgencySubAccountPermissions;
 }
 
 const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {

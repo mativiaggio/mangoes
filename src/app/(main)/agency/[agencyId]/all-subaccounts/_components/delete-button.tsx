@@ -1,9 +1,9 @@
 "use client";
+import { saveActivityLogsNotification } from "@/database/notification/queries";
 import {
   deleteSubAccount,
   getSubaccountDetails,
-  saveActivityLogsNotification,
-} from "@/lib/queries";
+} from "@/database/subaccount/queries";
 import { useRouter } from "next/navigation";
 import React from "react";
 

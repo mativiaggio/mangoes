@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/card";
 
 import { Agency, Category, Product, SubAccount, User } from "@prisma/client";
-import { saveActivityLogsNotification, upsertProduct } from "@/lib/queries";
 import { useModal } from "@/lib/providers/modal-provider";
 import {
   Select,
@@ -45,6 +44,8 @@ import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 import { Submit } from "../buttons/submit";
 import { cn } from "@/lib/utils";
+import { upsertProduct } from "@/database/product/queries";
+import { saveActivityLogsNotification } from "@/database/notification/queries";
 
 const formSchema = z.object({
   name: z

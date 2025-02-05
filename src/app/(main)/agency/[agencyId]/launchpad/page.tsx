@@ -1,6 +1,7 @@
 import LaunchpadForm from "@/components/forms/launchpad-form";
-import { db } from "@/lib/db";
-import { getAgencyWebsite, getAuthUserDetails } from "@/lib/queries";
+import { getAgencyWebsite } from "@/database/agency/queries";
+import { getAuthUserDetails } from "@/database/auth/queries";
+import { db } from "@/database/db";
 import { notFound } from "next/navigation";
 import React from "react";
 
