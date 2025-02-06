@@ -8,26 +8,96 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
+
 model User {
-  id           String         @id @default(uuid())
-  name         String
-  avatarUrl    String
-  email        String         @unique
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  role         Role           @default(SUBACCOUNT_USER)
-  agencyId     String?
-  Agency       Agency?        @relation(fields: [agencyId], references: [id], onDelete: SetNull)
-  Permissions  Permissions[]
-  Notification Notification[]
-  Product      Product[]
-  Category     Category[]
+  id                    String         @id @default(cuid())
+  name                  String
+  image                 String?
+  email                 String         @unique
+  emailVerified         DateTime?
+  password              String?
+  role                  Role           @default(SUBACCOUNT_USER)
+  userRole              UserRole       @default(USER)
+  isTwoFactorEnabled    Boolean @default(false)
+  twoFactorConfirmation TwoFactorConfirmation?
+  agencyId              String?
+  Agency                Agency?        @relation(fields: [agencyId], references: [id], onDelete: SetNull)
+  Permissions           Permissions[]
+  Notification          Notification[]
+  Product               Product[]
+  Category              Category[]
+  accounts              Account[]
+  // sessions      Session[]
+  // Authenticator Authenticator[]
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@index([agencyId])
 }
 
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model VerificationToken {
+  id String @id @default(cuid())
+  email String
+  token String @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id String @id @default(cuid())
+  email String
+  token String @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorToken {
+  id String @id @default(cuid())
+  email String
+  token String @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorConfirmation {
+  id String @id @default(cuid())
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
+
 model Permissions {
-  id           String     @id @default(uuid())
+  id           String     @id @default(cuid())
   email        String
   subAccountId String
   access       Boolean
@@ -39,7 +109,7 @@ model Permissions {
 }
 
 model Agency {
-  id               String                @id @default(uuid())
+  id               String                @id @default(cuid())
   connectAccountId String?               @default("")
   customerId       String                @default("")
   name             String
@@ -66,7 +136,7 @@ model Agency {
 }
 
 model SubAccount {
-  id               String                    @id @default(uuid())
+  id               String                    @id @default(cuid())
   connectAccountId String?                   @default("")
   name             String
   subAccountLogo   String
@@ -90,7 +160,7 @@ model SubAccount {
 }
 
 model Contact {
-  id           String     @id @default(uuid())
+  id           String     @id @default(cuid())
   name         String
   email        String
   phone        String
@@ -103,7 +173,7 @@ model Contact {
 }
 
 model Invitation {
-  id       String           @id @default(uuid())
+  id       String           @id @default(cuid())
   email    String           @unique
   agencyId String
   status   InvitationStatus @default(PENDING)
@@ -114,7 +184,7 @@ model Invitation {
 }
 
 model Notification {
-  id           String      @id @default(uuid())
+  id           String      @id @default(cuid())
   notification String
   agencyId     String
   subAccountId String?
@@ -131,7 +201,7 @@ model Notification {
 }
 
 model Subscription {
-  id                   String   @id @default(uuid())
+  id                   String   @id @default(cuid())
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   price                String?
@@ -148,7 +218,7 @@ model Subscription {
 }
 
 model Plan {
-  id               String        @id @default(uuid())
+  id               String        @id @default(cuid())
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
   name             String
@@ -161,7 +231,7 @@ model Plan {
 }
 
 model Product {
-  id              String      @id @default(uuid())
+  id              String      @id @default(cuid())
   name            String
   description     String
   price           Float       @default(0.0)
@@ -186,7 +256,7 @@ model Product {
 }
 
 model Category {
-  id        String    @id @default(uuid())
+  id        String    @id @default(cuid())
   name      String
   isActive  Boolean   @default(true)
   createdAt DateTime  @default(now())
@@ -203,7 +273,7 @@ model Category {
 }
 
 model Website {
-  id           String   @id @default(uuid())
+  id           String   @id @default(cuid())
   websiteLogo  String   @default("")
   name         String
   description  String

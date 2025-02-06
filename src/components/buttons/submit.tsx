@@ -7,14 +7,20 @@ import { Button } from "../ui/button";
 
 interface SubmitProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading: boolean;
+  label?: string;
 }
 
-export function Submit({ isLoading, className, ...props }: SubmitProps) {
+export function Submit({
+  isLoading,
+  className,
+  label = "Guardar",
+  ...props
+}: SubmitProps) {
   return (
     <Button
       disabled={isLoading}
       className={cn(
-        "w-28", // Ancho fijo
+        "w-28 overflow-hidden", // Ancho fijo
         className
       )}
       {...props}>
@@ -39,7 +45,7 @@ export function Submit({ isLoading, className, ...props }: SubmitProps) {
               transition={{ duration: 0.2 }}
               className="absolute inset-0 flex items-center justify-center">
               <span className="flex gap-2 items-center">
-                Guardar <Stars />
+                {label} <Stars />
               </span>
             </motion.span>
           )}

@@ -19,7 +19,7 @@ const Layout = async ({ children, params }: Props) => {
   // Ensure params are properly awaited if needed
   const agencyId = (await params).agencyId;
   const verifiedAgencyId = await verifyAndAcceptInvitation();
-  const user = await currentUser();
+  // const user = await currentUser();
 
   if (!user) return redirect("/");
 

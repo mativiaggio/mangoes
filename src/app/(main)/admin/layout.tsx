@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import AdminInfoBar from "@/components/admin-infobar";
 import AdminSidebar from "@/components/admin-sidebar";
 import BlurPage from "@/components/blur-page";
@@ -6,9 +7,9 @@ import { notFound } from "next/navigation";
 import React from "react";
 
 const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
-  const user = await currentUser();
+  const user = await auth();
 
-  if (!user || !user?.privateMetadata.isAdmin) {
+  if (!user) {
     return notFound();
   }
 

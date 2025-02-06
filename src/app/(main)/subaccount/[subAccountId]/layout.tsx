@@ -18,7 +18,7 @@ const SubaccountLayout = async ({ children, params }: Props) => {
   const subAccountId = (await params).subAccountId;
   const agencyId = await verifyAndAcceptInvitation();
   if (!agencyId) return <Unauthorized />;
-  const user = await currentUser();
+  // const user = await currentUser();
   if (!user) {
     return redirect("/");
   }

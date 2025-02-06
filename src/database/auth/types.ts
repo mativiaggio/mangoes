@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { getAuthUserDetails, getUserPermissions } from "./queries";
 import { db } from "../db";
+import { z } from "zod";
 
 export type UserWithPermissionsAndSubAccounts = Prisma.PromiseReturnType<
   typeof getUserPermissions
@@ -21,3 +22,22 @@ export type AuthUserSubAccounts = Prisma.PromiseReturnType<
 export type UsersWithAgencySubAccountPermissions = Prisma.PromiseReturnType<
   typeof __getUsersWithAgencySubAccountPermissions
 >;
+
+// Login Schema
+
+export const LoginSchema = z.object({
+  email: z.string().email({
+    message: "El email es obligatorio",
+  }),
+  password: z.string().min(1, { message: "La contraseña es obligatoria" }),
+});
+
+export const RegisterSchema = z.object({
+  name: z.string().min(1, "El nombre es obligatorio"),
+  email: z.string().email({
+    message: "El email es obligatorio",
+  }),
+  password: z
+    .string()
+    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
+});
